@@ -1,7 +1,6 @@
 import { PGlite } from "@electric-sql/pglite";
-import { readFile, mkdir, writeFile } from "node:fs/promises";
+import { readFile, mkdir } from "node:fs/promises";
 import { resolve, join } from "node:path";
-import { randomBytes } from "node:crypto";
 import { hashPassword } from "./password";
 export type Actor = {
   user_id: number;
@@ -50,10 +49,9 @@ export async function getDb() {
               "utf8",
             ),
           );
-          const password =
-            process.env.DEMO_PASSWORD || randomBytes(18).toString("base64url");
-          if (password.length < 12)
-            throw Error("DEMO_PASSWORD must contain at least 12 characters");
+          const password = process.env.DEMO_PASSWORD;
+          if (!password || password.length < 12 || password.length > 200)
+            throw Error("Initialize with pnpm setup before starting the app. The setup password must contain 12 to 200 characters.");
           const accounts = await tx.query<{ user_id: number }>(
             "SELECT user_id FROM users",
           );
@@ -62,27 +60,6 @@ export async function getDb() {
               "UPDATE users SET password_hash=$1 WHERE user_id=$2",
               [hashPassword(password), account.user_id],
             );
-          await mkdir("data", { recursive: true });
-          await writeFile(
-            process.env.DEMO_ACCOUNTS_FILE || "data/demo-accounts.json",
-            JSON.stringify(
-              {
-                notice:
-                  "Local fictional demonstration accounts. Keep this file private.",
-                password,
-                accounts: [
-                  "coordinator@example.com",
-                  "fire@example.com",
-                  "medic@example.com",
-                  "rescue@example.com",
-                  "tech@example.com",
-                ],
-              },
-              null,
-              2,
-            ),
-            { mode: 0o600 },
-          );
         });
       }
       await db.exec(await readFile(join(process.cwd(), "database/05_resource_tag_permissions.sql"), "utf8"));
