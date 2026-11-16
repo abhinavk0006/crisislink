@@ -85,6 +85,7 @@ export async function getDb() {
           );
         });
       }
+      await db.exec(await readFile(join(process.cwd(), "database/05_resource_tag_permissions.sql"), "utf8"));
       return db;
     })();
   return globalDb.crisisDb;

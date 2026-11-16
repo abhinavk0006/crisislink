@@ -48,6 +48,7 @@ export async function dashboard(actor: Actor) {
         "SELECT * FROM maintenance_records ORDER BY maintenance_id DESC",
       )
     ).rows;
+    const resourceTags = (await tx.query("SELECT resource_id,tag FROM resource_tags ORDER BY resource_id,tag")).rows;
     return {
       incidents,
       resources,
@@ -58,8 +59,28 @@ export async function dashboard(actor: Actor) {
       locations,
       capabilities,
       maintenance,
+      resourceTags,
     };
   });
+}
+const tagInput=z.object({resource_id:z.number().int().positive(),tag:z.string().trim().min(1).max(100)});
+export async function addResourceTag(actor:Actor,input:unknown){
+ requireRole(actor,"Coordinator","Technician");const d=tagInput.parse(input);
+ return asActor(actor,async tx=>(await tx.query("INSERT INTO resource_tags(resource_id,tag) VALUES($1,$2) RETURNING resource_id,tag",[d.resource_id,d.tag])).rows[0]);
+}
+export async function updateResourceTag(actor:Actor,input:unknown){
+ requireRole(actor,"Coordinator","Technician");const d=tagInput.extend({new_tag:z.string().trim().min(1).max(100)}).parse(input);
+ return asActor(actor,async tx=>{
+  const row=(await tx.query("UPDATE resource_tags SET tag=$1 WHERE resource_id=$2 AND tag=$3 RETURNING resource_id,tag",[d.new_tag,d.resource_id,d.tag])).rows[0];
+  if(!row)throw new AppError(404,"Resource tag not found");return row;
+ });
+}
+export async function removeResourceTag(actor:Actor,input:unknown){
+ requireRole(actor,"Coordinator","Technician");const d=tagInput.parse(input);
+ return asActor(actor,async tx=>{
+  const row=(await tx.query("DELETE FROM resource_tags WHERE resource_id=$1 AND tag=$2 RETURNING resource_id,tag",[d.resource_id,d.tag])).rows[0];
+  if(!row)throw new AppError(404,"Resource tag not found");return {deleted:true,...row};
+ });
 }
 export async function createIncident(actor: Actor, input: unknown) {
   requireRole(actor, "Coordinator");
