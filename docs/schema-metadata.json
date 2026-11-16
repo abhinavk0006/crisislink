@@ -1,0 +1,1545 @@
+{
+  "tables": [
+    "app_login_attempts",
+    "app_sessions",
+    "assignments",
+    "capabilities",
+    "emergencies",
+    "emergency_required_capabilities",
+    "emergency_status_history",
+    "emergency_types",
+    "locations",
+    "maintenance_records",
+    "resource_capabilities",
+    "resource_tags",
+    "resource_types",
+    "resources",
+    "responder_reports",
+    "responder_skills",
+    "responders",
+    "roles",
+    "users"
+  ],
+  "columns": [
+    {
+      "table_name": "app_login_attempts",
+      "column_name": "attempt_key",
+      "sql_type": "character varying(64)",
+      "nullable": false,
+      "identity": "",
+      "position": 1
+    },
+    {
+      "table_name": "app_login_attempts",
+      "column_name": "failures",
+      "sql_type": "integer",
+      "nullable": false,
+      "identity": "",
+      "position": 2
+    },
+    {
+      "table_name": "app_login_attempts",
+      "column_name": "blocked_until",
+      "sql_type": "timestamp with time zone",
+      "nullable": true,
+      "identity": "",
+      "position": 3
+    },
+    {
+      "table_name": "app_sessions",
+      "column_name": "token_hash",
+      "sql_type": "character varying(64)",
+      "nullable": false,
+      "identity": "",
+      "position": 1
+    },
+    {
+      "table_name": "app_sessions",
+      "column_name": "user_id",
+      "sql_type": "integer",
+      "nullable": false,
+      "identity": "",
+      "position": 2
+    },
+    {
+      "table_name": "app_sessions",
+      "column_name": "expires_at",
+      "sql_type": "timestamp with time zone",
+      "nullable": false,
+      "identity": "",
+      "position": 3
+    },
+    {
+      "table_name": "assignments",
+      "column_name": "assignment_id",
+      "sql_type": "integer",
+      "nullable": false,
+      "identity": "d",
+      "position": 1
+    },
+    {
+      "table_name": "assignments",
+      "column_name": "emergency_id",
+      "sql_type": "integer",
+      "nullable": false,
+      "identity": "",
+      "position": 2
+    },
+    {
+      "table_name": "assignments",
+      "column_name": "resource_id",
+      "sql_type": "integer",
+      "nullable": false,
+      "identity": "",
+      "position": 3
+    },
+    {
+      "table_name": "assignments",
+      "column_name": "assigned_by",
+      "sql_type": "integer",
+      "nullable": false,
+      "identity": "",
+      "position": 4
+    },
+    {
+      "table_name": "assignments",
+      "column_name": "assigned_at",
+      "sql_type": "timestamp with time zone",
+      "nullable": true,
+      "identity": "",
+      "position": 5
+    },
+    {
+      "table_name": "assignments",
+      "column_name": "dispatch_time",
+      "sql_type": "timestamp with time zone",
+      "nullable": true,
+      "identity": "",
+      "position": 6
+    },
+    {
+      "table_name": "assignments",
+      "column_name": "status",
+      "sql_type": "character varying(255)",
+      "nullable": true,
+      "identity": "",
+      "position": 7
+    },
+    {
+      "table_name": "assignments",
+      "column_name": "remarks",
+      "sql_type": "text",
+      "nullable": true,
+      "identity": "",
+      "position": 8
+    },
+    {
+      "table_name": "assignments",
+      "column_name": "responder_id",
+      "sql_type": "integer",
+      "nullable": false,
+      "identity": "",
+      "position": 9
+    },
+    {
+      "table_name": "capabilities",
+      "column_name": "capability_id",
+      "sql_type": "integer",
+      "nullable": false,
+      "identity": "d",
+      "position": 1
+    },
+    {
+      "table_name": "capabilities",
+      "column_name": "capability_name",
+      "sql_type": "character varying(255)",
+      "nullable": true,
+      "identity": "",
+      "position": 2
+    },
+    {
+      "table_name": "capabilities",
+      "column_name": "description",
+      "sql_type": "text",
+      "nullable": true,
+      "identity": "",
+      "position": 3
+    },
+    {
+      "table_name": "emergencies",
+      "column_name": "emergency_id",
+      "sql_type": "integer",
+      "nullable": false,
+      "identity": "d",
+      "position": 1
+    },
+    {
+      "table_name": "emergencies",
+      "column_name": "type_id",
+      "sql_type": "integer",
+      "nullable": false,
+      "identity": "",
+      "position": 2
+    },
+    {
+      "table_name": "emergencies",
+      "column_name": "location_id",
+      "sql_type": "integer",
+      "nullable": false,
+      "identity": "",
+      "position": 3
+    },
+    {
+      "table_name": "emergencies",
+      "column_name": "reported_by",
+      "sql_type": "integer",
+      "nullable": false,
+      "identity": "",
+      "position": 4
+    },
+    {
+      "table_name": "emergencies",
+      "column_name": "description",
+      "sql_type": "text",
+      "nullable": false,
+      "identity": "",
+      "position": 5
+    },
+    {
+      "table_name": "emergencies",
+      "column_name": "severity_level",
+      "sql_type": "character varying(255)",
+      "nullable": true,
+      "identity": "",
+      "position": 6
+    },
+    {
+      "table_name": "emergencies",
+      "column_name": "people_affected",
+      "sql_type": "integer",
+      "nullable": true,
+      "identity": "",
+      "position": 7
+    },
+    {
+      "table_name": "emergencies",
+      "column_name": "status",
+      "sql_type": "character varying(255)",
+      "nullable": true,
+      "identity": "",
+      "position": 8
+    },
+    {
+      "table_name": "emergencies",
+      "column_name": "reported_at",
+      "sql_type": "timestamp with time zone",
+      "nullable": true,
+      "identity": "",
+      "position": 9
+    },
+    {
+      "table_name": "emergencies",
+      "column_name": "updated_at",
+      "sql_type": "timestamp with time zone",
+      "nullable": true,
+      "identity": "",
+      "position": 10
+    },
+    {
+      "table_name": "emergency_required_capabilities",
+      "column_name": "emergency_id",
+      "sql_type": "integer",
+      "nullable": false,
+      "identity": "",
+      "position": 1
+    },
+    {
+      "table_name": "emergency_required_capabilities",
+      "column_name": "capability_id",
+      "sql_type": "integer",
+      "nullable": false,
+      "identity": "d",
+      "position": 2
+    },
+    {
+      "table_name": "emergency_required_capabilities",
+      "column_name": "location_id",
+      "sql_type": "integer",
+      "nullable": true,
+      "identity": "",
+      "position": 3
+    },
+    {
+      "table_name": "emergency_required_capabilities",
+      "column_name": "location_name",
+      "sql_type": "character varying(255)",
+      "nullable": true,
+      "identity": "",
+      "position": 4
+    },
+    {
+      "table_name": "emergency_required_capabilities",
+      "column_name": "address",
+      "sql_type": "text",
+      "nullable": true,
+      "identity": "",
+      "position": 5
+    },
+    {
+      "table_name": "emergency_required_capabilities",
+      "column_name": "quantity_required",
+      "sql_type": "integer",
+      "nullable": true,
+      "identity": "",
+      "position": 6
+    },
+    {
+      "table_name": "emergency_status_history",
+      "column_name": "history_id",
+      "sql_type": "integer",
+      "nullable": false,
+      "identity": "d",
+      "position": 1
+    },
+    {
+      "table_name": "emergency_status_history",
+      "column_name": "emergency_id",
+      "sql_type": "integer",
+      "nullable": true,
+      "identity": "",
+      "position": 2
+    },
+    {
+      "table_name": "emergency_status_history",
+      "column_name": "status",
+      "sql_type": "character varying(255)",
+      "nullable": true,
+      "identity": "",
+      "position": 3
+    },
+    {
+      "table_name": "emergency_status_history",
+      "column_name": "remarks",
+      "sql_type": "text",
+      "nullable": true,
+      "identity": "",
+      "position": 4
+    },
+    {
+      "table_name": "emergency_status_history",
+      "column_name": "changed_by",
+      "sql_type": "integer",
+      "nullable": true,
+      "identity": "",
+      "position": 5
+    },
+    {
+      "table_name": "emergency_status_history",
+      "column_name": "changed_at",
+      "sql_type": "timestamp with time zone",
+      "nullable": true,
+      "identity": "",
+      "position": 6
+    },
+    {
+      "table_name": "emergency_types",
+      "column_name": "type_id",
+      "sql_type": "integer",
+      "nullable": false,
+      "identity": "d",
+      "position": 1
+    },
+    {
+      "table_name": "emergency_types",
+      "column_name": "type_name",
+      "sql_type": "character varying(255)",
+      "nullable": true,
+      "identity": "",
+      "position": 2
+    },
+    {
+      "table_name": "emergency_types",
+      "column_name": "description",
+      "sql_type": "text",
+      "nullable": true,
+      "identity": "",
+      "position": 3
+    },
+    {
+      "table_name": "locations",
+      "column_name": "location_id",
+      "sql_type": "integer",
+      "nullable": false,
+      "identity": "d",
+      "position": 1
+    },
+    {
+      "table_name": "locations",
+      "column_name": "location_name",
+      "sql_type": "character varying(255)",
+      "nullable": true,
+      "identity": "",
+      "position": 2
+    },
+    {
+      "table_name": "locations",
+      "column_name": "address",
+      "sql_type": "text",
+      "nullable": true,
+      "identity": "",
+      "position": 3
+    },
+    {
+      "table_name": "locations",
+      "column_name": "latitude",
+      "sql_type": "numeric(10,7)",
+      "nullable": true,
+      "identity": "",
+      "position": 4
+    },
+    {
+      "table_name": "locations",
+      "column_name": "longitude",
+      "sql_type": "numeric(10,7)",
+      "nullable": true,
+      "identity": "",
+      "position": 5
+    },
+    {
+      "table_name": "locations",
+      "column_name": "risk_level",
+      "sql_type": "character varying(255)",
+      "nullable": true,
+      "identity": "",
+      "position": 6
+    },
+    {
+      "table_name": "maintenance_records",
+      "column_name": "maintenance_id",
+      "sql_type": "integer",
+      "nullable": false,
+      "identity": "d",
+      "position": 1
+    },
+    {
+      "table_name": "maintenance_records",
+      "column_name": "resource_id",
+      "sql_type": "integer",
+      "nullable": true,
+      "identity": "",
+      "position": 2
+    },
+    {
+      "table_name": "maintenance_records",
+      "column_name": "maintenance_type",
+      "sql_type": "character varying(255)",
+      "nullable": true,
+      "identity": "",
+      "position": 3
+    },
+    {
+      "table_name": "maintenance_records",
+      "column_name": "description",
+      "sql_type": "text",
+      "nullable": true,
+      "identity": "",
+      "position": 4
+    },
+    {
+      "table_name": "maintenance_records",
+      "column_name": "performed_on",
+      "sql_type": "timestamp with time zone",
+      "nullable": true,
+      "identity": "",
+      "position": 5
+    },
+    {
+      "table_name": "maintenance_records",
+      "column_name": "next_due_date",
+      "sql_type": "date",
+      "nullable": true,
+      "identity": "",
+      "position": 6
+    },
+    {
+      "table_name": "maintenance_records",
+      "column_name": "status",
+      "sql_type": "character varying(255)",
+      "nullable": true,
+      "identity": "",
+      "position": 7
+    },
+    {
+      "table_name": "maintenance_records",
+      "column_name": "performed_by",
+      "sql_type": "integer",
+      "nullable": true,
+      "identity": "",
+      "position": 8
+    },
+    {
+      "table_name": "maintenance_records",
+      "column_name": "cost",
+      "sql_type": "numeric(12,2)",
+      "nullable": true,
+      "identity": "",
+      "position": 9
+    },
+    {
+      "table_name": "maintenance_records",
+      "column_name": "assignment_id",
+      "sql_type": "integer",
+      "nullable": true,
+      "identity": "",
+      "position": 10
+    },
+    {
+      "table_name": "resource_capabilities",
+      "column_name": "resource_id",
+      "sql_type": "integer",
+      "nullable": false,
+      "identity": "",
+      "position": 1
+    },
+    {
+      "table_name": "resource_capabilities",
+      "column_name": "capability_id",
+      "sql_type": "integer",
+      "nullable": false,
+      "identity": "d",
+      "position": 2
+    },
+    {
+      "table_name": "resource_capabilities",
+      "column_name": "proficiency_level",
+      "sql_type": "character varying(255)",
+      "nullable": true,
+      "identity": "",
+      "position": 3
+    },
+    {
+      "table_name": "resource_tags",
+      "column_name": "resource_id",
+      "sql_type": "integer",
+      "nullable": false,
+      "identity": "",
+      "position": 1
+    },
+    {
+      "table_name": "resource_tags",
+      "column_name": "tag",
+      "sql_type": "character varying(100)",
+      "nullable": false,
+      "identity": "",
+      "position": 2
+    },
+    {
+      "table_name": "resource_types",
+      "column_name": "type_id",
+      "sql_type": "integer",
+      "nullable": false,
+      "identity": "d",
+      "position": 1
+    },
+    {
+      "table_name": "resource_types",
+      "column_name": "type_name",
+      "sql_type": "character varying(255)",
+      "nullable": true,
+      "identity": "",
+      "position": 2
+    },
+    {
+      "table_name": "resource_types",
+      "column_name": "description",
+      "sql_type": "text",
+      "nullable": true,
+      "identity": "",
+      "position": 3
+    },
+    {
+      "table_name": "resources",
+      "column_name": "resource_id",
+      "sql_type": "integer",
+      "nullable": false,
+      "identity": "d",
+      "position": 1
+    },
+    {
+      "table_name": "resources",
+      "column_name": "type_id",
+      "sql_type": "integer",
+      "nullable": true,
+      "identity": "",
+      "position": 2
+    },
+    {
+      "table_name": "resources",
+      "column_name": "resource_name",
+      "sql_type": "character varying(255)",
+      "nullable": true,
+      "identity": "",
+      "position": 3
+    },
+    {
+      "table_name": "resources",
+      "column_name": "call_sign",
+      "sql_type": "character varying(255)",
+      "nullable": true,
+      "identity": "",
+      "position": 4
+    },
+    {
+      "table_name": "resources",
+      "column_name": "status",
+      "sql_type": "character varying(255)",
+      "nullable": true,
+      "identity": "",
+      "position": 5
+    },
+    {
+      "table_name": "resources",
+      "column_name": "current_location_id",
+      "sql_type": "integer",
+      "nullable": true,
+      "identity": "",
+      "position": 6
+    },
+    {
+      "table_name": "resources",
+      "column_name": "capacity",
+      "sql_type": "integer",
+      "nullable": true,
+      "identity": "",
+      "position": 7
+    },
+    {
+      "table_name": "responder_reports",
+      "column_name": "report_id",
+      "sql_type": "integer",
+      "nullable": false,
+      "identity": "d",
+      "position": 1
+    },
+    {
+      "table_name": "responder_reports",
+      "column_name": "emergency_id",
+      "sql_type": "integer",
+      "nullable": true,
+      "identity": "",
+      "position": 2
+    },
+    {
+      "table_name": "responder_reports",
+      "column_name": "responder_id",
+      "sql_type": "integer",
+      "nullable": true,
+      "identity": "",
+      "position": 3
+    },
+    {
+      "table_name": "responder_reports",
+      "column_name": "initial_assessment",
+      "sql_type": "text",
+      "nullable": true,
+      "identity": "",
+      "position": 4
+    },
+    {
+      "table_name": "responder_reports",
+      "column_name": "actions_taken",
+      "sql_type": "text",
+      "nullable": true,
+      "identity": "",
+      "position": 5
+    },
+    {
+      "table_name": "responder_reports",
+      "column_name": "resources_used",
+      "sql_type": "text",
+      "nullable": true,
+      "identity": "",
+      "position": 6
+    },
+    {
+      "table_name": "responder_reports",
+      "column_name": "people_affected",
+      "sql_type": "integer",
+      "nullable": true,
+      "identity": "",
+      "position": 7
+    },
+    {
+      "table_name": "responder_reports",
+      "column_name": "outcome",
+      "sql_type": "text",
+      "nullable": true,
+      "identity": "",
+      "position": 8
+    },
+    {
+      "table_name": "responder_reports",
+      "column_name": "reported_at",
+      "sql_type": "timestamp with time zone",
+      "nullable": true,
+      "identity": "",
+      "position": 9
+    },
+    {
+      "table_name": "responder_reports",
+      "column_name": "assignment_id",
+      "sql_type": "integer",
+      "nullable": true,
+      "identity": "",
+      "position": 10
+    },
+    {
+      "table_name": "responder_skills",
+      "column_name": "responder_id",
+      "sql_type": "integer",
+      "nullable": false,
+      "identity": "",
+      "position": 1
+    },
+    {
+      "table_name": "responder_skills",
+      "column_name": "skill",
+      "sql_type": "character varying(100)",
+      "nullable": false,
+      "identity": "",
+      "position": 2
+    },
+    {
+      "table_name": "responders",
+      "column_name": "responder_id",
+      "sql_type": "integer",
+      "nullable": false,
+      "identity": "d",
+      "position": 1
+    },
+    {
+      "table_name": "responders",
+      "column_name": "user_id",
+      "sql_type": "integer",
+      "nullable": true,
+      "identity": "",
+      "position": 2
+    },
+    {
+      "table_name": "responders",
+      "column_name": "employee_id",
+      "sql_type": "character varying(255)",
+      "nullable": true,
+      "identity": "",
+      "position": 3
+    },
+    {
+      "table_name": "responders",
+      "column_name": "team",
+      "sql_type": "character varying(255)",
+      "nullable": true,
+      "identity": "",
+      "position": 4
+    },
+    {
+      "table_name": "responders",
+      "column_name": "status",
+      "sql_type": "character varying(255)",
+      "nullable": true,
+      "identity": "",
+      "position": 5
+    },
+    {
+      "table_name": "roles",
+      "column_name": "role_id",
+      "sql_type": "integer",
+      "nullable": false,
+      "identity": "d",
+      "position": 1
+    },
+    {
+      "table_name": "roles",
+      "column_name": "role_name",
+      "sql_type": "character varying(255)",
+      "nullable": true,
+      "identity": "",
+      "position": 2
+    },
+    {
+      "table_name": "roles",
+      "column_name": "description",
+      "sql_type": "text",
+      "nullable": true,
+      "identity": "",
+      "position": 3
+    },
+    {
+      "table_name": "users",
+      "column_name": "user_id",
+      "sql_type": "integer",
+      "nullable": false,
+      "identity": "d",
+      "position": 1
+    },
+    {
+      "table_name": "users",
+      "column_name": "full_name",
+      "sql_type": "character varying(255)",
+      "nullable": true,
+      "identity": "",
+      "position": 2
+    },
+    {
+      "table_name": "users",
+      "column_name": "email",
+      "sql_type": "character varying(255)",
+      "nullable": false,
+      "identity": "",
+      "position": 3
+    },
+    {
+      "table_name": "users",
+      "column_name": "password_hash",
+      "sql_type": "character varying(255)",
+      "nullable": false,
+      "identity": "",
+      "position": 4
+    },
+    {
+      "table_name": "users",
+      "column_name": "phone",
+      "sql_type": "character varying(255)",
+      "nullable": true,
+      "identity": "",
+      "position": 5
+    },
+    {
+      "table_name": "users",
+      "column_name": "role_id",
+      "sql_type": "integer",
+      "nullable": false,
+      "identity": "",
+      "position": 6
+    },
+    {
+      "table_name": "users",
+      "column_name": "status",
+      "sql_type": "character varying(255)",
+      "nullable": true,
+      "identity": "",
+      "position": 7
+    },
+    {
+      "table_name": "users",
+      "column_name": "created_at",
+      "sql_type": "timestamp with time zone",
+      "nullable": true,
+      "identity": "",
+      "position": 8
+    }
+  ],
+  "constraints": [
+    {
+      "table_name": "app_login_attempts",
+      "constraint_name": "app_login_attempts_attempt_key_not_null",
+      "type": "n",
+      "definition": "NOT NULL attempt_key"
+    },
+    {
+      "table_name": "app_login_attempts",
+      "constraint_name": "app_login_attempts_failures_not_null",
+      "type": "n",
+      "definition": "NOT NULL failures"
+    },
+    {
+      "table_name": "app_login_attempts",
+      "constraint_name": "app_login_attempts_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (attempt_key)"
+    },
+    {
+      "table_name": "app_sessions",
+      "constraint_name": "app_sessions_expires_at_not_null",
+      "type": "n",
+      "definition": "NOT NULL expires_at"
+    },
+    {
+      "table_name": "app_sessions",
+      "constraint_name": "app_sessions_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (token_hash)"
+    },
+    {
+      "table_name": "app_sessions",
+      "constraint_name": "app_sessions_token_hash_not_null",
+      "type": "n",
+      "definition": "NOT NULL token_hash"
+    },
+    {
+      "table_name": "app_sessions",
+      "constraint_name": "app_sessions_user_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (user_id) REFERENCES users(user_id)"
+    },
+    {
+      "table_name": "app_sessions",
+      "constraint_name": "app_sessions_user_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL user_id"
+    },
+    {
+      "table_name": "assignments",
+      "constraint_name": "assignments_assigned_by_not_null",
+      "type": "n",
+      "definition": "NOT NULL assigned_by"
+    },
+    {
+      "table_name": "assignments",
+      "constraint_name": "assignments_assignment_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL assignment_id"
+    },
+    {
+      "table_name": "assignments",
+      "constraint_name": "assignments_emergency_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL emergency_id"
+    },
+    {
+      "table_name": "assignments",
+      "constraint_name": "assignments_resource_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL resource_id"
+    },
+    {
+      "table_name": "assignments",
+      "constraint_name": "assignments_responder_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL responder_id"
+    },
+    {
+      "table_name": "assignments",
+      "constraint_name": "fk_assigned_in",
+      "type": "f",
+      "definition": "FOREIGN KEY (resource_id) REFERENCES resources(resource_id)"
+    },
+    {
+      "table_name": "assignments",
+      "constraint_name": "fk_assignment_author",
+      "type": "f",
+      "definition": "FOREIGN KEY (assigned_by) REFERENCES users(user_id)"
+    },
+    {
+      "table_name": "assignments",
+      "constraint_name": "fk_assignment_emergency",
+      "type": "f",
+      "definition": "FOREIGN KEY (emergency_id) REFERENCES emergencies(emergency_id)"
+    },
+    {
+      "table_name": "assignments",
+      "constraint_name": "fk_submits_drawn",
+      "type": "f",
+      "definition": "FOREIGN KEY (responder_id) REFERENCES responders(responder_id)"
+    },
+    {
+      "table_name": "assignments",
+      "constraint_name": "pk_assignments",
+      "type": "p",
+      "definition": "PRIMARY KEY (assignment_id)"
+    },
+    {
+      "table_name": "capabilities",
+      "constraint_name": "capabilities_capability_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL capability_id"
+    },
+    {
+      "table_name": "capabilities",
+      "constraint_name": "pk_capabilities",
+      "type": "p",
+      "definition": "PRIMARY KEY (capability_id)"
+    },
+    {
+      "table_name": "emergencies",
+      "constraint_name": "ck_people_affected",
+      "type": "c",
+      "definition": "CHECK ((people_affected >= 0))"
+    },
+    {
+      "table_name": "emergencies",
+      "constraint_name": "ck_severity",
+      "type": "c",
+      "definition": "CHECK (((severity_level)::text = ANY ((ARRAY['low'::character varying, 'medium'::character varying, 'high'::character varying, 'critical'::character varying])::text[])))"
+    },
+    {
+      "table_name": "emergencies",
+      "constraint_name": "ck_status",
+      "type": "c",
+      "definition": "CHECK (((status)::text = ANY ((ARRAY['reported'::character varying, 'responding'::character varying, 'resolved'::character varying])::text[])))"
+    },
+    {
+      "table_name": "emergencies",
+      "constraint_name": "ck_time",
+      "type": "c",
+      "definition": "CHECK ((updated_at >= reported_at))"
+    },
+    {
+      "table_name": "emergencies",
+      "constraint_name": "emergencies_description_not_null",
+      "type": "n",
+      "definition": "NOT NULL description"
+    },
+    {
+      "table_name": "emergencies",
+      "constraint_name": "emergencies_emergency_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL emergency_id"
+    },
+    {
+      "table_name": "emergencies",
+      "constraint_name": "emergencies_location_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL location_id"
+    },
+    {
+      "table_name": "emergencies",
+      "constraint_name": "emergencies_reported_by_not_null",
+      "type": "n",
+      "definition": "NOT NULL reported_by"
+    },
+    {
+      "table_name": "emergencies",
+      "constraint_name": "emergencies_type_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL type_id"
+    },
+    {
+      "table_name": "emergencies",
+      "constraint_name": "fk_emergency_location",
+      "type": "f",
+      "definition": "FOREIGN KEY (location_id) REFERENCES locations(location_id)"
+    },
+    {
+      "table_name": "emergencies",
+      "constraint_name": "fk_emergency_type",
+      "type": "f",
+      "definition": "FOREIGN KEY (type_id) REFERENCES emergency_types(type_id)"
+    },
+    {
+      "table_name": "emergencies",
+      "constraint_name": "fk_reports",
+      "type": "f",
+      "definition": "FOREIGN KEY (reported_by) REFERENCES users(user_id)"
+    },
+    {
+      "table_name": "emergencies",
+      "constraint_name": "pk_emergencies",
+      "type": "p",
+      "definition": "PRIMARY KEY (emergency_id)"
+    },
+    {
+      "table_name": "emergency_required_capabilities",
+      "constraint_name": "ck_quantity",
+      "type": "c",
+      "definition": "CHECK ((quantity_required >= 0))"
+    },
+    {
+      "table_name": "emergency_required_capabilities",
+      "constraint_name": "emergency_required_capabilities_capability_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL capability_id"
+    },
+    {
+      "table_name": "emergency_required_capabilities",
+      "constraint_name": "emergency_required_capabilities_emergency_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL emergency_id"
+    },
+    {
+      "table_name": "emergency_required_capabilities",
+      "constraint_name": "fk_requirement_emergency",
+      "type": "f",
+      "definition": "FOREIGN KEY (emergency_id) REFERENCES emergencies(emergency_id)"
+    },
+    {
+      "table_name": "emergency_required_capabilities",
+      "constraint_name": "fk_requirement_location",
+      "type": "f",
+      "definition": "FOREIGN KEY (location_id) REFERENCES locations(location_id)"
+    },
+    {
+      "table_name": "emergency_required_capabilities",
+      "constraint_name": "fk_requires_for",
+      "type": "f",
+      "definition": "FOREIGN KEY (capability_id) REFERENCES capabilities(capability_id)"
+    },
+    {
+      "table_name": "emergency_required_capabilities",
+      "constraint_name": "pk_emergency_required_capabilities",
+      "type": "p",
+      "definition": "PRIMARY KEY (emergency_id, capability_id)"
+    },
+    {
+      "table_name": "emergency_status_history",
+      "constraint_name": "emergency_status_history_history_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL history_id"
+    },
+    {
+      "table_name": "emergency_status_history",
+      "constraint_name": "fk_emergency_history",
+      "type": "f",
+      "definition": "FOREIGN KEY (emergency_id) REFERENCES emergencies(emergency_id)"
+    },
+    {
+      "table_name": "emergency_status_history",
+      "constraint_name": "fk_history_author",
+      "type": "f",
+      "definition": "FOREIGN KEY (changed_by) REFERENCES users(user_id)"
+    },
+    {
+      "table_name": "emergency_status_history",
+      "constraint_name": "pk_emergency_status_history",
+      "type": "p",
+      "definition": "PRIMARY KEY (history_id)"
+    },
+    {
+      "table_name": "emergency_types",
+      "constraint_name": "emergency_types_type_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL type_id"
+    },
+    {
+      "table_name": "emergency_types",
+      "constraint_name": "pk_emergency_types",
+      "type": "p",
+      "definition": "PRIMARY KEY (type_id)"
+    },
+    {
+      "table_name": "locations",
+      "constraint_name": "ck_latitude",
+      "type": "c",
+      "definition": "CHECK (((latitude >= ('-90'::integer)::numeric) AND (latitude <= (90)::numeric)))"
+    },
+    {
+      "table_name": "locations",
+      "constraint_name": "ck_longitude",
+      "type": "c",
+      "definition": "CHECK (((longitude >= ('-180'::integer)::numeric) AND (longitude <= (180)::numeric)))"
+    },
+    {
+      "table_name": "locations",
+      "constraint_name": "locations_location_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL location_id"
+    },
+    {
+      "table_name": "locations",
+      "constraint_name": "pk_locations",
+      "type": "p",
+      "definition": "PRIMARY KEY (location_id)"
+    },
+    {
+      "table_name": "maintenance_records",
+      "constraint_name": "ck_cost",
+      "type": "c",
+      "definition": "CHECK ((cost >= (0)::numeric))"
+    },
+    {
+      "table_name": "maintenance_records",
+      "constraint_name": "fk_has_drawn",
+      "type": "f",
+      "definition": "FOREIGN KEY (assignment_id) REFERENCES assignments(assignment_id)"
+    },
+    {
+      "table_name": "maintenance_records",
+      "constraint_name": "fk_maintenance_author",
+      "type": "f",
+      "definition": "FOREIGN KEY (performed_by) REFERENCES users(user_id)"
+    },
+    {
+      "table_name": "maintenance_records",
+      "constraint_name": "fk_maintenance_resource",
+      "type": "f",
+      "definition": "FOREIGN KEY (resource_id) REFERENCES resources(resource_id)"
+    },
+    {
+      "table_name": "maintenance_records",
+      "constraint_name": "maintenance_records_maintenance_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL maintenance_id"
+    },
+    {
+      "table_name": "maintenance_records",
+      "constraint_name": "pk_maintenance_records",
+      "type": "p",
+      "definition": "PRIMARY KEY (maintenance_id)"
+    },
+    {
+      "table_name": "resource_capabilities",
+      "constraint_name": "fk_possesses",
+      "type": "f",
+      "definition": "FOREIGN KEY (resource_id) REFERENCES resources(resource_id)"
+    },
+    {
+      "table_name": "resource_capabilities",
+      "constraint_name": "fk_resource_capability",
+      "type": "f",
+      "definition": "FOREIGN KEY (capability_id) REFERENCES capabilities(capability_id)"
+    },
+    {
+      "table_name": "resource_capabilities",
+      "constraint_name": "pk_resource_capabilities",
+      "type": "p",
+      "definition": "PRIMARY KEY (resource_id, capability_id)"
+    },
+    {
+      "table_name": "resource_capabilities",
+      "constraint_name": "resource_capabilities_capability_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL capability_id"
+    },
+    {
+      "table_name": "resource_capabilities",
+      "constraint_name": "resource_capabilities_resource_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL resource_id"
+    },
+    {
+      "table_name": "resource_tags",
+      "constraint_name": "fk_resource_tags",
+      "type": "f",
+      "definition": "FOREIGN KEY (resource_id) REFERENCES resources(resource_id)"
+    },
+    {
+      "table_name": "resource_tags",
+      "constraint_name": "pk_resource_tags",
+      "type": "p",
+      "definition": "PRIMARY KEY (resource_id, tag)"
+    },
+    {
+      "table_name": "resource_tags",
+      "constraint_name": "resource_tags_resource_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL resource_id"
+    },
+    {
+      "table_name": "resource_tags",
+      "constraint_name": "resource_tags_tag_not_null",
+      "type": "n",
+      "definition": "NOT NULL tag"
+    },
+    {
+      "table_name": "resource_types",
+      "constraint_name": "pk_resource_types",
+      "type": "p",
+      "definition": "PRIMARY KEY (type_id)"
+    },
+    {
+      "table_name": "resource_types",
+      "constraint_name": "resource_types_type_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL type_id"
+    },
+    {
+      "table_name": "resources",
+      "constraint_name": "ck_capacity",
+      "type": "c",
+      "definition": "CHECK ((capacity >= 0))"
+    },
+    {
+      "table_name": "resources",
+      "constraint_name": "fk_resource_location",
+      "type": "f",
+      "definition": "FOREIGN KEY (current_location_id) REFERENCES locations(location_id)"
+    },
+    {
+      "table_name": "resources",
+      "constraint_name": "fk_resource_type",
+      "type": "f",
+      "definition": "FOREIGN KEY (type_id) REFERENCES resource_types(type_id)"
+    },
+    {
+      "table_name": "resources",
+      "constraint_name": "pk_resources",
+      "type": "p",
+      "definition": "PRIMARY KEY (resource_id)"
+    },
+    {
+      "table_name": "resources",
+      "constraint_name": "resources_resource_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL resource_id"
+    },
+    {
+      "table_name": "responder_reports",
+      "constraint_name": "ck_report_people",
+      "type": "c",
+      "definition": "CHECK ((people_affected >= 0))"
+    },
+    {
+      "table_name": "responder_reports",
+      "constraint_name": "fk_report_assignment_drawn",
+      "type": "f",
+      "definition": "FOREIGN KEY (assignment_id) REFERENCES assignments(assignment_id)"
+    },
+    {
+      "table_name": "responder_reports",
+      "constraint_name": "fk_report_emergency",
+      "type": "f",
+      "definition": "FOREIGN KEY (emergency_id) REFERENCES emergencies(emergency_id)"
+    },
+    {
+      "table_name": "responder_reports",
+      "constraint_name": "fk_report_responder",
+      "type": "f",
+      "definition": "FOREIGN KEY (responder_id) REFERENCES responders(responder_id)"
+    },
+    {
+      "table_name": "responder_reports",
+      "constraint_name": "pk_responder_reports",
+      "type": "p",
+      "definition": "PRIMARY KEY (report_id)"
+    },
+    {
+      "table_name": "responder_reports",
+      "constraint_name": "responder_reports_report_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL report_id"
+    },
+    {
+      "table_name": "responder_skills",
+      "constraint_name": "fk_responder_skills",
+      "type": "f",
+      "definition": "FOREIGN KEY (responder_id) REFERENCES responders(responder_id)"
+    },
+    {
+      "table_name": "responder_skills",
+      "constraint_name": "pk_responder_skills",
+      "type": "p",
+      "definition": "PRIMARY KEY (responder_id, skill)"
+    },
+    {
+      "table_name": "responder_skills",
+      "constraint_name": "responder_skills_responder_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL responder_id"
+    },
+    {
+      "table_name": "responder_skills",
+      "constraint_name": "responder_skills_skill_not_null",
+      "type": "n",
+      "definition": "NOT NULL skill"
+    },
+    {
+      "table_name": "responders",
+      "constraint_name": "fk_responder_user",
+      "type": "f",
+      "definition": "FOREIGN KEY (user_id) REFERENCES users(user_id)"
+    },
+    {
+      "table_name": "responders",
+      "constraint_name": "pk_responders",
+      "type": "p",
+      "definition": "PRIMARY KEY (responder_id)"
+    },
+    {
+      "table_name": "responders",
+      "constraint_name": "responders_responder_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL responder_id"
+    },
+    {
+      "table_name": "responders",
+      "constraint_name": "uq_responder_user",
+      "type": "u",
+      "definition": "UNIQUE (user_id)"
+    },
+    {
+      "table_name": "roles",
+      "constraint_name": "pk_roles",
+      "type": "p",
+      "definition": "PRIMARY KEY (role_id)"
+    },
+    {
+      "table_name": "roles",
+      "constraint_name": "roles_role_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL role_id"
+    },
+    {
+      "table_name": "users",
+      "constraint_name": "fk_user_role",
+      "type": "f",
+      "definition": "FOREIGN KEY (role_id) REFERENCES roles(role_id)"
+    },
+    {
+      "table_name": "users",
+      "constraint_name": "pk_users",
+      "type": "p",
+      "definition": "PRIMARY KEY (user_id)"
+    },
+    {
+      "table_name": "users",
+      "constraint_name": "uq_users_email",
+      "type": "u",
+      "definition": "UNIQUE (email)"
+    },
+    {
+      "table_name": "users",
+      "constraint_name": "users_email_not_null",
+      "type": "n",
+      "definition": "NOT NULL email"
+    },
+    {
+      "table_name": "users",
+      "constraint_name": "users_password_hash_not_null",
+      "type": "n",
+      "definition": "NOT NULL password_hash"
+    },
+    {
+      "table_name": "users",
+      "constraint_name": "users_role_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL role_id"
+    },
+    {
+      "table_name": "users",
+      "constraint_name": "users_user_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL user_id"
+    }
+  ],
+  "indexes": [
+    {
+      "tablename": "app_login_attempts",
+      "indexname": "app_login_attempts_pkey",
+      "indexdef": "CREATE UNIQUE INDEX app_login_attempts_pkey ON public.app_login_attempts USING btree (attempt_key)"
+    },
+    {
+      "tablename": "app_sessions",
+      "indexname": "app_sessions_pkey",
+      "indexdef": "CREATE UNIQUE INDEX app_sessions_pkey ON public.app_sessions USING btree (token_hash)"
+    },
+    {
+      "tablename": "assignments",
+      "indexname": "idx_assignment_emergency",
+      "indexdef": "CREATE INDEX idx_assignment_emergency ON public.assignments USING btree (emergency_id)"
+    },
+    {
+      "tablename": "assignments",
+      "indexname": "pk_assignments",
+      "indexdef": "CREATE UNIQUE INDEX pk_assignments ON public.assignments USING btree (assignment_id)"
+    },
+    {
+      "tablename": "assignments",
+      "indexname": "uq_active_resource",
+      "indexdef": "CREATE UNIQUE INDEX uq_active_resource ON public.assignments USING btree (resource_id) WHERE ((status)::text = ANY ((ARRAY['active'::character varying, 'dispatched'::character varying])::text[]))"
+    },
+    {
+      "tablename": "assignments",
+      "indexname": "uq_active_responder",
+      "indexdef": "CREATE UNIQUE INDEX uq_active_responder ON public.assignments USING btree (responder_id) WHERE ((status)::text = ANY ((ARRAY['active'::character varying, 'dispatched'::character varying])::text[]))"
+    },
+    {
+      "tablename": "capabilities",
+      "indexname": "pk_capabilities",
+      "indexdef": "CREATE UNIQUE INDEX pk_capabilities ON public.capabilities USING btree (capability_id)"
+    },
+    {
+      "tablename": "emergencies",
+      "indexname": "idx_emergency_status_time",
+      "indexdef": "CREATE INDEX idx_emergency_status_time ON public.emergencies USING btree (status, reported_at DESC)"
+    },
+    {
+      "tablename": "emergencies",
+      "indexname": "pk_emergencies",
+      "indexdef": "CREATE UNIQUE INDEX pk_emergencies ON public.emergencies USING btree (emergency_id)"
+    },
+    {
+      "tablename": "emergency_required_capabilities",
+      "indexname": "pk_emergency_required_capabilities",
+      "indexdef": "CREATE UNIQUE INDEX pk_emergency_required_capabilities ON public.emergency_required_capabilities USING btree (emergency_id, capability_id)"
+    },
+    {
+      "tablename": "emergency_status_history",
+      "indexname": "idx_history_time",
+      "indexdef": "CREATE INDEX idx_history_time ON public.emergency_status_history USING btree (emergency_id, changed_at DESC)"
+    },
+    {
+      "tablename": "emergency_status_history",
+      "indexname": "pk_emergency_status_history",
+      "indexdef": "CREATE UNIQUE INDEX pk_emergency_status_history ON public.emergency_status_history USING btree (history_id)"
+    },
+    {
+      "tablename": "emergency_types",
+      "indexname": "pk_emergency_types",
+      "indexdef": "CREATE UNIQUE INDEX pk_emergency_types ON public.emergency_types USING btree (type_id)"
+    },
+    {
+      "tablename": "locations",
+      "indexname": "pk_locations",
+      "indexdef": "CREATE UNIQUE INDEX pk_locations ON public.locations USING btree (location_id)"
+    },
+    {
+      "tablename": "maintenance_records",
+      "indexname": "pk_maintenance_records",
+      "indexdef": "CREATE UNIQUE INDEX pk_maintenance_records ON public.maintenance_records USING btree (maintenance_id)"
+    },
+    {
+      "tablename": "resource_capabilities",
+      "indexname": "pk_resource_capabilities",
+      "indexdef": "CREATE UNIQUE INDEX pk_resource_capabilities ON public.resource_capabilities USING btree (resource_id, capability_id)"
+    },
+    {
+      "tablename": "resource_tags",
+      "indexname": "pk_resource_tags",
+      "indexdef": "CREATE UNIQUE INDEX pk_resource_tags ON public.resource_tags USING btree (resource_id, tag)"
+    },
+    {
+      "tablename": "resource_types",
+      "indexname": "pk_resource_types",
+      "indexdef": "CREATE UNIQUE INDEX pk_resource_types ON public.resource_types USING btree (type_id)"
+    },
+    {
+      "tablename": "resources",
+      "indexname": "pk_resources",
+      "indexdef": "CREATE UNIQUE INDEX pk_resources ON public.resources USING btree (resource_id)"
+    },
+    {
+      "tablename": "responder_reports",
+      "indexname": "pk_responder_reports",
+      "indexdef": "CREATE UNIQUE INDEX pk_responder_reports ON public.responder_reports USING btree (report_id)"
+    },
+    {
+      "tablename": "responder_skills",
+      "indexname": "pk_responder_skills",
+      "indexdef": "CREATE UNIQUE INDEX pk_responder_skills ON public.responder_skills USING btree (responder_id, skill)"
+    },
+    {
+      "tablename": "responders",
+      "indexname": "pk_responders",
+      "indexdef": "CREATE UNIQUE INDEX pk_responders ON public.responders USING btree (responder_id)"
+    },
+    {
+      "tablename": "responders",
+      "indexname": "uq_responder_user",
+      "indexdef": "CREATE UNIQUE INDEX uq_responder_user ON public.responders USING btree (user_id)"
+    },
+    {
+      "tablename": "roles",
+      "indexname": "pk_roles",
+      "indexdef": "CREATE UNIQUE INDEX pk_roles ON public.roles USING btree (role_id)"
+    },
+    {
+      "tablename": "users",
+      "indexname": "pk_users",
+      "indexdef": "CREATE UNIQUE INDEX pk_users ON public.users USING btree (user_id)"
+    },
+    {
+      "tablename": "users",
+      "indexname": "uq_users_email",
+      "indexdef": "CREATE UNIQUE INDEX uq_users_email ON public.users USING btree (email)"
+    }
+  ]
+}
