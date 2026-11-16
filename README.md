@@ -23,6 +23,7 @@ Install Node.js 24 or later and MongoDB Community Server. Install pnpm using you
 
 ```powershell
 pnpm install --frozen-lockfile
+pnpm setup
 pnpm mongo
 ```
 
@@ -34,7 +35,7 @@ In a second terminal, in the project folder:
 pnpm dev
 ```
 
-Open http://127.0.0.1:3100. Loading the application initializes the SQL schema and seed once. Read the local generated `data/demo-accounts.json` for the random demonstration password. Do not publish this file. An optional `DEMO_PASSWORD` environment variable can set the first-run password; it must contain at least 12 characters. Updating the environment does not change passwords in an existing database.
+Before starting the app, run `pnpm setup` and choose a 12 to 200 character demonstration password using hidden input. Setup initializes the SQL database, gives each synthetic account an independently salted scrypt hash and creates no plaintext password file. Running setup again resets these local demonstration passwords and revokes sessions. Stop the app before running setup against its PGlite directory. Use the password you chose at http://127.0.0.1:3100. Automated setup may receive DEMO_PASSWORD through the process environment; never commit a real password or put it in source files.
 
 | Account | Role |
 |---|---|
@@ -103,7 +104,7 @@ pnpm test
 node scripts/http-smoke.mjs
 ```
 
-The integration tests use a fresh temporary SQL directory, separate credential file and uniquely named MongoDB database. They do not alter the demonstration database; the temporary MongoDB database is removed after testing. HTTP smoke checks use the running demonstration app and clean up their temporary note. Evidence files are written to `test-results/` and copies are included in the delivery package.
+The integration tests use a fresh temporary SQL directory, no credential artifact and a uniquely named MongoDB database. They do not alter the demonstration database; the temporary MongoDB database is removed after testing. HTTP smoke checks use the running demonstration app and clean up their temporary note. Evidence files are written to `test-results/` and copies are included in the delivery package.
 
 ## Git and student contribution
 
@@ -119,3 +120,10 @@ The delivered implementation and documentation were generated with coding assist
 - https://www.postgresql.org/docs/current/ddl-rowsecurity.html
 - https://www.mongodb.com/docs/manual/core/schema-validation/
 - https://www.mongodb.com/docs/manual/text-search/
+
+## Requirements and design documentation
+
+See docs/PROJECT_SPECIFICATION.md for the problem, objectives, scope, functional requirements, conclusion and future work; docs/DATA_DICTIONARY.md for generated SQL metadata; docs/ARCHITECTURE.md for system and failure boundaries; and docs/LEVEL3_REQUIREMENTS_AUDIT.md for the full brief comparison. Resource tag create/rename/remove actions demonstrate SQL DML through the Resources screen. Run database/06_ddl_demo.sql for isolated CREATE/ALTER/DROP practice.
+
+HTTP checks request the current password using hidden input, or accept TEST_PASSWORD in the process environment. They do not read or create a password file.
+
