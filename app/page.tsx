@@ -36,6 +36,7 @@ export default function Home() {
     [editing, setEditing] = useState<Row | null>(null),
     [query, setQuery] = useState("join"),
     [queryResult, setQueryResult] = useState<Row | null>(null);
+  const [tagEditing,setTagEditing]=useState<{resource_id:number;tag:string}|null>(null);
   const refresh = useCallback(async () => {
     setData(await api("dashboard"));
   }, []);
@@ -551,6 +552,29 @@ export default function Home() {
                       <p>
                         Capacity {r.capacity} · Resource #{r.resource_id}
                       </p>
+                      <div className="resource-tags" aria-label={`Tags for ${r.resource_name}`}>
+                        {(data?.resourceTags||[]).filter((t:Row)=>t.resource_id===r.resource_id).map((t:Row)=><div className="resource-tag" key={t.tag}>
+                          <span className="badge">{t.tag}</span>
+                          {["Coordinator","Technician"].includes(user.role_name)&&<>
+                            <button type="button" aria-label={`Rename ${t.tag} on ${r.resource_name}`} onClick={()=>setTagEditing({resource_id:r.resource_id,tag:t.tag})}>Rename</button>
+                            <button type="button" disabled={busy} aria-label={`Remove ${t.tag} from ${r.resource_name}`} onClick={()=>void action(async()=>{
+                              if(!confirm(`Remove the tag ${t.tag} from ${r.resource_name}?`))return;
+                              await api("resource-tags","DELETE",{resource_id:r.resource_id,tag:t.tag});await refresh();setMessage("Resource tag removed from PostgreSQL.");
+                            })}>Remove</button>
+                          </>}
+                        </div>)}
+                      </div>
+                      {["Coordinator","Technician"].includes(user.role_name)&&<form className="resource-tag-form" key={tagEditing?.resource_id===r.resource_id?(tagEditing?.tag||'new'):'new'} onSubmit={e=>{
+                        const el=e.currentTarget;const d=form(e);void action(async()=>{
+                          const current=tagEditing?.resource_id===r.resource_id?tagEditing:null;
+                          await api("resource-tags",current?"PATCH":"POST",current?{resource_id:r.resource_id,tag:current.tag,new_tag:d.tag}:{resource_id:r.resource_id,tag:d.tag});
+                          setTagEditing(null);el.reset();await refresh();setMessage(current?"Resource tag renamed in PostgreSQL.":"Resource tag saved to PostgreSQL.");
+                        });
+                      }}>
+                        <label>{tagEditing?.resource_id===r.resource_id?'Rename tag':'Add resource tag'}<input name="tag" required minLength={1} maxLength={100} defaultValue={tagEditing?.resource_id===r.resource_id?(tagEditing?.tag||''):''}/></label>
+                        <button type="submit" disabled={busy}>Save tag</button>
+                        {tagEditing?.resource_id===r.resource_id&&<button type="button" onClick={()=>setTagEditing(null)}>Cancel rename</button>}
+                      </form>}
                     </article>
                   ))}
                 </div>
@@ -862,3 +886,4 @@ function ResultTable({ rows }: { rows: Row[] }) {
     </div>
   );
 }
+
