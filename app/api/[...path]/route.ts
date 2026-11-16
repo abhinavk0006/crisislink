@@ -8,6 +8,9 @@ import {
   complete,
   maintenance,
   runQuery,
+  addResourceTag,
+  updateResourceTag,
+  removeResourceTag,
 } from "@/lib/service";
 import { listNotes, createNote, updateNote, deleteNote } from "@/lib/mongo";
 export const runtime = "nodejs";
@@ -68,6 +71,11 @@ async function handler(req: NextRequest) {
       return respond(await complete(actor, await req.json()));
     if (path === "maintenance" && method === "POST")
       return respond(await maintenance(actor, await req.json()), 201);
+    if (path === "resource-tags") {
+      if (method === "POST") return respond(await addResourceTag(actor,await req.json()),201);
+      if (method === "PATCH") return respond(await updateResourceTag(actor,await req.json()));
+      if (method === "DELETE") return respond(await removeResourceTag(actor,await req.json()));
+    }
     if (path === "queries" && method === "GET")
       return respond(
         await runQuery(actor, req.nextUrl.searchParams.get("key") || "join"),
