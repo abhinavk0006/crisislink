@@ -1,0 +1,17 @@
+{
+  "checkedAt": "2026-11-16T19:23:43.946Z",
+  "passed": 11,
+  "checks": [
+    "Unauthenticated dashboard returns 401",
+    "Coordinator login sets an HttpOnly SameSite session cookie",
+    "Authenticated dashboard is served without credential data",
+    "Cross-origin write is rejected",
+    "Invalid incident body is rejected",
+    "Responder login and API write denial",
+    "Technician login and field-note write denial",
+    "HTTP MongoDB create read search update delete",
+    "Live SQL CTE query returns records",
+    "HTTP incident dispatch and responder completion persist together",
+    "Logout invalidates an existing session"
+  ]
+}

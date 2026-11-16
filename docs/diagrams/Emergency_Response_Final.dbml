@@ -1,0 +1,189 @@
+Project Emergency_Response {
+  database_type: "MySQL"
+}
+
+Table roles {
+  role_id integer [pk, not null]
+  role_name varchar(255)
+  description text
+}
+
+Table users {
+  user_id integer [pk, not null]
+  full_name varchar(255)
+  email varchar(255)
+  password_hash varchar(255)
+  phone varchar(255)
+  role_id integer
+  status varchar(255)
+  created_at timestamp
+}
+
+Table emergency_types {
+  type_id integer [pk, not null]
+  type_name varchar(255)
+  description text
+}
+
+Table locations {
+  location_id integer [pk, not null]
+  location_name varchar(255)
+  address text
+  latitude decimal(10,7)
+  longitude decimal(10,7)
+  risk_level varchar(255)
+}
+
+Table emergencies {
+  emergency_id integer [pk, not null]
+  type_id integer
+  location_id integer
+  reported_by integer
+  description text
+  severity_level varchar(255)
+  people_affected integer
+  status varchar(255)
+  reported_at timestamp
+  updated_at timestamp
+}
+
+Table emergency_status_history {
+  history_id integer [pk, not null]
+  emergency_id integer
+  status varchar(255)
+  remarks text
+  changed_by integer
+  changed_at timestamp
+}
+
+Table capabilities {
+  capability_id integer [pk, not null]
+  capability_name varchar(255)
+  description text
+}
+
+Table emergency_required_capabilities {
+  emergency_id integer [not null]
+  capability_id integer [not null]
+  location_id integer
+  location_name varchar(255)
+  address text
+  quantity_required integer
+  indexes {
+    (emergency_id, capability_id) [pk]
+  }
+}
+
+Table responders {
+  responder_id integer [pk, not null]
+  user_id integer
+  employee_id varchar(255)
+  team varchar(255)
+  status varchar(255)
+}
+
+Table resource_types {
+  type_id integer [pk, not null]
+  type_name varchar(255)
+  description text
+}
+
+Table resources {
+  resource_id integer [pk, not null]
+  type_id integer
+  resource_name varchar(255)
+  call_sign varchar(255)
+  status varchar(255)
+  current_location_id integer
+  capacity integer
+}
+
+Table resource_capabilities {
+  resource_id integer [not null]
+  capability_id integer [not null]
+  proficiency_level varchar(255)
+  indexes {
+    (resource_id, capability_id) [pk]
+  }
+}
+
+Table assignments {
+  assignment_id integer [pk, not null]
+  emergency_id integer
+  resource_id integer
+  assigned_by integer
+  assigned_at timestamp
+  dispatch_time timestamp
+  status varchar(255)
+  remarks text
+  responder_id integer
+}
+
+Table maintenance_records {
+  maintenance_id integer [pk, not null]
+  resource_id integer
+  maintenance_type varchar(255)
+  description text
+  performed_on timestamp
+  next_due_date date
+  status varchar(255)
+  performed_by integer
+  cost decimal(12,2)
+  assignment_id integer
+}
+
+Table responder_reports {
+  report_id integer [pk, not null]
+  emergency_id integer
+  responder_id integer
+  initial_assessment text
+  actions_taken text
+  resources_used text
+  people_affected integer
+  outcome text
+  reported_at timestamp
+  assignment_id integer
+}
+
+Table responder_skills {
+  responder_id integer [not null]
+  skill varchar(100) [not null]
+  indexes {
+    (responder_id, skill) [pk]
+  }
+}
+
+Table resource_tags {
+  resource_id integer [not null]
+  tag varchar(100) [not null]
+  indexes {
+    (resource_id, tag) [pk]
+  }
+}
+
+Ref: users.role_id >? roles.role_id
+Ref: emergencies.reported_by >? users.user_id
+Ref: emergencies.location_id >? locations.location_id
+Ref: emergencies.type_id >? emergency_types.type_id
+Ref: emergency_status_history.changed_by >? users.user_id
+Ref: emergency_status_history.emergency_id >? emergencies.emergency_id
+Ref: emergency_required_capabilities.location_id >? locations.location_id
+Ref: emergency_required_capabilities.emergency_id > emergencies.emergency_id
+Ref: emergency_required_capabilities.capability_id > capabilities.capability_id
+Ref: responders.user_id >? users.user_id
+Ref: resources.current_location_id >? locations.location_id
+Ref: resources.type_id >? resource_types.type_id
+Ref: resource_capabilities.capability_id > capabilities.capability_id
+Ref: resource_capabilities.resource_id > resources.resource_id
+Ref: assignments.responder_id >? responders.responder_id
+Ref: assignments.assigned_by >? users.user_id
+Ref: assignments.emergency_id >? emergencies.emergency_id
+Ref: assignments.resource_id >? resources.resource_id
+Ref: maintenance_records.assignment_id >? assignments.assignment_id
+Ref: maintenance_records.performed_by >? users.user_id
+Ref: maintenance_records.resource_id >? resources.resource_id
+Ref: responder_reports.assignment_id >? assignments.assignment_id
+Ref: responder_reports.responder_id >? responders.responder_id
+Ref: responder_reports.emergency_id >? emergencies.emergency_id
+Ref: responder_skills.responder_id > responders.responder_id
+Ref: resource_tags.resource_id > resources.resource_id

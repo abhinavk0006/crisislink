@@ -1,0 +1,21 @@
+{
+  "pdfPageSize": "A4",
+  "pdfPages": 18,
+  "outageChecks": 2,
+  "integrationChecks": 23,
+  "httpChecks": 11,
+  "typecheck": {
+    "exitCode": 0,
+    "command": "tsc --noEmit"
+  },
+  "checkedOn": "2026-11-17 Asia/Calcutta",
+  "productionBuild": {
+    "routes": [
+      "/",
+      "/api/[...path]"
+    ],
+    "exitCode": 0,
+    "command": "next build --webpack"
+  },
+  "evaluationRubricsInReport": false
+}

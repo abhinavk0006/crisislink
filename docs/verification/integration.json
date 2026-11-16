@@ -1,0 +1,31 @@
+{
+  "checkedAt": "2026-11-16T19:12:18.307Z",
+  "passed": 23,
+  "checks": [
+    "Supplied seed has 17 domain tables and 63 rows",
+    "Passwords are hashed and valid sign in creates a revocable session",
+    "Invalid login and absent session are rejected",
+    "All three roles can retrieve dashboard without credential data",
+    "Database denies responder incident INSERT independently of the API",
+    "Database denies responder access to password hashes and session tokens",
+    "Primary key foreign key and numerical CHECK reject invalid data",
+    "DML demonstration rolls back INSERT UPDATE DELETE",
+    "Creating an incident generates exactly one audit event with an accurate timestamp",
+    "Failed requirement insert rolls back incident and audit together",
+    "API service rejects technician and responder incident writes",
+    "Stored dispatch function reserves one resource and one responder atomically",
+    "Conflicting dispatch is rejected with no partial assignment",
+    "Unchanged status does not generate duplicate audit records",
+    "Responder cannot complete another responder assignment",
+    "MongoDB supports create read full-text search aggregation update delete",
+    "NoSQL validates SQL references assignment scope and ownership",
+    "MongoDB collection validator rejects malformed direct inserts",
+    "Completing response releases resources creates report and resolves incident",
+    "Database role grants and RLS enforce maintenance author identity",
+    "JOIN nested correlated CTE recursive view and aggregate queries execute",
+    "Password comparison rejects database-style injection input",
+    "Login throttling blocks repeated failures"
+  ],
+  "database": "PostgreSQL through PGlite and real MongoDB",
+  "isolation": "Temporary SQL directory and uniquely named MongoDB database"
+}

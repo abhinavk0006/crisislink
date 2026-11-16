@@ -1,0 +1,713 @@
+--------------
+CREATE DATABASE emergency_response_demo CHARACTER SET utf8mb4
+--------------
+
+--------------
+CREATE TABLE roles (
+    role_id INTEGER NOT NULL,
+    role_name VARCHAR(255),
+    description TEXT,
+    CONSTRAINT pk_roles PRIMARY KEY (role_id)
+) ENGINE=InnoDB
+--------------
+
+--------------
+CREATE TABLE users (
+    user_id INTEGER NOT NULL,
+    full_name VARCHAR(255),
+    email VARCHAR(255),
+    password_hash VARCHAR(255),
+    phone VARCHAR(255),
+    role_id INTEGER,
+    status VARCHAR(255),
+    created_at TIMESTAMP NULL DEFAULT NULL,
+    CONSTRAINT pk_users PRIMARY KEY (user_id),
+    CONSTRAINT fk_user_role FOREIGN KEY (role_id)
+        REFERENCES roles (role_id)
+        ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB
+--------------
+
+--------------
+CREATE TABLE emergency_types (
+    type_id INTEGER NOT NULL,
+    type_name VARCHAR(255),
+    description TEXT,
+    CONSTRAINT pk_emergency_types PRIMARY KEY (type_id)
+) ENGINE=InnoDB
+--------------
+
+--------------
+CREATE TABLE locations (
+    location_id INTEGER NOT NULL,
+    location_name VARCHAR(255),
+    address TEXT,
+    latitude DECIMAL(10,7),
+    longitude DECIMAL(10,7),
+    risk_level VARCHAR(255),
+    CONSTRAINT pk_locations PRIMARY KEY (location_id),
+    CONSTRAINT ck_latitude CHECK (latitude BETWEEN -90 AND 90),
+    CONSTRAINT ck_longitude CHECK (longitude BETWEEN -180 AND 180)
+) ENGINE=InnoDB
+--------------
+
+--------------
+CREATE TABLE emergencies (
+    emergency_id INTEGER NOT NULL,
+    type_id INTEGER,
+    location_id INTEGER,
+    reported_by INTEGER,
+    description TEXT,
+    severity_level VARCHAR(255),
+    people_affected INTEGER,
+    status VARCHAR(255),
+    reported_at TIMESTAMP NULL DEFAULT NULL,
+    updated_at TIMESTAMP NULL DEFAULT NULL,
+    CONSTRAINT pk_emergencies PRIMARY KEY (emergency_id),
+    CONSTRAINT fk_emergency_type FOREIGN KEY (type_id)
+        REFERENCES emergency_types (type_id)
+        ON DELETE NO ACTION ON UPDATE NO ACTION,
+    CONSTRAINT fk_emergency_location FOREIGN KEY (location_id)
+        REFERENCES locations (location_id)
+        ON DELETE NO ACTION ON UPDATE NO ACTION,
+    CONSTRAINT fk_reports FOREIGN KEY (reported_by)
+        REFERENCES users (user_id)
+        ON DELETE NO ACTION ON UPDATE NO ACTION,
+    CONSTRAINT ck_people_affected CHECK (people_affected >= 0)
+) ENGINE=InnoDB
+--------------
+
+--------------
+CREATE TABLE emergency_status_history (
+    history_id INTEGER NOT NULL,
+    emergency_id INTEGER,
+    status VARCHAR(255),
+    remarks TEXT,
+    changed_by INTEGER,
+    changed_at TIMESTAMP NULL DEFAULT NULL,
+    CONSTRAINT pk_emergency_status_history PRIMARY KEY (history_id),
+    CONSTRAINT fk_emergency_history FOREIGN KEY (emergency_id)
+        REFERENCES emergencies (emergency_id)
+        ON DELETE NO ACTION ON UPDATE NO ACTION,
+    CONSTRAINT fk_history_author FOREIGN KEY (changed_by)
+        REFERENCES users (user_id)
+        ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB
+--------------
+
+--------------
+CREATE TABLE capabilities (
+    capability_id INTEGER NOT NULL,
+    capability_name VARCHAR(255),
+    description TEXT,
+    CONSTRAINT pk_capabilities PRIMARY KEY (capability_id)
+) ENGINE=InnoDB
+--------------
+
+--------------
+CREATE TABLE emergency_required_capabilities (
+    emergency_id INTEGER NOT NULL,
+    capability_id INTEGER NOT NULL,
+    location_id INTEGER,
+    location_name VARCHAR(255),
+    address TEXT,
+    quantity_required INTEGER,
+    CONSTRAINT pk_emergency_required_capabilities PRIMARY KEY (emergency_id, capability_id),
+    CONSTRAINT fk_requires_for FOREIGN KEY (capability_id)
+        REFERENCES capabilities (capability_id)
+        ON DELETE NO ACTION ON UPDATE NO ACTION,
+    CONSTRAINT fk_requirement_emergency FOREIGN KEY (emergency_id)
+        REFERENCES emergencies (emergency_id)
+        ON DELETE NO ACTION ON UPDATE NO ACTION,
+    CONSTRAINT fk_requirement_location FOREIGN KEY (location_id)
+        REFERENCES locations (location_id)
+        ON DELETE NO ACTION ON UPDATE NO ACTION,
+    CONSTRAINT ck_quantity CHECK (quantity_required >= 0)
+) ENGINE=InnoDB
+--------------
+
+--------------
+CREATE TABLE responders (
+    responder_id INTEGER NOT NULL,
+    user_id INTEGER,
+    employee_id VARCHAR(255),
+    team VARCHAR(255),
+    status VARCHAR(255),
+    CONSTRAINT pk_responders PRIMARY KEY (responder_id),
+    CONSTRAINT fk_responder_user FOREIGN KEY (user_id)
+        REFERENCES users (user_id)
+        ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB
+--------------
+
+--------------
+CREATE TABLE resource_types (
+    type_id INTEGER NOT NULL,
+    type_name VARCHAR(255),
+    description TEXT,
+    CONSTRAINT pk_resource_types PRIMARY KEY (type_id)
+) ENGINE=InnoDB
+--------------
+
+--------------
+CREATE TABLE resources (
+    resource_id INTEGER NOT NULL,
+    type_id INTEGER,
+    resource_name VARCHAR(255),
+    call_sign VARCHAR(255),
+    status VARCHAR(255),
+    current_location_id INTEGER,
+    capacity INTEGER,
+    CONSTRAINT pk_resources PRIMARY KEY (resource_id),
+    CONSTRAINT fk_resource_type FOREIGN KEY (type_id)
+        REFERENCES resource_types (type_id)
+        ON DELETE NO ACTION ON UPDATE NO ACTION,
+    CONSTRAINT fk_resource_location FOREIGN KEY (current_location_id)
+        REFERENCES locations (location_id)
+        ON DELETE NO ACTION ON UPDATE NO ACTION,
+    CONSTRAINT ck_capacity CHECK (capacity >= 0)
+) ENGINE=InnoDB
+--------------
+
+--------------
+CREATE TABLE resource_capabilities (
+    resource_id INTEGER NOT NULL,
+    capability_id INTEGER NOT NULL,
+    proficiency_level VARCHAR(255),
+    CONSTRAINT pk_resource_capabilities PRIMARY KEY (resource_id, capability_id),
+    CONSTRAINT fk_possesses FOREIGN KEY (resource_id)
+        REFERENCES resources (resource_id)
+        ON DELETE NO ACTION ON UPDATE NO ACTION,
+    CONSTRAINT fk_resource_capability FOREIGN KEY (capability_id)
+        REFERENCES capabilities (capability_id)
+        ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB
+--------------
+
+--------------
+CREATE TABLE assignments (
+    assignment_id INTEGER NOT NULL,
+    emergency_id INTEGER,
+    resource_id INTEGER,
+    assigned_by INTEGER,
+    assigned_at TIMESTAMP NULL DEFAULT NULL,
+    dispatch_time TIMESTAMP NULL DEFAULT NULL,
+    status VARCHAR(255),
+    remarks TEXT,
+    responder_id INTEGER,
+    CONSTRAINT pk_assignments PRIMARY KEY (assignment_id),
+    CONSTRAINT fk_assigned_in FOREIGN KEY (resource_id)
+        REFERENCES resources (resource_id)
+        ON DELETE NO ACTION ON UPDATE NO ACTION,
+    CONSTRAINT fk_assignment_emergency FOREIGN KEY (emergency_id)
+        REFERENCES emergencies (emergency_id)
+        ON DELETE NO ACTION ON UPDATE NO ACTION,
+    CONSTRAINT fk_assignment_author FOREIGN KEY (assigned_by)
+        REFERENCES users (user_id)
+        ON DELETE NO ACTION ON UPDATE NO ACTION,
+    CONSTRAINT fk_submits_drawn FOREIGN KEY (responder_id)
+        REFERENCES responders (responder_id)
+        ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB
+--------------
+
+--------------
+CREATE TABLE maintenance_records (
+    maintenance_id INTEGER NOT NULL,
+    resource_id INTEGER,
+    maintenance_type VARCHAR(255),
+    description TEXT,
+    performed_on TIMESTAMP NULL DEFAULT NULL,
+    next_due_date DATE,
+    status VARCHAR(255),
+    performed_by INTEGER,
+    cost DECIMAL(12,2),
+    assignment_id INTEGER,
+    CONSTRAINT pk_maintenance_records PRIMARY KEY (maintenance_id),
+    CONSTRAINT fk_maintenance_resource FOREIGN KEY (resource_id)
+        REFERENCES resources (resource_id)
+        ON DELETE NO ACTION ON UPDATE NO ACTION,
+    CONSTRAINT fk_maintenance_author FOREIGN KEY (performed_by)
+        REFERENCES users (user_id)
+        ON DELETE NO ACTION ON UPDATE NO ACTION,
+    CONSTRAINT fk_has_drawn FOREIGN KEY (assignment_id)
+        REFERENCES assignments (assignment_id)
+        ON DELETE NO ACTION ON UPDATE NO ACTION,
+    CONSTRAINT ck_cost CHECK (cost >= 0)
+) ENGINE=InnoDB
+--------------
+
+--------------
+CREATE TABLE responder_reports (
+    report_id INTEGER NOT NULL,
+    emergency_id INTEGER,
+    responder_id INTEGER,
+    initial_assessment TEXT,
+    actions_taken TEXT,
+    resources_used TEXT,
+    people_affected INTEGER,
+    outcome TEXT,
+    reported_at TIMESTAMP NULL DEFAULT NULL,
+    assignment_id INTEGER,
+    CONSTRAINT pk_responder_reports PRIMARY KEY (report_id),
+    CONSTRAINT fk_report_emergency FOREIGN KEY (emergency_id)
+        REFERENCES emergencies (emergency_id)
+        ON DELETE NO ACTION ON UPDATE NO ACTION,
+    CONSTRAINT fk_report_responder FOREIGN KEY (responder_id)
+        REFERENCES responders (responder_id)
+        ON DELETE NO ACTION ON UPDATE NO ACTION,
+    CONSTRAINT fk_report_assignment_drawn FOREIGN KEY (assignment_id)
+        REFERENCES assignments (assignment_id)
+        ON DELETE NO ACTION ON UPDATE NO ACTION,
+    CONSTRAINT ck_report_people CHECK (people_affected >= 0)
+) ENGINE=InnoDB
+--------------
+
+--------------
+CREATE TABLE responder_skills (
+    responder_id INTEGER NOT NULL,
+    skill VARCHAR(100) NOT NULL,
+    CONSTRAINT pk_responder_skills PRIMARY KEY (responder_id, skill),
+    CONSTRAINT fk_responder_skills FOREIGN KEY (responder_id)
+        REFERENCES responders (responder_id)
+        ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB
+--------------
+
+--------------
+CREATE TABLE resource_tags (
+    resource_id INTEGER NOT NULL,
+    tag VARCHAR(100) NOT NULL,
+    CONSTRAINT pk_resource_tags PRIMARY KEY (resource_id, tag),
+    CONSTRAINT fk_resource_tags FOREIGN KEY (resource_id)
+        REFERENCES resources (resource_id)
+        ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB
+--------------
+
+--------------
+START TRANSACTION
+--------------
+
+--------------
+INSERT INTO roles VALUES
+(1,'Coordinator','Assigns response teams'),
+(2,'Responder','Responds to incidents'),
+(3,'Technician','Maintains equipment')
+--------------
+
+--------------
+INSERT INTO users VALUES
+(1,'Demo Coordinator','coordinator@example.com','DEMO_NOT_A_REAL_HASH','9000000001',1,'active','2026-10-30 08:00:00'),
+(2,'Demo Firefighter','fire@example.com','DEMO_NOT_A_REAL_HASH','9000000002',2,'active','2026-10-30 08:00:00'),
+(3,'Demo Medic','medic@example.com','DEMO_NOT_A_REAL_HASH','9000000003',2,'active','2026-10-30 08:00:00'),
+(4,'Demo Rescue Worker','rescue@example.com','DEMO_NOT_A_REAL_HASH','9000000004',2,'active','2026-10-30 08:00:00'),
+(5,'Demo Technician','tech@example.com','DEMO_NOT_A_REAL_HASH','9000000005',3,'active','2026-10-30 08:00:00')
+--------------
+
+--------------
+INSERT INTO emergency_types VALUES
+(1,'Fire','Building or outdoor fire'),(2,'Medical','Medical assistance'),(3,'Flood','Water rescue')
+--------------
+
+--------------
+INSERT INTO locations VALUES
+(1,'Demo Market','Training Road A',12.9716,77.5946,'high'),
+(2,'Demo Campus','Training Road B',12.9352,77.6245,'medium'),
+(3,'Demo Riverside','Training Road C',13.0100,77.5800,'high')
+--------------
+
+--------------
+INSERT INTO emergencies VALUES
+(101,1,1,1,'Training warehouse fire','high',20,'responding','2026-10-30 09:00:00','2026-10-30 09:10:00'),
+(102,2,2,1,'Training medical incident','medium',2,'resolved','2026-10-30 10:00:00','2026-10-30 10:45:00'),
+(103,3,3,1,'Training flood rescue','high',12,'responding','2026-10-30 11:00:00','2026-10-30 11:10:00')
+--------------
+
+--------------
+INSERT INTO emergency_status_history VALUES
+(1,101,'reported','Call registered',1,'2026-10-30 09:00:00'),
+(2,101,'responding','Fire team dispatched',1,'2026-10-30 09:10:00'),
+(3,102,'reported','Call registered',1,'2026-10-30 10:00:00'),
+(4,102,'resolved','Patient transferred safely',3,'2026-10-30 10:45:00'),
+(5,103,'reported','Call registered',1,'2026-10-30 11:00:00'),
+(6,103,'responding','Boat dispatched',1,'2026-10-30 11:10:00')
+--------------
+
+--------------
+INSERT INTO capabilities VALUES
+(1,'Fire suppression','Extinguish fires'),(2,'Medical support','Provide first aid'),(3,'Water rescue','Rescue from floodwater')
+--------------
+
+--------------
+INSERT INTO emergency_required_capabilities VALUES
+(101,1,1,'Demo Market','Training Road A',1),
+(102,2,2,'Demo Campus','Training Road B',1),
+(103,3,3,'Demo Riverside','Training Road C',1)
+--------------
+
+--------------
+INSERT INTO responders VALUES
+(1,2,'EMP-F01','Fire Team','on_duty'),
+(2,3,'EMP-M01','Medical Team','available'),
+(3,4,'EMP-R01','Rescue Team','on_duty')
+--------------
+
+--------------
+INSERT INTO resource_types VALUES
+(1,'Fire engine','Fire response vehicle'),(2,'Ambulance','Medical transport'),(3,'Rescue boat','Water rescue craft')
+--------------
+
+--------------
+INSERT INTO resources VALUES
+(201,1,'Demo Fire Engine','FIRE-01','assigned',1,6),
+(202,2,'Demo Ambulance','MED-01','available',2,2),
+(203,3,'Demo Rescue Boat','RESCUE-01','assigned',3,8)
+--------------
+
+--------------
+INSERT INTO resource_capabilities VALUES
+(201,1,'advanced'),(201,2,'basic'),(202,2,'advanced'),(203,3,'advanced')
+--------------
+
+--------------
+INSERT INTO assignments VALUES
+(301,101,201,1,'2026-10-30 09:05:00','2026-10-30 09:10:00','dispatched','Fire engine dispatched',1),
+(302,102,202,1,'2026-10-30 10:05:00','2026-10-30 10:10:00','completed','Medical response completed',2),
+(303,103,203,1,'2026-10-30 11:05:00','2026-10-30 11:10:00','dispatched','Boat dispatched',3)
+--------------
+
+--------------
+INSERT INTO maintenance_records VALUES
+(401,201,'Inspection','Post-drill inspection','2026-10-30 12:00:00','2026-11-30','completed',5,1500.00,301),
+(402,202,'Sanitization','Post-response cleaning','2026-10-30 12:15:00','2026-11-06','completed',5,500.00,302),
+(403,203,'Engine service','Post-drill engine check','2026-10-30 12:30:00','2026-11-30','completed',5,2200.00,303)
+--------------
+
+--------------
+INSERT INTO responder_reports VALUES
+(501,101,1,'Smoke in warehouse','Evacuation in progress','Fire engine and hoses',20,'Response ongoing','2026-10-30 09:30:00',301),
+(502,102,2,'Two patients need care','First aid and transport','Ambulance and medical kit',2,'Patients transferred','2026-10-30 10:45:00',302),
+(503,103,3,'People stranded','Rescue operation started','Boat and life jackets',12,'Response ongoing','2026-10-30 11:30:00',303)
+--------------
+
+--------------
+INSERT INTO responder_skills VALUES
+(1,'Fire suppression'),(1,'First aid'),(2,'First aid'),(2,'Patient transport'),(3,'Swimming'),(3,'Water rescue')
+--------------
+
+--------------
+INSERT INTO resource_tags VALUES
+(201,'fire'),(201,'heavy_vehicle'),(202,'medical'),(202,'patient_transport'),(203,'water'),(203,'rescue')
+--------------
+
+--------------
+COMMIT
+--------------
+
+--------------
+SELECT DATABASE()
+--------------
+
++-------------------------+
+| DATABASE()              |
++-------------------------+
+| emergency_response_demo |
++-------------------------+
+--------------
+SHOW TABLES
+--------------
+
++-----------------------------------+
+| Tables_in_emergency_response_demo |
++-----------------------------------+
+| assignments                       |
+| capabilities                      |
+| emergencies                       |
+| emergency_required_capabilities   |
+| emergency_status_history          |
+| emergency_types                   |
+| locations                         |
+| maintenance_records               |
+| resource_capabilities             |
+| resource_tags                     |
+| resource_types                    |
+| resources                         |
+| responder_reports                 |
+| responder_skills                  |
+| responders                        |
+| roles                             |
+| users                             |
++-----------------------------------+
+--------------
+DESCRIBE emergencies
+--------------
+
++-----------------+--------------+------+-----+---------+-------+
+| Field           | Type         | Null | Key | Default | Extra |
++-----------------+--------------+------+-----+---------+-------+
+| emergency_id    | int          | NO   | PRI | NULL    |       |
+| type_id         | int          | YES  | MUL | NULL    |       |
+| location_id     | int          | YES  | MUL | NULL    |       |
+| reported_by     | int          | YES  | MUL | NULL    |       |
+| description     | text         | YES  |     | NULL    |       |
+| severity_level  | varchar(255) | YES  |     | NULL    |       |
+| people_affected | int          | YES  |     | NULL    |       |
+| status          | varchar(255) | YES  |     | NULL    |       |
+| reported_at     | timestamp    | YES  |     | NULL    |       |
+| updated_at      | timestamp    | YES  |     | NULL    |       |
++-----------------+--------------+------+-----+---------+-------+
+--------------
+DESCRIBE assignments
+--------------
+
++---------------+--------------+------+-----+---------+-------+
+| Field         | Type         | Null | Key | Default | Extra |
++---------------+--------------+------+-----+---------+-------+
+| assignment_id | int          | NO   | PRI | NULL    |       |
+| emergency_id  | int          | YES  | MUL | NULL    |       |
+| resource_id   | int          | YES  | MUL | NULL    |       |
+| assigned_by   | int          | YES  | MUL | NULL    |       |
+| assigned_at   | timestamp    | YES  |     | NULL    |       |
+| dispatch_time | timestamp    | YES  |     | NULL    |       |
+| status        | varchar(255) | YES  |     | NULL    |       |
+| remarks       | text         | YES  |     | NULL    |       |
+| responder_id  | int          | YES  | MUL | NULL    |       |
++---------------+--------------+------+-----+---------+-------+
+--------------
+SHOW CREATE TABLE assignments
+--------------
+
++-------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| Table       | Create Table                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
++-------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| assignments | CREATE TABLE `assignments` (
+  `assignment_id` int NOT NULL,
+  `emergency_id` int DEFAULT NULL,
+  `resource_id` int DEFAULT NULL,
+  `assigned_by` int DEFAULT NULL,
+  `assigned_at` timestamp NULL DEFAULT NULL,
+  `dispatch_time` timestamp NULL DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL,
+  `remarks` text,
+  `responder_id` int DEFAULT NULL,
+  PRIMARY KEY (`assignment_id`),
+  KEY `fk_assigned_in` (`resource_id`),
+  KEY `fk_assignment_emergency` (`emergency_id`),
+  KEY `fk_assignment_author` (`assigned_by`),
+  KEY `fk_submits_drawn` (`responder_id`),
+  CONSTRAINT `fk_assigned_in` FOREIGN KEY (`resource_id`) REFERENCES `resources` (`resource_id`),
+  CONSTRAINT `fk_assignment_author` FOREIGN KEY (`assigned_by`) REFERENCES `users` (`user_id`),
+  CONSTRAINT `fk_assignment_emergency` FOREIGN KEY (`emergency_id`) REFERENCES `emergencies` (`emergency_id`),
+  CONSTRAINT `fk_submits_drawn` FOREIGN KEY (`responder_id`) REFERENCES `responders` (`responder_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci |
++-------------+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+--------------
+SELECT emergency_id, type_id, location_id, severity_level, status FROM emergencies
+--------------
+
++--------------+---------+-------------+----------------+------------+
+| emergency_id | type_id | location_id | severity_level | status     |
++--------------+---------+-------------+----------------+------------+
+|          101 |       1 |           1 | high           | responding |
+|          102 |       2 |           2 | medium         | resolved   |
+|          103 |       3 |           3 | high           | responding |
++--------------+---------+-------------+----------------+------------+
+--------------
+SELECT resource_id, resource_name, status, capacity FROM resources
+--------------
+
++-------------+------------------+-----------+----------+
+| resource_id | resource_name    | status    | capacity |
++-------------+------------------+-----------+----------+
+|         201 | Demo Fire Engine | assigned  |        6 |
+|         202 | Demo Ambulance   | available |        2 |
+|         203 | Demo Rescue Boat | assigned  |        8 |
++-------------+------------------+-----------+----------+
+--------------
+SELECT responder_id, employee_id, team, status FROM responders
+--------------
+
++--------------+-------------+--------------+-----------+
+| responder_id | employee_id | team         | status    |
++--------------+-------------+--------------+-----------+
+|            1 | EMP-F01     | Fire Team    | on_duty   |
+|            2 | EMP-M01     | Medical Team | available |
+|            3 | EMP-R01     | Rescue Team  | on_duty   |
++--------------+-------------+--------------+-----------+
+--------------
+SELECT e.emergency_id, t.type_name, l.location_name, e.people_affected, e.status
+FROM emergencies e
+JOIN emergency_types t ON t.type_id=e.type_id
+JOIN locations l ON l.location_id=e.location_id
+ORDER BY e.emergency_id
+--------------
+
++--------------+-----------+----------------+-----------------+------------+
+| emergency_id | type_name | location_name  | people_affected | status     |
++--------------+-----------+----------------+-----------------+------------+
+|          101 | Fire      | Demo Market    |              20 | responding |
+|          102 | Medical   | Demo Campus    |               2 | resolved   |
+|          103 | Flood     | Demo Riverside |              12 | responding |
++--------------+-----------+----------------+-----------------+------------+
+--------------
+SELECT a.assignment_id, e.emergency_id, r.resource_name, u.full_name AS responder, a.status
+FROM assignments a
+JOIN emergencies e ON e.emergency_id=a.emergency_id
+JOIN resources r ON r.resource_id=a.resource_id
+JOIN responders p ON p.responder_id=a.responder_id
+JOIN users u ON u.user_id=p.user_id
+ORDER BY a.assignment_id
+--------------
+
++---------------+--------------+------------------+--------------------+------------+
+| assignment_id | emergency_id | resource_name    | responder          | status     |
++---------------+--------------+------------------+--------------------+------------+
+|           301 |          101 | Demo Fire Engine | Demo Firefighter   | dispatched |
+|           302 |          102 | Demo Ambulance   | Demo Medic         | completed  |
+|           303 |          103 | Demo Rescue Boat | Demo Rescue Worker | dispatched |
++---------------+--------------+------------------+--------------------+------------+
+--------------
+SELECT e.emergency_id, COUNT(a.assignment_id) AS assignment_count
+FROM emergencies e LEFT JOIN assignments a ON a.emergency_id=e.emergency_id
+GROUP BY e.emergency_id HAVING COUNT(a.assignment_id)>=1
+--------------
+
++--------------+------------------+
+| emergency_id | assignment_count |
++--------------+------------------+
+|          101 |                1 |
+|          102 |                1 |
+|          103 |                1 |
++--------------+------------------+
+--------------
+SELECT r.employee_id, s.skill FROM responders r
+JOIN responder_skills s ON s.responder_id=r.responder_id ORDER BY r.responder_id,s.skill
+--------------
+
++-------------+-------------------+
+| employee_id | skill             |
++-------------+-------------------+
+| EMP-F01     | Fire suppression  |
+| EMP-F01     | First aid         |
+| EMP-M01     | First aid         |
+| EMP-M01     | Patient transport |
+| EMP-R01     | Swimming          |
+| EMP-R01     | Water rescue      |
++-------------+-------------------+
+--------------
+START TRANSACTION
+--------------
+
+--------------
+UPDATE emergencies SET status='resolved' WHERE emergency_id=101
+--------------
+
+--------------
+SELECT emergency_id,status FROM emergencies WHERE emergency_id=101
+--------------
+
++--------------+----------+
+| emergency_id | status   |
++--------------+----------+
+|          101 | resolved |
++--------------+----------+
+--------------
+INSERT INTO resource_tags VALUES (201,'temporary_demo')
+--------------
+
+--------------
+DELETE FROM resource_tags WHERE resource_id=201 AND tag='temporary_demo'
+--------------
+
+--------------
+ROLLBACK
+--------------
+
+--------------
+SELECT emergency_id,status FROM emergencies WHERE emergency_id=101
+--------------
+
++--------------+------------+
+| emergency_id | status     |
++--------------+------------+
+|          101 | responding |
++--------------+------------+
+--------------
+SELECT 'roles' AS table_name, COUNT(*) AS row_count FROM roles
+UNION ALL
+SELECT 'users' AS table_name, COUNT(*) AS row_count FROM users
+UNION ALL
+SELECT 'emergency_types' AS table_name, COUNT(*) AS row_count FROM emergency_types
+UNION ALL
+SELECT 'locations' AS table_name, COUNT(*) AS row_count FROM locations
+UNION ALL
+SELECT 'emergencies' AS table_name, COUNT(*) AS row_count FROM emergencies
+UNION ALL
+SELECT 'emergency_status_history' AS table_name, COUNT(*) AS row_count FROM emergency_status_history
+UNION ALL
+SELECT 'capabilities' AS table_name, COUNT(*) AS row_count FROM capabilities
+UNION ALL
+SELECT 'emergency_required_capabilities' AS table_name, COUNT(*) AS row_count FROM emergency_required_capabilities
+UNION ALL
+SELECT 'responders' AS table_name, COUNT(*) AS row_count FROM responders
+UNION ALL
+SELECT 'resource_types' AS table_name, COUNT(*) AS row_count FROM resource_types
+UNION ALL
+SELECT 'resources' AS table_name, COUNT(*) AS row_count FROM resources
+UNION ALL
+SELECT 'resource_capabilities' AS table_name, COUNT(*) AS row_count FROM resource_capabilities
+UNION ALL
+SELECT 'assignments' AS table_name, COUNT(*) AS row_count FROM assignments
+UNION ALL
+SELECT 'maintenance_records' AS table_name, COUNT(*) AS row_count FROM maintenance_records
+UNION ALL
+SELECT 'responder_reports' AS table_name, COUNT(*) AS row_count FROM responder_reports
+UNION ALL
+SELECT 'responder_skills' AS table_name, COUNT(*) AS row_count FROM responder_skills
+UNION ALL
+SELECT 'resource_tags' AS table_name, COUNT(*) AS row_count FROM resource_tags
+--------------
+
++---------------------------------+-----------+
+| table_name                      | row_count |
++---------------------------------+-----------+
+| roles                           |         3 |
+| users                           |         5 |
+| emergency_types                 |         3 |
+| locations                       |         3 |
+| emergencies                     |         3 |
+| emergency_status_history        |         6 |
+| capabilities                    |         3 |
+| emergency_required_capabilities |         3 |
+| responders                      |         3 |
+| resource_types                  |         3 |
+| resources                       |         3 |
+| resource_capabilities           |         4 |
+| assignments                     |         3 |
+| maintenance_records             |         3 |
+| responder_reports               |         3 |
+| responder_skills                |         6 |
+| resource_tags                   |         6 |
++---------------------------------+-----------+
+--------------
+SELECT COUNT(*) AS table_count FROM information_schema.tables
+WHERE table_schema=DATABASE() AND table_type='BASE TABLE'
+--------------
+
++-------------+
+| table_count |
++-------------+
+|          17 |
++-------------+
+--------------
+SELECT COUNT(*) AS foreign_key_count FROM information_schema.table_constraints
+WHERE constraint_schema=DATABASE() AND constraint_type='FOREIGN KEY'
+--------------
+
++-------------------+
+| foreign_key_count |
++-------------------+
+|                26 |
++-------------------+
+

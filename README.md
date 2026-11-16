@@ -1,0 +1,121 @@
+# CrisisLink
+
+Database Management Systems mini project, UE24CS351A.
+
+Students: Sachin R (PES1UG24CS688) and Abhinav Krishna Kandukuri (PES1UG24CS701).
+
+This runnable reconstruction uses the 17-table model and 63 fictional seed rows in the supplied Final DBMS Presentation Package. The supplied ZIP contains no application source. The former website's description of a 134-row application is a different version and is not the implementation packaged here.
+
+## Stack and scope
+
+- Next.js App Router, React and TypeScript.
+- Real PostgreSQL engine through PGlite, with files persisted under `data/postgres`.
+- Real MongoDB Community Server, with a separate `field_notes` collection. No JSON-file emulation.
+- Three application and PostgreSQL roles: Coordinator, Responder and Technician.
+- Atomic SQL dispatch and completion functions, an automatic status-history trigger, CTE/window/recursive queries, a reporting view, indexes, GRANT/REVOKE and a row-level maintenance policy.
+- MongoDB validation, compound/text indexes, note CRUD, full-text search and tag aggregation.
+
+This is a single-process local classroom demonstration, with fictional incidents. It does not contact real emergency services. PGlite is not a network PostgreSQL server. The source MySQL scripts remain in `database/mysql/` for provenance; the application runs only the PostgreSQL adaptation.
+
+## Run locally
+
+Install Node.js 24 or later and MongoDB Community Server. Install pnpm using your preferred normal Node setup, or use `npx pnpm@11.25.0` in place of `pnpm` below.
+
+```powershell
+pnpm install --frozen-lockfile
+pnpm mongo
+```
+
+Keep MongoDB running in this first terminal. The included helper starts a dedicated instance bound only to 127.0.0.1 on port 27028. Its default Windows binary path is MongoDB Server 8.2; set `MONGOD_BIN` for another installation. Existing database services are not stopped or reconfigured.
+
+In a second terminal, in the project folder:
+
+```powershell
+pnpm dev
+```
+
+Open http://127.0.0.1:3100. Loading the application initializes the SQL schema and seed once. Read the local generated `data/demo-accounts.json` for the random demonstration password. Do not publish this file. An optional `DEMO_PASSWORD` environment variable can set the first-run password; it must contain at least 12 characters. Updating the environment does not change passwords in an existing database.
+
+| Account | Role |
+|---|---|
+| coordinator@example.com | Coordinator |
+| fire@example.com | Responder, EMP-F01 |
+| medic@example.com | Responder, EMP-M01 |
+| rescue@example.com | Responder, EMP-R01 |
+| tech@example.com | Technician |
+
+All accounts are synthetic. Passwords receive independent scrypt salts; sessions store only SHA-256 token hashes. Cookies are HttpOnly and SameSite Strict, with Secure enabled for HTTPS. This local demo uses loopback HTTP. MongoDB is loopback-only and has no authentication in the included local helper; a remote deployment requires authenticated MongoDB/TLS, HTTPS, managed secrets and a suitable database/server architecture.
+
+Production-mode local check:
+
+```powershell
+pnpm build
+pnpm start
+```
+
+Run one Next.js process at a time against a PGlite data directory. Stop `dev` before `start`. The build uses webpack and excludes runtime data from tracing so MongoDB's locked data files are never bundled.
+
+Configuration defaults are documented in `.env.example`. Next.js loads `.env.local` automatically. The helper and test commands read process environment variables. Set environment variables in the terminal for those commands.
+
+## Demonstration sequence
+
+1. Coordinator: report a Medical incident at Demo Campus, require Medical support, and enter a description and affected-person count.
+2. Observe the automatically generated `reported` history entry.
+3. Dispatch Demo Ambulance and EMP-M01. The SQL function validates availability and capability coverage, locks rows, inserts the assignment and updates related statuses together.
+4. Add and retrieve a field note. Search its text or tags, edit it and inspect the tag counts.
+5. Sign in as medic@example.com. Complete that assigned response. Inspect the report, released resource, available responder and final incident history.
+6. Sign in as tech@example.com. Save a maintenance record. Incident creation and note-writing controls are absent, and direct API/SQL attempts are rejected.
+7. Open SQL lab and execute JOIN, nested, correlated, CTE, recursive CTE, view and grouped queries.
+
+## Database structure and commands
+
+`database/00_schema.sql` defines the 17 domain tables. `01_seed.sql` preserves the 63 supplied seed records; initialization replaces nonfunctional sample hash values with real password hashes. `02_advanced.sql` adds stronger constraints, functions, trigger, roles, RLS and two internal authentication tables. There are 26 domain foreign keys and one extra session-to-user foreign key. `03_queries.sql` contains standalone SQL demonstrations, including rollback-safe DML. `04_mongo_commands.js` contains mongosh collection creation and CRUD/search/aggregation examples for a fresh MongoDB database.
+
+The conceptual diagram shows derived priority and available capacity attributes. Neither is stored in this classroom-based application. Readiness is determined by resource status; dispatch is exclusive per active resource and responder. The application strengthens selected nullability and uniqueness rules; these extensions are documented in the SQL migration and report. One resource must cover all requested capability types for its dispatch; quantities greater than one are outside this demonstration's dispatch model.
+
+SQL and MongoDB do not share a distributed transaction. Note endpoints first check SQL incident existence, role and assignment scope. MongoDB errors are reported as failed saves; the interface never reports success for an unpersisted note. Notes cannot change SQL incident IDs on edit. Incident deletion is not exposed, preventing dangling note references through the application.
+
+## API
+
+| Method | Path | Purpose |
+|---|---|---|
+| POST | /api/auth/login | Authenticate and create a session |
+| GET | /api/auth/me | Current session identity |
+| POST | /api/auth/logout | Revoke session |
+| GET | /api/dashboard | Related operational records |
+| POST | /api/incidents | Coordinator creates incident |
+| POST | /api/dispatch | Coordinator invokes dispatch function |
+| POST | /api/complete | Assigned responder or coordinator completes response |
+| POST | /api/maintenance | Technician or coordinator records maintenance |
+| GET | /api/queries?key=cte | Execute an allowlisted SQL example |
+| GET/POST | /api/notes | Read/search or create field notes |
+| PATCH/DELETE | /api/notes/:id | Author or coordinator edits/deletes a note |
+
+All operational endpoints authenticate sessions. SQL values use bound parameters; arbitrary SQL input is not exposed. The server sets `app.user_id` and an allowlisted PostgreSQL role within a transaction. Direct responder SQL writes to incidents and credential-table reads fail even when the UI is bypassed. Security-definer functions use a fixed search path and narrowly granted execution permissions. Role-based SQL sessions trust the authenticated backend to set the correct actor ID; they are not separate end-user database logins.
+
+## Verification
+
+With MongoDB running:
+
+```powershell
+pnpm typecheck
+pnpm test
+node scripts/http-smoke.mjs
+```
+
+The integration tests use a fresh temporary SQL directory, separate credential file and uniquely named MongoDB database. They do not alter the demonstration database; the temporary MongoDB database is removed after testing. HTTP smoke checks use the running demonstration app and clean up their temporary note. Evidence files are written to `test-results/` and copies are included in the delivery package.
+
+## Git and student contribution
+
+The delivered implementation and documentation were generated with coding assistance from the supplied model. Students must inspect, understand, modify and test it, and record their actual contributions. No student-authored commit history, originality guarantee, GitHub publication or viva performance is fabricated. Follow the course's assistance/disclosure rules. Use your own repository and identities for genuine future contributions. See the separate rubric checklist for remaining human evidence.
+
+## Source references
+
+- Supplied `Final_DBMS_Presentation_Package.zip`: conceptual/relational diagrams and classroom MySQL model/seed.
+- https://nextjs.org/docs/app/guides/authentication
+- https://nextjs.org/docs/app/api-reference/file-conventions/route
+- https://pglite.dev/docs/
+- https://www.postgresql.org/docs/current/sql-createfunction.html
+- https://www.postgresql.org/docs/current/ddl-rowsecurity.html
+- https://www.mongodb.com/docs/manual/core/schema-validation/
+- https://www.mongodb.com/docs/manual/text-search/

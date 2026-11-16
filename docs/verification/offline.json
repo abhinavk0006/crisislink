@@ -1,0 +1,8 @@
+{
+  "checkedAt": "2026-11-16T19:23:01.136Z",
+  "passed": 2,
+  "checks": [
+    "Unavailable real MongoDB endpoint returns 503 without success",
+    "SQL dashboard remains available during MongoDB outage"
+  ]
+}
