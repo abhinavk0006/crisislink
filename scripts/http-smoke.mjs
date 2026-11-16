@@ -1,9 +1,8 @@
 import assert from "node:assert/strict";
-import { readFile, writeFile, mkdir } from "node:fs/promises";
+import { writeFile, mkdir } from "node:fs/promises";
+import {readSecret} from './secret-input.mjs';
 const base = process.env.APP_URL || "http://127.0.0.1:3100";
-const { password } = JSON.parse(
-  await readFile("data/demo-accounts.json", "utf8"),
-);
+const password=process.env.TEST_PASSWORD||await readSecret('Current demonstration password for HTTP checks (hidden): ');
 const checks = [];
 async function request(path, method = "GET", body, cookie, origin = base) {
   const res = await fetch(base + "/api/" + path, {

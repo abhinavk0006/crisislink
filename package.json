@@ -8,7 +8,8 @@
     "build": "next build --webpack",
     "start": "next start --hostname 127.0.0.1 --port 3100",
     "typecheck": "tsc --noEmit",
-    "test": "tsx --test tests/integration.test.ts",
+    "test": "tsx --test --test-concurrency=1 tests/*.test.ts",
+    "setup": "tsx scripts/setup.ts",
     "mongo": "node scripts/mongo.mjs"
   },
   "dependencies": {
