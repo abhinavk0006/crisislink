@@ -18,7 +18,7 @@ The friend's ZIP supplied a classroom MySQL model, seed, diagrams, slides and SQ
 | Next.js interface | 3 | Implemented and checked | Login, incident creation/detail, dispatch, response completion, resources/maintenance, field notes and live SQL lab. Responsive screenshots included. |
 | Backend/API and database integration | 2 | Implemented and tested | Authenticated route handlers; SQL transactions; MongoDB service with SQL reference validation; real HTTP CRUD and dispatch/completion checks. |
 | Frontend authentication, two roles and database RBAC | 4 | Implemented and tested | Three roles: Coordinator, Responder, Technician. Hidden setup input, hash-only persistence, no plaintext password file; scrypt passwords; hashed-token sessions; HttpOnly cookies; API role checks; PostgreSQL GRANT/REVOKE, function grants and maintenance RLS. Direct forbidden SQL actions tested independently of the interface. |
-| Documentation and Git/GitHub | 2 | Documentation complete; public repository prepared | Report, setup README, example configuration, SQL/NoSQL commands, test evidence and a local Git repository. Public repository target: https://github.com/abhinavk0006/crisislink. Publication is verified at final delivery. Actual implementation commits are attributed to Codex; student authorship is not fabricated. |
+| Documentation and Git/GitHub | 2 | Documentation complete; public GitHub published | Report, setup README, example configuration, SQL/NoSQL commands, test evidence and a local Git repository. Published and verified: https://github.com/abhinavk0006/crisislink. Actual implementation commits are attributed to Codex; student authorship is not fabricated. |
 | Originality, individual contribution, modification and viva | 4 | Student action required | Students must review and understand the generated implementation, make and document their real changes, disclose assistance as required by the course, and prepare to modify/explain it in the viva. These cannot be established by a code generator. |
 
 ## Verification record
@@ -36,7 +36,7 @@ The friend's ZIP supplied a classroom MySQL model, seed, diagrams, slides and SQ
 - [ ] Rehearse the three roles and explain database-level permission checks.
 - [ ] Demonstrate one JOIN, nested query, correlated query, recursive CTE, stored function, audit trigger and MongoDB CRUD/search.
 - [ ] Make genuine individual modifications and record their actual authorship and tests.
-- [ ] Confirm the published repository link at delivery. Runtime data, secrets, dependencies and build outputs are excluded.
+- [x] Public GitHub repository published and verified. Runtime data, secrets, dependencies and build outputs are excluded.
 - [ ] Confirm that local embedded PostgreSQL/PGlite is acceptable to the evaluator; the SQL engine is PostgreSQL, but it is not a separately installed network server.
 - [ ] Review the conceptual diagram assumptions and the stronger constraints added by the implementation.
 - [ ] Follow the course's rules for coding assistance and originality disclosure.
@@ -48,5 +48,6 @@ This is a local, single-process teaching application. It uses fictional data. Mo
 ## Full brief audit
 
 See docs/LEVEL3_REQUIREMENTS_AUDIT.md for all 18 requirements, PROJECT_SPECIFICATION.md for the full specification, DATA_DICTIONARY.md for executed schema metadata, and ARCHITECTURE.md for the backend/database design. The revised report adds problem, objectives, scope, functional requirements, architecture, DDL lifecycle, SQL tag CRUD, secure setup, conclusion and future enhancements.
+
 
 

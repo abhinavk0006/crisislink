@@ -18,7 +18,7 @@ Source: user-provided DBMS Level 3 Project Requirements.pdf, four pages, inspect
 | 12 Database validation and consistency | PK/FK/NOT NULL/UNIQUE/CHECK, active-allocation indexes, SQL transactions, trigger audit and maintenance RLS; MongoDB collection validator. | Implemented and tested |
 | 13 Basic security and no plaintext passwords | Scrypt password hashes, hidden setup input, no plaintext credential artifact, HttpOnly cookies, hashed session tokens, bounded validation and role checks. | Corrected and tested for local scope |
 | 14 Documentation | Problem, objectives, scope, functional requirements, models, choices, dictionary, implementations, queries, architecture, screenshots, tests, conclusion and future enhancements. | Report and supporting documents |
-| 15 Git/GitHub and actual student commits | Real-time implementation commits attributed to Codex, source README and the intended public crisislink repository. Student-specific commits must reflect real subsequent student work. | Publication tracked at delivery; student authorship pending |
+| 15 Git/GitHub and actual student commits | Real-time implementation commits attributed to Codex, source README and the intended public crisislink repository. Student-specific commits must reflect real subsequent student work. | Published public repository; student authorship pending |
 | 16 Demonstration | README demo sequence, execution evidence, screenshot captures and test cases. Both students must rehearse and present their own actual contributions. | Technical demo prepared; student demonstration pending |
 | 17 Originality | New application reconstructed from the user-supplied model, with transparent coding-assistance provenance; not a cloned tutorial repository. Originality approval and differences from other teams remain instructor/student responsibilities. | Provenance documented; no originality certification claimed |
 | 18 Beyond CRUD and justified database choices | Atomic dispatch, conflict prevention, automatic history, role enforcement, linked SQL/document data, meaningful search and query demonstrations. | Implemented |
@@ -30,3 +30,6 @@ Source: user-provided DBMS Level 3 Project Requirements.pdf, four pages, inspect
 - Stored functions and procedures are alternatives in the examples; the implemented SQL functions satisfy that concept.
 - No artificial backdated commits, student impersonation, fabricated faculty approval or guarantees of marks are used.
 - Administrative approval, section uniqueness, genuine individual contribution and viva performance cannot be completed by changing source code.
+
+Public source repository verified: https://github.com/abhinavk0006/crisislink
+

@@ -1,5 +1,9 @@
 # CrisisLink
 
+Public repository: https://github.com/abhinavk0006/crisislink
+
+[Final report](docs/CrisisLink_DBMS_Final_Report.pdf) | [Level 3 requirements audit](docs/LEVEL3_REQUIREMENTS_AUDIT.md) | [Rubric checklist](docs/CrisisLink_Rubric_Checklist.md)
+
 Database Management Systems mini project, UE24CS351A.
 
 Students: Sachin R (PES1UG24CS688) and Abhinav Krishna Kandukuri (PES1UG24CS701).
@@ -126,4 +130,5 @@ The delivered implementation and documentation were generated with coding assist
 See docs/PROJECT_SPECIFICATION.md for the problem, objectives, scope, functional requirements, conclusion and future work; docs/DATA_DICTIONARY.md for generated SQL metadata; docs/ARCHITECTURE.md for system and failure boundaries; and docs/LEVEL3_REQUIREMENTS_AUDIT.md for the full brief comparison. Resource tag create/rename/remove actions demonstrate SQL DML through the Resources screen. Run database/06_ddl_demo.sql for isolated CREATE/ALTER/DROP practice.
 
 HTTP checks request the current password using hidden input, or accept TEST_PASSWORD in the process environment. They do not read or create a password file.
+
 
