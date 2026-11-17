@@ -1,12 +1,30 @@
 * {
   box-sizing: border-box;
 }
-.resource-tags { margin-top:16px; }
-.resource-tag { display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:7px 0; }
-.resource-tag button { font-size:10px;padding:4px 6px; }
-.resource-tag-form { margin-top:18px; }
-.resource-tag-form label { font-size:11px; }
-.resource-tag-form button { font-size:11px;margin-right:5px; }
+.resource-tags {
+  margin-top: 16px;
+}
+.resource-tag {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin: 7px 0;
+}
+.resource-tag button {
+  font-size: 10px;
+  padding: 4px 6px;
+}
+.resource-tag-form {
+  margin-top: 18px;
+}
+.resource-tag-form label {
+  font-size: 11px;
+}
+.resource-tag-form button {
+  font-size: 11px;
+  margin-right: 5px;
+}
 body {
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;

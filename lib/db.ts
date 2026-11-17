@@ -51,7 +51,9 @@ export async function getDb() {
           );
           const password = process.env.DEMO_PASSWORD;
           if (!password || password.length < 12 || password.length > 200)
-            throw Error("Initialize with pnpm setup before starting the app. The setup password must contain 12 to 200 characters.");
+            throw Error(
+              "Initialize with pnpm setup before starting the app. The setup password must contain 12 to 200 characters.",
+            );
           const accounts = await tx.query<{ user_id: number }>(
             "SELECT user_id FROM users",
           );
@@ -62,7 +64,12 @@ export async function getDb() {
             );
         });
       }
-      await db.exec(await readFile(join(process.cwd(), "database/05_resource_tag_permissions.sql"), "utf8"));
+      await db.exec(
+        await readFile(
+          join(process.cwd(), "database/05_resource_tag_permissions.sql"),
+          "utf8",
+        ),
+      );
       return db;
     })();
   return globalDb.crisisDb;

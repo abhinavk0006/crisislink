@@ -1,6 +1,6 @@
 import { test, after } from "node:test";
 import assert from "node:assert/strict";
-import { randomUUID } from "node:crypto";
+import { randomUUID, randomBytes } from "node:crypto";
 import { mkdtemp, readFile, writeFile, mkdir } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -47,13 +47,9 @@ const technician: Actor = {
   role_name: "Technician",
 };
 process.env.PGLITE_DATA_DIR = await mkdtemp(join(tmpdir(), "crisislink-test-"));
-process.env.DEMO_ACCOUNTS_FILE = join(
-  process.env.PGLITE_DATA_DIR,
-  "demo-accounts.json",
-);
 process.env.MONGODB_DATABASE =
   "crisislink_test_" + randomUUID().replaceAll("-", "");
-process.env.DEMO_PASSWORD = "IntegrationOnly!2026";
+process.env.DEMO_PASSWORD = randomBytes(24).toString("base64url");
 const passed: string[] = [];
 test("CrisisLink integration evidence", async (t) => {
   const db = await getDb();

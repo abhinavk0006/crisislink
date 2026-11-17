@@ -72,9 +72,12 @@ async function handler(req: NextRequest) {
     if (path === "maintenance" && method === "POST")
       return respond(await maintenance(actor, await req.json()), 201);
     if (path === "resource-tags") {
-      if (method === "POST") return respond(await addResourceTag(actor,await req.json()),201);
-      if (method === "PATCH") return respond(await updateResourceTag(actor,await req.json()));
-      if (method === "DELETE") return respond(await removeResourceTag(actor,await req.json()));
+      if (method === "POST")
+        return respond(await addResourceTag(actor, await req.json()), 201);
+      if (method === "PATCH")
+        return respond(await updateResourceTag(actor, await req.json()));
+      if (method === "DELETE")
+        return respond(await removeResourceTag(actor, await req.json()));
     }
     if (path === "queries" && method === "GET")
       return respond(

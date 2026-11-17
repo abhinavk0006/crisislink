@@ -1,8 +1,12 @@
 import assert from "node:assert/strict";
 import { writeFile, mkdir } from "node:fs/promises";
-import {readSecret} from './secret-input.mjs';
+import { readSecret } from "./secret-input.mjs";
 const base = process.env.APP_URL || "http://127.0.0.1:3100";
-const password=process.env.TEST_PASSWORD||await readSecret('Current demonstration password for HTTP checks (hidden): ');
+const password =
+  process.env.TEST_PASSWORD ||
+  (await readSecret(
+    "Current demonstration password for HTTP checks (hidden): ",
+  ));
 const checks = [];
 async function request(path, method = "GET", body, cookie, origin = base) {
   const res = await fetch(base + "/api/" + path, {
@@ -149,6 +153,64 @@ await check("HTTP MongoDB create read search update delete", async () => {
     200,
   );
 });
+await check(
+  "SQL resource tag create read rename delete through HTTP",
+  async () => {
+    const tag = "http-check-" + Date.now();
+    assert.equal(
+      (
+        await request(
+          "resource-tags",
+          "POST",
+          { resource_id: 201, tag },
+          technicianCookie,
+        )
+      ).status,
+      201,
+    );
+    let d = await request("dashboard", "GET", undefined, technicianCookie);
+    assert.ok(d.data.resourceTags.some((t) => t.tag === tag));
+    assert.equal(
+      (
+        await request(
+          "resource-tags",
+          "PATCH",
+          { resource_id: 201, tag, new_tag: tag + "-renamed" },
+          technicianCookie,
+        )
+      ).status,
+      200,
+    );
+    assert.equal(
+      (
+        await request(
+          "resource-tags",
+          "DELETE",
+          { resource_id: 201, tag: tag + "-renamed" },
+          technicianCookie,
+        )
+      ).status,
+      200,
+    );
+    d = await request("dashboard", "GET", undefined, technicianCookie);
+    assert.ok(
+      !d.data.resourceTags.some(
+        (t) => t.tag === tag || t.tag === tag + "-renamed",
+      ),
+    );
+    assert.equal(
+      (
+        await request(
+          "resource-tags",
+          "POST",
+          { resource_id: 201, tag: "forbidden" },
+          responderCookie,
+        )
+      ).status,
+      403,
+    );
+  },
+);
 await check("Live SQL CTE query returns records", async () => {
   const r = await request(
     "queries?key=cte",
@@ -159,24 +221,95 @@ await check("Live SQL CTE query returns records", async () => {
   assert.equal(r.status, 200);
   assert.ok(r.data.rows.length >= 3);
 });
-await check("HTTP incident dispatch and responder completion persist together", async () => {
-  const medic = await request("auth/login", "POST", { email: "medic@example.com", password });
-  assert.equal(medic.status, 200);
-  const medicCookie = medic.headers.get("set-cookie").split(";")[0];
-  const snapshot = await request("dashboard", "GET", undefined, coordinatorCookie);
-  const previous = snapshot.data.assignments.find(a => a.responder_id === 2 && ["active", "dispatched"].includes(a.status));
-  if (previous) assert.equal((await request("complete", "POST", {assignment_id: previous.assignment_id, outcome: "Medical response completed during API verification"}, medicCookie)).status, 200);
-  const created = await request("incidents", "POST", {type_id:2,location_id:2,description:"HTTP integration medical response",severity_level:"medium",people_affected:1,capability_id:2}, coordinatorCookie);
-  assert.equal(created.status, 201);
-  const dispatched = await request("dispatch", "POST", {emergency_id:created.data.emergency_id,resource_id:202,responder_id:2}, coordinatorCookie);
-  assert.equal(dispatched.status, 201);
-  const payload={assignment_id:dispatched.data.assignment_id,outcome:"Patient transferred safely by the assigned medical team"};
-  assert.equal((await request("complete", "POST", payload, responderCookie)).status,403);
-  assert.equal((await request("complete", "POST", payload, medicCookie)).status,200);
-  const final=await request("dashboard","GET",undefined,coordinatorCookie);
-  assert.equal(final.data.incidents.find(i=>i.emergency_id===created.data.emergency_id).status,"resolved");
-  assert.equal(final.data.resources.find(r=>r.resource_id===202).status,"available");
-});
+await check(
+  "HTTP incident dispatch and responder completion persist together",
+  async () => {
+    const medic = await request("auth/login", "POST", {
+      email: "medic@example.com",
+      password,
+    });
+    assert.equal(medic.status, 200);
+    const medicCookie = medic.headers.get("set-cookie").split(";")[0];
+    const snapshot = await request(
+      "dashboard",
+      "GET",
+      undefined,
+      coordinatorCookie,
+    );
+    const previous = snapshot.data.assignments.find(
+      (a) =>
+        a.responder_id === 2 && ["active", "dispatched"].includes(a.status),
+    );
+    if (previous)
+      assert.equal(
+        (
+          await request(
+            "complete",
+            "POST",
+            {
+              assignment_id: previous.assignment_id,
+              outcome: "Medical response completed during API verification",
+            },
+            medicCookie,
+          )
+        ).status,
+        200,
+      );
+    const created = await request(
+      "incidents",
+      "POST",
+      {
+        type_id: 2,
+        location_id: 2,
+        description: "HTTP integration medical response",
+        severity_level: "medium",
+        people_affected: 1,
+        capability_id: 2,
+      },
+      coordinatorCookie,
+    );
+    assert.equal(created.status, 201);
+    const dispatched = await request(
+      "dispatch",
+      "POST",
+      {
+        emergency_id: created.data.emergency_id,
+        resource_id: 202,
+        responder_id: 2,
+      },
+      coordinatorCookie,
+    );
+    assert.equal(dispatched.status, 201);
+    const payload = {
+      assignment_id: dispatched.data.assignment_id,
+      outcome: "Patient transferred safely by the assigned medical team",
+    };
+    assert.equal(
+      (await request("complete", "POST", payload, responderCookie)).status,
+      403,
+    );
+    assert.equal(
+      (await request("complete", "POST", payload, medicCookie)).status,
+      200,
+    );
+    const final = await request(
+      "dashboard",
+      "GET",
+      undefined,
+      coordinatorCookie,
+    );
+    assert.equal(
+      final.data.incidents.find(
+        (i) => i.emergency_id === created.data.emergency_id,
+      ).status,
+      "resolved",
+    );
+    assert.equal(
+      final.data.resources.find((r) => r.resource_id === 202).status,
+      "available",
+    );
+  },
+);
 await check("Logout invalidates an existing session", async () => {
   assert.equal(
     (await request("auth/logout", "POST", {}, coordinatorCookie)).status,
