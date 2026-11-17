@@ -8,6 +8,8 @@ Public repository: https://github.com/abhinavk0006/crisislink
 
 [Team responsibilities and evidence](CONTRIBUTIONS.md) | [Title and approval record](PROJECT_APPROVAL.md)
 
+[Database concept-to-feature and code mapping](docs/DATABASE_FEATURE_MAP.md) | [Searchable offline viva guide](docs/DATABASE_FEATURE_MAP.html)
+
 Database Management Systems mini project, UE24CS351A.
 
 Students: Sachin R (PES1UG24CS688) and Abhinav Krishna Kandukuri (PES1UG24CS701).
