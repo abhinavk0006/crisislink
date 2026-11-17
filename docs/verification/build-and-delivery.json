@@ -1,21 +1,25 @@
 {
+  "totalNamedChecks": 43,
   "pdfPageSize": "A4",
-  "pdfPages": 18,
   "outageChecks": 2,
-  "integrationChecks": 23,
-  "httpChecks": 11,
+  "pdfPages": 22,
+  "requirementsSource": "DBMS Level 3 Project Requirements.pdf",
   "typecheck": {
-    "exitCode": 0,
-    "command": "tsc --noEmit"
+    "command": "tsc --noEmit",
+    "exitCode": 0
   },
-  "checkedOn": "2026-11-17 Asia/Calcutta",
   "productionBuild": {
+    "command": "next build --webpack",
     "routes": [
       "/",
       "/api/[...path]"
     ],
-    "exitCode": 0,
-    "command": "next build --webpack"
+    "exitCode": 0
   },
-  "evaluationRubricsInReport": false
+  "codeCommit": "1c3366b",
+  "evaluationRubricsInReport": false,
+  "runnerTests": 30,
+  "checkedOn": "2026-11-17 Asia/Calcutta",
+  "httpChecks": 12,
+  "namedDatabaseChecks": 29
 }

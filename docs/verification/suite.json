@@ -1,0 +1,15 @@
+{
+  "failed": 0,
+  "command": "node --import tsx --test --test-concurrency=1 tests/*.test.ts",
+  "passed": 30,
+  "coverage": [
+    "DDL lifecycle",
+    "SQL and real MongoDB integration",
+    "SQL resource tag CRUD and permissions",
+    "hash-only bootstrap persistence",
+    "secure setup password reset and session revocation"
+  ],
+  "checkedOn": "2026-11-17 Asia/Calcutta",
+  "runnerTests": 30,
+  "namedChecks": 29
+}

@@ -1,6 +1,6 @@
 {
-  "checkedAt": "2026-11-16T19:23:43.946Z",
-  "passed": 11,
+  "checkedAt": "2026-11-17T03:03:06.053Z",
+  "passed": 12,
   "checks": [
     "Unauthenticated dashboard returns 401",
     "Coordinator login sets an HttpOnly SameSite session cookie",
@@ -10,6 +10,7 @@
     "Responder login and API write denial",
     "Technician login and field-note write denial",
     "HTTP MongoDB create read search update delete",
+    "SQL resource tag create read rename delete through HTTP",
     "Live SQL CTE query returns records",
     "HTTP incident dispatch and responder completion persist together",
     "Logout invalidates an existing session"

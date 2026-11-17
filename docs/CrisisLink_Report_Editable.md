@@ -26,6 +26,42 @@ The project combines PostgreSQL, executed through PGlite, with MongoDB. PostgreS
 
 The initial relational dataset contains 63 fictional records across 17 domain tables. Two additional internal tables support sessions and login throttling. The system is a local classroom demonstration and does not connect to emergency services.
 
+2.1 Problem statement
+
+Emergency response coordination must keep incident information, team availability, equipment allocation and field updates consistent. Separate lists and messages can obscure which team is responsible or whether a resource is already occupied. CrisisLink connects these records and implements an auditable training workflow from reporting to dispatch and completion.
+
+2.2 Objectives
+
+The objectives are to model operational relationships with explicit keys and constraints; prevent conflicting assignments through transactions; record status changes automatically; preserve flexible searchable field assessments in a document database; and enforce three user roles through a functional web interface and database permissions.
+
+
+---
+
+2.3 Scope and functional requirements
+
+The supported scope is one local classroom deployment with fictional data. It includes incident reporting, exclusive dispatch, completion reports, maintenance, SQL resource-tag CRUD, document-note CRUD and search, and live SQL examples. Real emergency communication, multi-process SQL hosting, multi-resource quantity optimization and distributed transactions are outside this implementation.
+
+| ID | Functional requirement | Acceptance condition |
+|---|---|---|
+| FR01 | Authenticate accounts | Valid credentials create expiring sessions; logout revokes them. |
+| FR02 | Enforce roles | Three roles; forbidden API and direct SQL operations fail. |
+| FR03 | Report incidents | Validated incident and capability requirement save together. |
+| FR04 | Audit status changes | One trigger entry per new incident or actual status change. |
+| FR05 | Dispatch a response | Availability/capability checks and reservations are atomic. |
+| FR06 | Reject allocation conflicts | Conflicting active assignments leave no partial update. |
+| FR07 | Complete a response | Owned assignment creates a report and releases the team. |
+| FR08 | Record maintenance | Allowed role and correct author identity; nonnegative cost. |
+| FR09 | Manage SQL resource tags | Resources screen supports create read rename and remove. |
+| FR10 | Manage MongoDB notes | Incident links, assignment scope and ownership are validated. |
+| FR11 | Search and aggregate | Indexed text/tag search and incident tag counts execute. |
+| FR12 | Explore SQL queries | JOIN, subquery, CTE/window, recursive and view queries run. |
+| FR13 | Report database failures | No success response for an unconfirmed database save. |
+| FR14 | Protect passwords | Hidden setup input; only salted hashes persist. |
+| FR15 | Demonstrate DDL safely | CREATE ALTER DROP run against a temporary object. |
+
+
+---
+
 3 Tech Stack
 
 | Technology | Role and justification |
@@ -38,6 +74,10 @@ The initial relational dataset contains 63 fictional records across 17 domain ta
 | Node.js 24 and pnpm | Local runtime, locked dependencies, build and test commands. |
 | Node crypto and node:test | Scrypt password hashing, random sessions and automated integration checks. |
 
+3.1 System architecture
+
+The browser communicates only with the Next.js API. SQL services use role-scoped transactions. The field-note service validates SQL incident references before writing to MongoDB. Each database has its own transaction boundary; cross-database atomic commit is not claimed. Database configuration comes from environment variables.
+
 
 ---
 
@@ -46,6 +86,8 @@ The initial relational dataset contains 63 fictional records across 17 domain ta
 4.1 Database design
 
 The relational design retains the supplied classroom model. Assignments connect an emergency to one response resource and one responder. Junction relations represent incident requirements and resource capabilities. Multivalued skills and tags are stored in separate relations with composite primary keys. Conceptual priority_score and available_capacity attributes are not stored in this version.
+
+The supporting DATA_DICTIONARY.md and schema-metadata.json are generated from an executed fresh database and document every attribute, SQL type, nullability, identity, key, check and index. Internal session and login-attempt tables are documented separately from the domain model.
 
 | Domain relations | Primary key |
 |---|---|
@@ -113,7 +155,44 @@ CREATE UNIQUE INDEX uq_active_responder ON assignments(responder_id)
 
 ---
 
-4.3 DML operations and joins
+4.3 DDL lifecycle and SQL tag operations
+
+The following standalone demonstration creates, alters and drops only a temporary practice table. It does not remove operational data. The automated DDL test verifies the sample result and confirms that the temporary table no longer exists afterward.
+
+```
+-- Isolated temporary-object DDL demonstration. Does not drop application data.
+BEGIN;
+CREATE TEMPORARY TABLE crisislink_ddl_example (
+    example_id INTEGER PRIMARY KEY,
+    label VARCHAR(80) NOT NULL
+);
+ALTER TABLE crisislink_ddl_example
+    ADD COLUMN quantity INTEGER NOT NULL DEFAULT 1 CHECK(quantity > 0);
+INSERT INTO crisislink_ddl_example(example_id,label) VALUES(1,'DDL practice');
+SELECT * FROM crisislink_ddl_example;
+DROP TABLE crisislink_ddl_example;
+COMMIT;
+```
+
+Resource tag CRUD in the application
+
+The Resources screen lets coordinators and technicians add a resource tag, inspect current tags, rename one and remove one. These actions execute SQL INSERT, SELECT, UPDATE and DELETE through the API. Responders retain read-only tag access; direct responder SQL deletion is also rejected.
+
+```
+INSERT INTO resource_tags(resource_id,tag) VALUES($1,$2);
+SELECT resource_id,tag FROM resource_tags ORDER BY resource_id,tag;
+UPDATE resource_tags SET tag=$1 WHERE resource_id=$2 AND tag=$3;
+DELETE FROM resource_tags WHERE resource_id=$1 AND tag=$2;
+GRANT INSERT,UPDATE,DELETE ON resource_tags
+  TO crisis_coordinator,crisis_technician;
+```
+
+The service binds all values as parameters, validates tag length and resource IDs, and returns 404 when an expected tag is missing. Primary and foreign keys reject duplicate tags and unknown resources.
+
+
+---
+
+4.4 DML operations and joins
 
 The seed is inserted transactionally using database/01_seed.sql. Application INSERT and UPDATE statements bind values as parameters. The following tag demonstration exercises all four CRUD operations and then restores the starting state.
 
@@ -159,7 +238,7 @@ Each of the three supplied emergencies has one assignment. LEFT JOIN also allows
 
 ---
 
-4.4 Nested correlated and recursive queries
+4.5 Nested correlated and recursive queries
 
 A scalar subquery computes one overall average. The outer query retrieves incidents whose affected-person count is greater than that average.
 
@@ -210,7 +289,7 @@ The recursive CTE produces seven dates. LEFT JOIN retains days with zero inciden
 
 ---
 
-4.5 Stored dispatch function
+4.6 Stored dispatch function
 
 The following function is implemented in database/02_advanced.sql. It rejects unavailable resources and responders before writing the assignment and related status changes. The calling service wraps execution in a role-scoped transaction.
 
@@ -245,7 +324,7 @@ $$;
 
 ---
 
-4.6 Response completion and automatic trigger
+4.7 Response completion and automatic trigger
 
 dispatch_response(emergency, resource, responder) locks the selected rows, rejects missing or unavailable entities, verifies required capability coverage and inserts an assignment. It then reserves the resource and responder and changes the incident to responding. All changes run in one SQL transaction. Partial unique indexes also reject conflicting active assignments.
 
@@ -292,15 +371,15 @@ CREATE INDEX idx_history_time
 
 ---
 
-4.7 Authentication and database role access
+4.8 Authentication and database role access
 
 The interface authenticates synthetic user accounts by email and password. Passwords use scrypt with independent random salts. The browser receives a random session token in an HttpOnly SameSite Strict cookie; SQL stores only its SHA-256 hash and an eight-hour expiry. Logout removes the stored token hash. Repeated failed logins trigger a temporary block.
 
 | Role | Permitted application actions |
 |---|---|
 | Coordinator | Read operational data; create incidents; dispatch and complete responses; manage field notes; record maintenance. |
-| Responder | Read operational data; complete only own assignments; add notes only to assigned incidents; edit/delete own notes. |
-| Technician | Read operational data and field notes; record maintenance under own user identity. |
+| Responder | Read operational data; complete only own assignments; add notes only to assigned incidents; edit/delete own notes. Resource tags are read-only. |
+| Technician | Read operational data and field notes; record maintenance under own user identity; add rename and remove SQL resource tags. |
 
 ```
 CREATE ROLE crisis_coordinator NOLOGIN;
@@ -427,9 +506,14 @@ crisislink-app/
     02_advanced.sql            Functions trigger roles RLS indexes
     03_queries.sql             DML JOIN subquery CTE examples
     04_mongo_commands.js       MongoDB setup and demonstrations
+    05_resource_tag_permissions.sql  Role grants for tag CRUD
+    06_ddl_demo.sql             Isolated CREATE ALTER DROP demo
     mysql/                     Original classroom SQL and outputs
   scripts/
     mongo.mjs                  Dedicated local MongoDB launcher
+    setup.ts                   Hidden input hash only account setup
+    secret-input.mjs           Non echoing terminal input
+    export-schema.ts           Generate the SQL data dictionary
     http-smoke.mjs             Running API checks
   tests/integration.test.ts     Isolated SQL and MongoDB checks
   .env.example                 Configuration names without secrets
@@ -446,6 +530,7 @@ A user action reaches a same-origin Next.js route handler. The handler validates
 | Command | Purpose |
 |---|---|
 | pnpm install --frozen-lockfile | Install locked dependencies |
+| pnpm setup | Initialize/reset accounts with hidden password input |
 | pnpm mongo | Start local MongoDB in the first terminal |
 | pnpm dev | Start the app at 127.0.0.1:3100 |
 | pnpm build and pnpm start | Build and run in production mode |
@@ -466,6 +551,7 @@ A user action reaches a same-origin Next.js route handler. The handler validates
 | POST /api/dispatch | Coordinator invokes the atomic dispatch SQL function. |
 | POST /api/complete | Assigned responder or coordinator completes a response. |
 | POST /api/maintenance | Coordinator or technician inserts maintenance. |
+| POST PATCH DELETE /api/resource-tags | Coordinator or technician adds renames or removes SQL tags. |
 | GET /api/queries?key=cte | Run an allowlisted live SQL example. |
 | GET and POST /api/notes | Read/search or create MongoDB field notes. |
 | PATCH and DELETE /api/notes/:id | Edit or delete an authorized field note. |
@@ -480,7 +566,7 @@ Operational endpoints return 401 without a valid session. Role violations return
 
 Persistent local storage
 
-PostgreSQL files are stored under data/postgres and MongoDB files under data/mongo. Generated local account credentials are stored in an ignored private data file. Runtime data, credentials, dependency folders and build outputs are excluded from the distributable source archive and Git history. Only one app process should open a PGlite directory at a time.
+PostgreSQL files are stored under data/postgres and MongoDB files under data/mongo. Run pnpm setup before starting the app and choose a password using hidden input. Setup persists only scrypt hashes, revokes prior demo sessions and creates no plaintext password file. Runtime data, real credentials, dependencies and build outputs are excluded from the source archive and Git history. Only one app process should open a PGlite directory at a time.
 
 
 ---
@@ -513,7 +599,9 @@ Figure 5 CTE query and recorded application result
 
 Verification performed
 
-The database integration suite passed 23 checks against an isolated PostgreSQL directory and a separate real MongoDB database. The HTTP suite passed 11 checks against the running application. Type checking and the production build passed. The browser flow verified coordinator login, incident creation, dispatch, a persisted field note and live SQL results.
+The integration suite passed 23 named checks against isolated PostgreSQL and MongoDB data. Additional tests cover temporary-object DDL, SQL tag CRUD and permission denial, hash-only bootstrap persistence and secure setup/reset. The combined test runner passed 30 tests including its parent test. The HTTP suite passed 12 checks. Type checking and the production build passed.
+
+Two outage checks verified an unavailable MongoDB endpoint returns an explicit failure while the SQL dashboard remains available. Browser captures document coordinator login, incident creation, dispatch, a persisted field note and live SQL results.
 
 Checks include key and CHECK enforcement, transaction rollback, one audit entry per status change, assignment ownership, SQL permission denial, maintenance row policies, MongoDB validation, note ownership, text search, aggregation, cookie/session behavior, logout and cross-origin rejection. Full check names and results are included with the source package.
 
@@ -522,6 +610,29 @@ The application is a local evaluation system. Multi-process SQL access, producti
 Technical references
 
 Next.js authentication · PGlite documentation · PostgreSQL row security · MongoDB schema validation
+
+
+---
+
+7.4 Conclusion and future enhancements
+
+CrisisLink connects relational design and document storage to a response workflow. An incident is reported, a compatible resource and responder are reserved atomically, the assigned team records completion, and the resource becomes available again. PostgreSQL enforces relationships, conflicts and audit behavior. MongoDB supplies flexible incident-linked field updates with indexed retrieval and tag aggregation.
+
+The implementation goes beyond separate CRUD forms through transaction boundaries, automatic triggers, stored functions, database permissions, ownership checks and tested failure behavior. The Resources screen provides explicit SQL resource-tag CRUD. A disposable DDL example demonstrates CREATE, ALTER and DROP without dropping operational data.
+
+| Future enhancement | Purpose |
+|---|---|
+| Hosted PostgreSQL and deployment hardening | Support multi-process service operation with managed secrets and infrastructure. |
+| Authenticated MongoDB and TLS | Prepare database connections for hosted operation beyond the loopback demo. |
+| Multi-resource allocation | Allocate capability quantities across several response units. |
+| Cross-database outbox and retries | Coordinate eventual field updates without claiming distributed atomic commit. |
+| Maps and optional semantic note search | Improve location selection and explore vector retrieval where useful. |
+
+These enhancements are future work. The delivered application remains a fictional single-process local demonstration and does not connect to emergency services.
+
+Supporting project documentation
+
+PROJECT_SPECIFICATION.md records the full problem, objectives, scope and functional requirements. DATA_DICTIONARY.md and schema-metadata.json describe the executed schema. ARCHITECTURE.md explains trust and failure boundaries. The separate Level 3 audit and rubric checklist record evidence coverage. The repository README provides installation, secure setup, demonstration and test commands.
 
 ## Report figures
 
