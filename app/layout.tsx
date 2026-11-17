@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 export const metadata: Metadata = {
-  title: "CrisisLink Emergency Response",
+  title: "Crisis Link Emergency Resource Coordination & Response Management System",
   description:
     "Fictional DBMS mini project by Sachin R and Abhinav Krishna Kandukuri",
 };

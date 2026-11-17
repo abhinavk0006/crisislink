@@ -1,8 +1,8 @@
 DBMS Mini Project Report
 
-CrisisLink
+Crisis Link
 
-Emergency Response Management System
+Emergency Resource Coordination &amp; Response Management System
 
 Course TitleDatabase Management Systems
 
@@ -633,6 +633,30 @@ These enhancements are future work. The delivered application remains a fictiona
 Supporting project documentation
 
 PROJECT_SPECIFICATION.md records the full problem, objectives, scope and functional requirements. DATA_DICTIONARY.md and schema-metadata.json describe the executed schema. ARCHITECTURE.md explains trust and failure boundaries. The separate Level 3 audit and rubric checklist record evidence coverage. The repository README provides installation, secure setup, demonstration and test commands.
+
+
+---
+
+7.5 Team responsibilities and contribution records
+
+The following division assigns database and application responsibilities to both team members. Completed contributions are recorded separately in CONTRIBUTIONS.md using actual dates, changes, reviews, test results and student commit links.
+
+| Work area | Sachin R | Abhinav Krishna Kandukuri |
+|---|---|---|
+| Data design | ER and relational model; keys, cardinalities, constraints and SQL dictionary. | MongoDB note model; SQL/document references, indexes and retrieval strategy. |
+| Database work | Schema/seed review, safe DDL, SQL tag CRUD and incident-history trigger. | Dispatch/completion stored functions, reporting view/indexes and MongoDB CRUD/search/aggregation. |
+| Application work | Incident creation/detail/history and resource-tag/maintenance screens and APIs. | Login/session/role flow, dashboard, dispatch/completion and field-note screens and APIs. |
+| Testing and security | SQL integrity, DDL/DML, audit history, rollback, maintenance policy and tag permissions. | Authentication, role/ownership enforcement, MongoDB validation, HTTP workflow and outage cases. |
+| Documentation | Problem, objectives, scope, requirements, ER/schema, dictionary and SQL explanations. | Technology justification, architecture, NoSQL commands, setup, screenshots and integration evidence. |
+| Viva focus | Relational design, queries, audit trigger and incident/resource/maintenance modules. | Database choices, functions, authentication, dispatch and MongoDB integration. |
+
+Shared responsibilities
+
+Both members independently run the application, review and test each other's modules, verify the report against the demonstrated version, rehearse the complete workflow and maintain evidence for their own actual work. Each should be able to explain a database component and an application component beyond their primary assigned area.
+
+Title and approval record
+
+The formal project title is Crisis Link Emergency Resource Coordination &amp; Response Management System. PROJECT_APPROVAL.md records the title, course and team details and provides fields for the section, instructor, title uniqueness and approval evidence. Administrative confirmations are entered from actual course records.
 
 ## Report figures
 

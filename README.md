@@ -1,8 +1,12 @@
 # CrisisLink
 
+**Project title:** Crisis Link Emergency Resource Coordination & Response Management System
+
 Public repository: https://github.com/abhinavk0006/crisislink
 
 [Final report](docs/CrisisLink_DBMS_Final_Report.pdf) | [Level 3 requirements audit](docs/LEVEL3_REQUIREMENTS_AUDIT.md) | [Rubric checklist](docs/CrisisLink_Rubric_Checklist.md)
+
+[Team responsibilities and evidence](CONTRIBUTIONS.md) | [Title and approval record](PROJECT_APPROVAL.md)
 
 Database Management Systems mini project, UE24CS351A.
 

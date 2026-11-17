@@ -1,5 +1,7 @@
 # CrisisLink project specification
 
+**Project title:** Crisis Link Emergency Resource Coordination & Response Management System
+
 Course: Database Management Systems, UE24CS351A. Team: Sachin R (PES1UG24CS688) and Abhinav Krishna Kandukuri (PES1UG24CS701).
 
 ## Problem statement
@@ -55,4 +57,4 @@ Future enhancements include a separately hosted PostgreSQL service for multi-pro
 
 The two-member team and title must be approved by the instructor, and the title must be unique within the section. These are external facts the implementation cannot establish. Individual contributions and viva readiness must be evidenced by the students' actual work and explanations. The generated implementation commits are attributed to Codex; they do not claim student authorship.
 
-Suggested responsibilities for future student work: Sachin leads relational-model review, incident/API validation and SQL query demonstrations; Abhinav leads document-model review, resource/maintenance UI and role/security tests. Each should modify and test both a database component and an application component, review the other's work and record only the work actually performed. This allocation is a plan, not a record of completed contributions.
+The assigned split and actual-evidence log are maintained in [CONTRIBUTIONS.md](../CONTRIBUTIONS.md). Sachin leads relational design, core SQL/trigger review, incident/resource/maintenance modules and integrity tests. Abhinav leads the document model, dispatch/completion functions, authentication/dashboard/field-note integration and security/end-to-end tests. Each has database and application work and reviews the other's modules. This allocation is a plan, not a record of completed contributions. The formal title and instructor-confirmation fields are maintained in [PROJECT_APPROVAL.md](../PROJECT_APPROVAL.md).
