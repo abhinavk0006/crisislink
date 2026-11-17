@@ -654,10 +654,6 @@ Shared responsibilities
 
 Both members independently run the application, review and test each other's modules, verify the report against the demonstrated version, rehearse the complete workflow and maintain evidence for their own actual work. Each should be able to explain a database component and an application component beyond their primary assigned area.
 
-Title and approval record
-
-The formal project title is Crisis Link Emergency Resource Coordination &amp; Response Management System. PROJECT_APPROVAL.md records the title, course and team details and provides fields for the section, instructor, title uniqueness and approval evidence. Administrative confirmations are entered from actual course records.
-
 ## Report figures
 
 ![Chen ER diagram](diagrams/chen.png)

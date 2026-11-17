@@ -44,5 +44,3 @@ Add one row for each actual contribution. Use a real date, a specific change/rev
 ## Existing implementation provenance
 
 The repository was reconstructed with coding assistance from the team-supplied classroom model and SQL package. The existing implementation/revision commits are attributed to Codex. This plan does not relabel those commits as student-authored work or invent earlier contributions. Keep that history and add the students' actual subsequent work transparently, following course rules.
-
-See [project title and approval record](PROJECT_APPROVAL.md) for the formal title and administrative confirmation fields.
