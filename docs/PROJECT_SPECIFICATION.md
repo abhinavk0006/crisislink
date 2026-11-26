@@ -19,7 +19,7 @@ An emergency response team must keep incidents, responders, vehicles, equipment 
 
 ## Scope
 
-The application supports a single local classroom deployment, three roles, incident creation, exclusive resource/responder dispatch, response completion, report creation, maintenance records, resource tag management, field-note CRUD and search, and a live SQL query explorer. The initial dataset contains 63 fictional rows in 17 domain tables. Two internal tables manage sessions and login throttling.
+The application supports a single local classroom deployment, three roles, incident creation, exclusive resource/responder dispatch, response completion, report creation, maintenance records, resource tag management, field-note CRUD and search, and a live SQL query explorer. The initial dataset contains 63 fictional rows in 17 domain tables. Three internal tables manage sessions, login throttling and report-decision receipts.
 
 The system does not communicate with emergency services, send public alerts, process real patient records, compute travel routes or perform multi-resource quantity optimization. It does not provide a distributed SQL/MongoDB transaction. The local PostgreSQL engine uses PGlite and is intended for a single application process, not multiple server replicas.
 
@@ -43,7 +43,7 @@ The system does not communicate with emergency services, send public alerts, pro
 | FR14 | Maintain password confidentiality | Setup accepts hidden input, persists only independently salted scrypt hashes, and creates no plaintext password file. |
 | FR15 | Demonstrate DDL safely | CREATE, ALTER and DROP run against a disposable temporary table without dropping operational tables. |
 
-| FR16 | Find similar incidents | Pinned local 384-dimensional embeddings and PostgreSQL cosine nearest-neighbour search return ranked incidents; changed descriptions are reindexed. |
+| FR16 | Review possible duplicate reports | Current same-location active incidents are ranked by real embeddings; a signed human decision attaches the original report once or creates separately. |
 
 ## Database choice
 

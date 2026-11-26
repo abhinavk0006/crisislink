@@ -1,7 +1,7 @@
 import { readSecret } from "./secret-input.mjs";
 const query = process.argv[2];
 if (!query) {
-  console.log('Usage: pnpm vector:search "People trapped by rising water"');
+  console.log('Usage: pnpm vector:search "A storage building is burning behind the shops" <location_id> <type_id>');
   process.exit(1);
 }
 const base = process.env.APP_URL || "http://127.0.0.1:3100";
@@ -13,12 +13,13 @@ const login = await fetch(base + "/api/auth/login", {
 if (!login.ok) throw Error((await login.json()).error);
 const cookie = login.headers.get("set-cookie").split(";")[0];
 try {
-  const res = await fetch(base + "/api/incidents/search?q=" + encodeURIComponent(query), { headers: { Cookie: cookie } });
+  const res = await fetch(base + "/api/incidents/review", { method:"POST",headers: { Cookie: cookie,"Content-Type":"application/json" },
+    body:JSON.stringify({description:query,location_id:Number(process.argv[3]||1),type_id:Number(process.argv[4]||1),severity_level:"high",people_affected:0}) });
   const result = await res.json();
   if (!res.ok) throw Error(result.error);
-  console.log("Model:", result.model, "\nDimensions:", result.dimensions);
-  console.log("Executed SQL:\n" + result.sql);
-  console.table(result.rows.map(({ emergency_id, description, cosine_distance }) => ({ emergency_id, description, cosine_distance })));
+  console.log("Read-only duplicate review: same location, active status, last",result.windowHours,"hours. No report was saved.");
+  console.table(result.candidates.map(({ emergency_id, description, cosine_distance,reported_at }) => ({ emergency_id, description, cosine_distance,reported_at })));
+  console.log("Confirm attach/create in the application. A match is not proof of a duplicate.");
 } finally {
   await fetch(base + "/api/auth/logout", { method: "POST", headers: { Cookie: cookie } });
 }

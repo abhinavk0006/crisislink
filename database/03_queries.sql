@@ -21,8 +21,8 @@ WITH ranked AS (
 
 -- Recursive CTE: seven-day reporting calendar, including dates with zero incidents.
 WITH RECURSIVE days(day) AS (
- SELECT DATE '2026-10-30'
- UNION ALL SELECT day+1 FROM days WHERE day<DATE '2026-11-05'
+ SELECT CURRENT_DATE-6
+ UNION ALL SELECT day+1 FROM days WHERE day<CURRENT_DATE
 ) SELECT d.day,COUNT(e.emergency_id) AS incident_count FROM days d
 LEFT JOIN emergencies e ON e.reported_at::DATE=d.day
 GROUP BY d.day ORDER BY d.day;

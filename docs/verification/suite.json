@@ -1,14 +1,15 @@
 {
   "failed": 0,
   "command": "node --import tsx --test --test-concurrency=1 tests/*.test.ts",
-  "passed": 40,
-  "runnerTests": 40,
-  "namedChecks": 38,
+  "passed": 41,
+  "runnerTests": 41,
+  "namedChecks": 39,
   "checkedOn": "2026-11-26 Asia/Calcutta",
   "coverage": [
     "Original SQL/MongoDB integration",
-    "DDL and SQL resource-tag CRUD",
-    "Secure hash-only setup/reset",
-    "Nine real local embedding/pgvector checks"
+    "DDL, SQL CRUD and secure setup",
+    "Real vector duplicate review and human-confirmed decisions",
+    "Retry-safe SQL creation and MongoDB attachment",
+    "New incident and assignment data in live SQL lab"
   ]
 }

@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useCallback, type FormEvent } from "react";
+import { useState, useEffect, useCallback, useRef, type FormEvent } from "react";
 type Row = Record<string, any>;
 type User = {
   user_id: number;
@@ -14,7 +14,7 @@ async function api(path: string, method = "GET", body?: unknown) {
     body: body ? JSON.stringify(body) : undefined,
   });
   const data = await res.json();
-  if (!res.ok) throw Error(data.error || "Request failed");
+  if (!res.ok) throw Object.assign(Error(data.error || "Request failed"), { status: res.status });
   return data;
 }
 function badge(value: string) {
@@ -40,8 +40,15 @@ export default function Home() {
     resource_id: number;
     tag: string;
   } | null>(null);
-  const [semanticQuery, setSemanticQuery] = useState("");
-  const [semanticResult, setSemanticResult] = useState<Row | null>(null);
+  const [reportDraft, setReportDraft] = useState<Row | null>(null);
+  const [duplicateReview, setDuplicateReview] = useState<Row | null>(null);
+  const [reviewUnavailable, setReviewUnavailable] = useState(false);
+  const [draftRequestId, setDraftRequestId] = useState("");
+  const draftVersion = useRef(0);
+  const [queryEpoch, setQueryEpoch] = useState(0);
+  const [queryPending, setQueryPending] = useState(false);
+  const [queryError, setQueryError] = useState("");
+  const [queryUpdatedAt, setQueryUpdatedAt] = useState("");
   const refresh = useCallback(async () => {
     setData(await api("dashboard"));
   }, []);
@@ -83,11 +90,44 @@ export default function Home() {
     if (user && tab === "Field notes") void loadNotes();
   }, [user, tab, loadNotes]);
   useEffect(() => {
-    if (user && tab === "SQL lab")
-      api("queries?key=" + query)
-        .then(setQueryResult)
-        .catch((e) => setError(e.message));
-  }, [user, tab, query]);
+    if (!user || tab !== "SQL lab") return;
+    let cancelled = false, inFlight = false;
+    setQueryResult(null);
+    setQueryUpdatedAt("");
+    const load = async () => {
+      if (cancelled || inFlight) return;
+      inFlight = true;
+      setQueryPending(true);
+      try {
+        const result = await api("queries?key=" + query);
+        if (!cancelled) { setQueryResult(result); setQueryUpdatedAt(result.executedAt); setQueryError(""); }
+      } catch (e) {
+        if (!cancelled) { setQueryResult(null); setQueryUpdatedAt(""); setQueryError((e as Error).message); }
+      } finally { inFlight = false; if (!cancelled) setQueryPending(false); }
+    };
+    void load();
+    const timer = window.setInterval(() => void load(), 5000);
+    return () => { cancelled = true; window.clearInterval(timer); };
+  }, [user, tab, query, queryEpoch]);
+  function resetReportReview() {
+    draftVersion.current++;
+    setDuplicateReview(null); setReportDraft(null); setReviewUnavailable(false);
+  }
+  async function submitReportDecision(choice: "create" | "attach", incident?: number) {
+    if (!reportDraft) return;
+    await action(async () => {
+      const result = await api("incidents/report", "POST", {
+        draft: reportDraft, action: choice, emergency_id: incident,
+        ...(duplicateReview ? { reviewToken: duplicateReview.reviewToken } : { bypass_review: true, request_id: draftRequestId }),
+      });
+      setSelected(result.emergency_id); setShowCreate(false); resetReportReview();
+      if (result.action === "attached") {
+        setSearch(""); setEditing(null); setTab("Field notes");
+        setMessage(`Additional report saved to incident #${result.emergency_id}. No new incident or dispatch was created.`);
+      } else setMessage(`Incident #${result.emergency_id} saved with automatic status history.`);
+      try { await refresh(); } catch { throw Error(`The report was saved to incident #${result.emergency_id}, but refreshing the dashboard failed. Reload to view it.`); }
+    });
+  }
   function form(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     return Object.fromEntries(new FormData(event.currentTarget));
@@ -284,61 +324,33 @@ export default function Home() {
                 {coordinator && (
                   <button
                     className="primary"
-                    onClick={() => setShowCreate(!showCreate)}
+                    onClick={() => { setShowCreate(!showCreate); resetReportReview(); }}
                   >
                     + Report incident
                   </button>
                 )}
               </div>
-              <section className="panel semantic-search">
-                <h3>Find similar incidents</h3>
-                <p className="muted">Describe a situation to find related incidents by meaning, even when the wording differs.</p>
-                <form onSubmit={(e) => {
-                  e.preventDefault();
-                  void action(async () => {
-                    setSemanticResult(null);
-                    setSemanticResult(await api("incidents/search?q=" + encodeURIComponent(semanticQuery)));
-                  });
-                }}>
-                  <label htmlFor="semantic-query">Situation or question</label>
-                  <div className="semantic-controls">
-                    <input id="semantic-query" value={semanticQuery}
-                      onChange={(e) => setSemanticQuery(e.target.value)}
-                      placeholder="People trapped by rising water" minLength={3} maxLength={500} required />
-                    <button className="primary" disabled={busy}>{busy ? "Searching…" : "Search by meaning"}</button>
-                  </div>
-                </form>
-                {semanticResult && <div aria-live="polite">
-                  <p className="muted">{semanticResult.coverage.indexed} of {semanticResult.coverage.total} incidents indexed. Results are ranked suggestions; review their details before acting.</p>
-                  {semanticResult.rows.length === 0 && <p>No indexed incidents yet.</p>}
-                  <ol className="semantic-results">{semanticResult.rows.map((r: Row) => <li key={r.emergency_id}>
-                    <button type="button" onClick={() => setSelected(r.emergency_id)}>Open incident #{r.emergency_id}</button>
-                    <p>{r.description}</p>
-                    <small>Cosine distance: {Number(r.cosine_distance).toFixed(4)} · {r.status}</small>
-                  </li>)}</ol>
-                </div>}
-              </section>
               {showCreate && coordinator && (
                 <section className="panel">
                   <h3>Report a new incident</h3>
                   <form
                     className="form-grid"
+                    onChange={resetReportReview}
                     onSubmit={(e) => {
                       const d = form(e);
+                      const draft = { ...d, type_id: Number(d.type_id), location_id: Number(d.location_id),
+                        people_affected: Number(d.people_affected), capability_id: Number(d.capability_id) };
+                      const version = draftVersion.current;
+                      setReportDraft(draft); setDraftRequestId(crypto.randomUUID());
+                      setDuplicateReview(null); setReviewUnavailable(false);
                       void action(async () => {
-                        const row = await api("incidents", "POST", {
-                          ...d,
-                          type_id: Number(d.type_id),
-                          location_id: Number(d.location_id),
-                          people_affected: Number(d.people_affected),
-                          capability_id: Number(d.capability_id),
-                        });
-                        setSelected(row.emergency_id);
-                        setShowCreate(false);
-                        await refresh();
-                        setMessage(
-                          `Incident #${row.emergency_id} saved with automatic status history.`,
-                        );
+                        try {
+                          const result = await api("incidents/review", "POST", draft);
+                          if (draftVersion.current === version) setDuplicateReview(result);
+                        } catch (e) {
+                          if (draftVersion.current === version && ((e as Error & {status?:number}).status === 503 || e instanceof TypeError)) setReviewUnavailable(true);
+                          throw e;
+                        }
                       });
                     }}
                   >
@@ -403,9 +415,26 @@ export default function Home() {
                       />
                     </label>
                     <button disabled={busy} className="primary">
-                      Save incident
+                      {busy ? "Checking…" : "Check for existing incidents"}
                     </button>
                   </form>
+                  {duplicateReview && reportDraft && <div className="duplicate-review" aria-live="polite">
+                    <h3>{duplicateReview.candidates.length ? "Could this be an existing incident?" : "No close matches found"}</h3>
+                    <p>Checked active incidents at the selected location reported in the last {duplicateReview.windowHours} hours. Similar wording is a suggestion, not proof of a duplicate. Review the details before choosing.</p>
+                    {duplicateReview.candidates.map((candidate: Row) => <article key={candidate.emergency_id} className="duplicate-candidate">
+                      <h4>Incident #{candidate.emergency_id} · {candidate.type_name} · {candidate.status}</h4>
+                      <p>{candidate.description}</p>
+                      <p className="muted">Reported {new Date(candidate.reported_at).toLocaleString()} · Cosine distance {Number(candidate.cosine_distance).toFixed(4)} (lower is closer)</p>
+                      <p>{candidate.active_assignments.length ? "Already deployed: " + candidate.active_assignments.map((a: Row) => `${a.resource_name} / ${a.employee_id}`).join(", ") : "No active team assigned yet."}</p>
+                      <button type="button" disabled={busy} onClick={() => void submitReportDecision("attach", candidate.emergency_id)}>Same incident — attach this report</button>
+                    </article>)}
+                    <button type="button" className="primary" disabled={busy} onClick={() => void submitReportDecision("create")}>{duplicateReview.candidates.length ? "Different incident — create separately" : "Create new incident"}</button>
+                    <p className="muted">Attaching saves your original report as an additional field note. It does not change severity, affected-person counts or existing assignments automatically.</p>
+                  </div>}
+                  {reviewUnavailable && reportDraft && <div role="status" className="duplicate-review">
+                    <p>The duplicate check did not finish. You can retry above or explicitly create a new incident without it.</p>
+                    <button type="button" disabled={busy} onClick={() => void submitReportDecision("create")}>Create new incident without duplicate check</button>
+                  </div>}
                 </section>
               )}
               <div className="incident-layout">
@@ -959,7 +988,7 @@ export default function Home() {
                   <h2>Query explorer</h2>
                   <p className="muted">
                     These predefined queries execute against the live PostgreSQL
-                    database.
+                    database. Results refresh every 5 seconds while this tab is open.
                   </p>
                 </div>
                 <label>
@@ -978,9 +1007,12 @@ export default function Home() {
                   </select>
                 </label>
               </div>
+              <button type="button" disabled={queryPending} onClick={() => setQueryEpoch(n => n + 1)}>Refresh results now</button>
+              {queryError && <p role="alert">{queryError}</p>}
               <pre className="sql-code">{queryResult?.sql}</pre>
               <p className="small muted">
-                {queryResult?.rows.length || 0} rows returned
+                {queryPending ? "Refreshing… · " : ""}{queryResult?.rows.length || 0} rows returned
+                {queryUpdatedAt && ` · Last executed ${new Date(queryUpdatedAt).toLocaleTimeString()}`}
               </p>
               <ResultTable rows={queryResult?.rows || []} />
             </section>

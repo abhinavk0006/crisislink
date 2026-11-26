@@ -26,7 +26,7 @@ This runnable reconstruction uses the 17-table model and 63 fictional seed rows 
 - Three application and PostgreSQL roles: Coordinator, Responder and Technician.
 - Atomic SQL dispatch and completion functions, an automatic status-history trigger, CTE/window/recursive queries, a reporting view, indexes, GRANT/REVOKE and a row-level maintenance policy.
 - MongoDB validation, compound/text indexes, note CRUD, full-text search and tag aggregation.
-- PostgreSQL pgvector semantic incident search using local MiniLM embeddings (384 dimensions), cosine distance and an HNSW index, as taught in the course slides.
+- PostgreSQL pgvector duplicate-report review using local MiniLM embeddings (384 dimensions), cosine distance and an HNSW index, as taught in the course slides.
 
 This is a single-process local classroom demonstration, with fictional incidents. It does not contact real emergency services. PGlite is not a network PostgreSQL server. The source MySQL scripts remain in `database/mysql/` for provenance; the application runs only the PostgreSQL adaptation.
 
@@ -61,7 +61,7 @@ Before starting the app, run `pnpm setup` and choose a 12 to 200 character demon
 
 All accounts are synthetic. Passwords receive independent scrypt salts; sessions store only SHA-256 token hashes. Cookies are HttpOnly and SameSite Strict, with Secure enabled for HTTPS. This local demo uses loopback HTTP. MongoDB is loopback-only and has no authentication in the included local helper; a remote deployment requires authenticated MongoDB/TLS, HTTPS, managed secrets and a suitable database/server architecture.
 
-`pnpm vector:setup` downloads the pinned public MiniLM model once into `data/models` and backfills incident vectors. Stop the app before running this standalone command. The app also indexes new/changed descriptions on the next semantic search. No embedding API key is needed; inference runs locally and works offline after caching. This feature is **Find similar incidents** on the Incidents screen. MongoDB field-note search remains keyword search. See `docs/COURSE_ALIGNMENT.md` for slide pages, exact SQL, limitations and viva examples.
+`pnpm vector:setup` downloads the pinned public MiniLM model once into `data/models` and backfills incident vectors. Stop the app before running this standalone command. The app also indexes new/changed descriptions on the next semantic search. No embedding API key is needed; inference runs locally and works offline after caching. The **Report incident** form checks for possible duplicates, then lets the coordinator attach an additional report or create separately. MongoDB field-note search remains keyword search. See `docs/COURSE_ALIGNMENT.md` for slide pages, exact SQL, limitations and viva examples.
 
 Production-mode local check:
 
@@ -86,7 +86,7 @@ Configuration defaults are documented in `.env.example`. Next.js loads `.env.loc
 
 ## Database structure and commands
 
-`database/00_schema.sql` defines the 17 domain tables. `01_seed.sql` preserves the 63 supplied seed records; initialization replaces nonfunctional sample hash values with real password hashes. `02_advanced.sql` adds stronger constraints, functions, trigger, roles, RLS and two internal authentication tables. There are 26 domain foreign keys and one extra session-to-user foreign key. `03_queries.sql` contains standalone SQL demonstrations, including rollback-safe DML. `04_mongo_commands.js` contains mongosh collection creation and CRUD/search/aggregation examples for a fresh MongoDB database.
+`database/00_schema.sql` defines the 17 domain tables. `01_seed.sql` preserves the 63 supplied seed records; initialization replaces nonfunctional sample hash values with real password hashes. `02_advanced.sql` adds stronger constraints, functions, trigger, roles, RLS and two internal authentication tables. There are 26 domain foreign keys. Internal tables add a session-to-user foreign key and two decision-receipt references. `07_vector_search.sql` adds vector metadata/indexing; `08_report_receipts.sql` adds the third internal table for retry-safe report decisions. `03_queries.sql` contains standalone SQL demonstrations, including rollback-safe DML. `04_mongo_commands.js` contains mongosh collection creation and CRUD/search/aggregation examples for a fresh MongoDB database.
 
 The conceptual diagram shows derived priority and available capacity attributes. Neither is stored in this classroom-based application. Readiness is determined by resource status; dispatch is exclusive per active resource and responder. The application strengthens selected nullability and uniqueness rules; these extensions are documented in the SQL migration and report. One resource must cover all requested capability types for its dispatch; quantities greater than one are outside this demonstration's dispatch model.
 

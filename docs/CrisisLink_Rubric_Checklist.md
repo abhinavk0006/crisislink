@@ -23,7 +23,7 @@ The friend's ZIP supplied a classroom MySQL model, seed, diagrams, slides and SQ
 
 ## Verification record
 
-- The revised suite passed 40 runner tests (38 named checks plus two parents), including nine real local embedding/pgvector checks alongside the original SQL/MongoDB tests.
+- The revised suite passed 41 runner tests (39 named checks plus two parents), including nine real local embedding/pgvector checks alongside the original SQL/MongoDB tests.
 - 12 running HTTP checks passed, including incident/dispatch/completion, MongoDB CRUD and SQL tag CRUD. See docs/verification/http.json.
 - Two outage checks passed against a separate running production instance: an unavailable MongoDB endpoint returned 503, while the SQL dashboard remained available.
 - TypeScript checking and a production build passed. Final build/evidence files are included in the source package.
@@ -57,5 +57,13 @@ See docs/LEVEL3_REQUIREMENTS_AUDIT.md for all 18 requirements, PROJECT_SPECIFICA
 - [x] Real local MiniLM embeddings, vector(384), cosine distance and HNSW incident search.
 - [x] Invalidation trigger, conditional reindex writes, cached offline model and explicit model-outage errors.
 - [x] Existing architecture and MongoDB keyword-search behaviour preserved.
-- [x] Five new HTTP checks plus the existing 12 HTTP checks and two MongoDB outage checks pass.
+- [x] Seven new HTTP checks plus the existing 12 HTTP checks and two MongoDB outage checks pass.
 - See COURSE_ALIGNMENT.md for course-PDF pages and precise limitations.
+
+## Human-confirmed duplicate workflow and live lab
+
+- [x] Standalone incident search replaced with contextual duplicate review in Report incident.
+- [x] Same location, active status, last 24 hours, real vector similarity and visible candidate/team details.
+- [x] Human attach/create decisions; signed draft-bound review; stale/expired review rejection.
+- [x] Retry-safe MongoDB observation/SQL creation; original report details preserved without automatic counts/severity changes.
+- [x] SQL lab polls current data every five seconds, offers manual refresh and uses a rolling current-date calendar.

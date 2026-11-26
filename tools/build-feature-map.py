@@ -200,21 +200,34 @@ f('OPS01','Database outage failure handling','Integration','Operational + isolat
 ]
 
 features.extend([
-f('VEC01','Learned sentence embeddings','SQL','Operational incident search',
- 'Encode incident descriptions and questions as normalized 384-dimensional vectors using the same pinned local MiniLM model.',
+f('VEC01','Learned sentence embeddings','SQL','Operational duplicate-report review',
+ 'Encode incident descriptions and incoming reports as normalized 384-dimensional vectors using the same pinned local MiniLM model.',
  [ref('lib/embeddings.ts','export async function embedText('),ref('lib/embeddings.ts','export const EMBEDDING_REVISION'),ref('lib/semantic.ts','export async function indexIncidents(')],
- 'Run pnpm vector:setup once. In Incidents search A warehouse is burning. Show the model identity and 384 dimensions in the API result. We use real model inference, not manual vectors or keyword substitutions.',
+ 'Run pnpm vector:setup once. Create a current warehouse-fire incident, then check a differently worded report at the same location. Show the pinned local model and 384 dimensions in code. No incident is written during review.',
  'The model turns sentences into numeric representations. Identical model and preprocessing are required for document and query vectors.','Abhinav'),
-f('VEC02','pgvector cosine distance and HNSW index','SQL','Operational incident search',
- 'Retrieve semantically related past incidents using a database-native nearest-neighbour query.',
- [ref('database/07_vector_search.sql','CREATE EXTENSION IF NOT EXISTS vector'),ref('database/07_vector_search.sql','ON emergencies USING hnsw'),ref('lib/semantic.ts','export const SEMANTIC_SQL'),ref(API,'if (path === "incidents/search"'),ref(UI,'Find similar incidents')],
- 'Search People trapped by rising water and inspect ranked incidents. Show embedding <=> query, ORDER BY distance and LIMIT. Smaller distance is closer; the score is not probability. Small tables may use a sequential scan.',
+f('VEC02','pgvector cosine distance and HNSW index','SQL','Operational duplicate-report review',
+ 'Suggest possible duplicate active incidents using same-location/recent-time filters and native vector nearest neighbours.',
+ [ref('database/07_vector_search.sql','CREATE EXTENSION IF NOT EXISTS vector'),ref('database/07_vector_search.sql','ON emergencies USING hnsw'),ref('lib/incident-review.ts','export const DUPLICATE_SQL'),ref(API,'if (path === "incidents/review"'),ref(UI,'Check for existing incidents')],
+ 'In Report incident, check a paraphrased current same-location report. Show the CTE filters, cosine distance, candidate time and deployed teams. The coordinator must choose attach or create separately; similarity never proves identity.',
  'This implements the course PostgreSQL vector lesson within our existing architecture. MongoDB notes still use keyword search.','Abhinav'),
 f('VEC03','Embedding invalidation and incremental indexing','SQL','Operational derived-index maintenance',
  'Prevent a description edit from leaving a searchable embedding for old text, while keeping incident reporting independent of the model.',
- [ref('database/07_vector_search.sql','CREATE OR REPLACE FUNCTION invalidate_incident_embedding()'),ref('database/07_vector_search.sql','CREATE TRIGGER trg_invalidate_incident_embedding'),ref('lib/semantic.ts','WHERE emergency_id=$3 AND description=$4'),ref('tests/semantic.test.ts','Description edits invalidate old vectors')],
+ [ref('database/07_vector_search.sql','CREATE OR REPLACE FUNCTION invalidate_incident_embedding()'),ref('database/07_vector_search.sql','CREATE TRIGGER trg_invalidate_incident_embedding'),ref('lib/semantic.ts','WHERE emergency_id=$3 AND description=$4'),ref('tests/semantic.test.ts','description edits invalidate vectors')],
  'Show the BEFORE description-update trigger. It clears vectors only for changed descriptions; the next search recomputes them. Inference happens outside transactions and updates compare source text to avoid stale writes.',
  'Embeddings are a derived search representation. Invalidating and regenerating them keeps search consistent with the source incident.','Sachin'),
+])
+
+features.extend([
+f('VEC04','Human-confirmed duplicate decisions and idempotent reports','Integration','Operational reporting',
+ 'Attach an additional report once without another incident or dispatch, or deliberately create a separate event.',
+ [ref('lib/incident-review.ts','export async function confirmIncidentReport('),ref('database/08_report_receipts.sql','CREATE TABLE IF NOT EXISTS app_incident_report_receipts'),ref(M,'export async function saveAdditionalReport('),ref(M,'unique: true, partialFilterExpression'),ref(UI,'Same incident — attach this report')],
+ 'Show the same-incident versus create-separately choices. Attach a report; show the original text and reported details in Field notes and unchanged incident/assignment counts. Retry the same decision: it returns the same saved observation.',
+ 'SQL records the decision; MongoDB preserves the original observation. A signed review binds user, draft and candidates. Receipts and a unique partial index make retries safe; there is no distributed transaction.','Both'),
+f('SQL22','Live SQL results and rolling calendar','SQL','Operational SQL lab',
+ 'Show new incidents and assignments using real queries with five-second polling, manual refresh and a server execution timestamp.',
+ [ref(S,'executedAt: new Date().toISOString()'),ref(UI,'Refresh results now'),ref(UI,'window.setInterval(() => void load(), 5000)'),ref('tests/live-lab.test.ts','SQL lab reads new incidents')],
+ 'Create a new incident and open SQL lab: JOIN and latest-history CTE show its ID, and the current-day calendar count rises. Dispatch it and inspect view/group results. Not every record meets every filtered query.',
+ 'These are current database results. The lab polls every five seconds while open and can refresh immediately; the calendar uses CURRENT_DATE rather than old sample dates.','Sachin'),
 ])
 
 inventory=[]
@@ -225,7 +238,9 @@ for name,purpose,path,needle in [
  ('embedText','Generate real locally cached MiniLM sentence embeddings.','lib/embeddings.ts','export async function embedText('),
  ('vectorLiteral','Validate dimensions/finiteness and serialize a bound vector value.','lib/embeddings.ts','export function vectorLiteral('),
  ('indexIncidents','Incrementally maintain incident embeddings with conditional writes.','lib/semantic.ts','export async function indexIncidents('),
- ('searchIncidents','Run authenticated PostgreSQL cosine nearest-neighbour search.','lib/semantic.ts','export async function searchIncidents('),
+ ('reviewIncident','Filter and rank possible duplicates and sign a draft-bound review.','lib/incident-review.ts','export async function reviewIncident('),
+ ('confirmIncidentReport','Apply the coordinator decision with retry and stale-review protection.','lib/incident-review.ts','export async function confirmIncidentReport('),
+ ('saveAdditionalReport','Idempotently preserve an additional report as a MongoDB observation.','lib/mongo.ts','export async function saveAdditionalReport('),
 ]:inv(name,'Application vector-search helper',purpose,path,needle)
 inv('app_actor','Stored SQL function','Read the transaction actor ID used by audit and row policies.',ADV,'CREATE FUNCTION app_actor()')
 inv('record_emergency_status','Stored trigger function','Insert a history event after incident INSERT or an actual status change.',ADV,'CREATE FUNCTION record_emergency_status()')
@@ -269,7 +284,7 @@ f'Source-code snapshot: `{REV}`. Line numbers and marker strings were checked di
 '- SQL stored functions are dispatch_response, finish_response, app_actor, record_emergency_status and invalidate_incident_embedding. TypeScript helpers are application functions. No CREATE PROCEDURE/CALL routine is implemented.',
 '- The trigger, stored dispatch/completion functions and assignment view serve the operational workflow. CTE/recursive/nested/aggregate examples also execute live, but through SQL lab; they are not all dashboard implementation queries.',
 '- database/03_queries.sql and database/04_mongo_commands.js are supplementary standalone examples. Runtime query definitions live in lib/service.ts and lib/mongo.ts. database/06_ddl_demo.sql is an isolated demonstration, not an operational migration.',
-'- PostgreSQL incident semantic search uses real MiniLM embeddings, pgvector cosine distance and an HNSW index. MongoDB note search remains keyword search. Supporting indexes do not establish measured speed improvement; small data may use sequential scans.',
+'- PostgreSQL duplicate-report review uses real MiniLM embeddings, pgvector cosine distance and an HNSW index. MongoDB note search remains keyword search. Supporting indexes do not establish measured speed improvement; small data may use sequential scans.',
 '- Presenter suggestions follow CONTRIBUTIONS.md and are responsibility assignments, not claims of historical authorship.',
 '',
 '## Fast lookup',

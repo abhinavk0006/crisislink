@@ -1,95 +1,93 @@
-# CrisisLink: course alignment and vector-search viva guide
+# CrisisLink: duplicate-report review and course alignment
 
-Revision: 26 November 2026. This document describes implemented behaviour, not planned features.
+Revision: 26 November 2026. This describes implemented behaviour. The standalone similar-incidents search panel and its GET endpoint have been removed.
 
-## What changed and why
+## The operational problem
 
-The existing Next.js -> authenticated API -> PostgreSQL/PGlite + MongoDB architecture remains intact. The 17 domain tables, SQL dispatch/completion workflow, roles, MongoDB note CRUD and keyword search remain. We extended the existing emergencies relation with a real pgvector column and added **Find similar incidents** to the Incidents screen. A coordinator can describe a new situation and review related historical incidents before deciding how to respond. Search is advisory; it never dispatches a team automatically.
+Several callers may report one emergency using different wording. Creating another incident for every report fragments information and can lead to repeated coordination work. While reporting a new incident, CrisisLink now checks whether it could describe an existing active incident at the same location. The coordinator must decide; vector similarity never automatically merges reports, suppresses incident creation or dispatches a team.
 
-This directly implements the PostgreSQL vector-search lesson in the supplied UE24CS351A_Merged_Slides.pdf, rather than presenting keyword search as vector search. We did not replace MongoDB or introduce Redis solely to match an example.
+Example: existing report “Flames and heavy smoke are coming from a warehouse near the market.” Incoming report “A storage building is burning behind the shops.” The operator sees both descriptions, reporting time, type, status and already-deployed teams. Choosing **Same incident — attach this report** preserves the incoming description and reported details as an additional MongoDB field note. Choosing **Different incident — create separately** creates a new SQL incident even when a candidate exists.
 
-## Slide-to-implementation mapping
+## Architecture and storage
 
-Page references are 1-based PDF pages, not the internal slide number printed on a slide.
+The architecture remains React -> Next.js authenticated API -> PostgreSQL/PGlite + MongoDB. No extra server or database is introduced.
 
-| PDF pages | Course concept | CrisisLink implementation |
+- PostgreSQL owns the canonical incident, current status, location, resource assignments and vector index.
+- A pinned local MiniLM model encodes descriptions into normalized 384-dimensional vectors. There is no hosted embedding API, keyword substitution or JavaScript production distance scan.
+- PostgreSQL pgvector computes cosine distance and has an HNSW cosine index. An operational CTE first retrieves up to five filtered nearest candidates, then joins their incident type and deployed-team details.
+- MongoDB preserves the original incoming report as a note tagged `additional-report`, with authenticated author/timestamps and the submitted severity, affected-person count, type, location and capability in assessment fields. These are reported observations; canonical counts/severity are not overwritten automatically.
+- `app_incident_report_receipts` is one internal decision/idempotency table, added to the previous two internal authentication tables. The domain remains 17 tables and 26 domain foreign keys. The three vector columns extend emergencies. The base ER/schema diagrams do not depict these implementation extensions; DATA_DICTIONARY.md does.
+
+## Candidate eligibility and honest limits
+
+The candidate must have the same location ID, be reported/responding, and have a reporting timestamp in the preceding 24 hours. Future timestamps and resolved/older incidents are excluded. We do not filter by the incoming type because callers can describe/classify the same event differently; both types are shown for human review.
+
+Only the nearest five eligible candidates with cosine distance <= 0.65 are shown. This is a documented screening heuristic, not a calibrated confidence or duplicate probability. Lower distance means closer meaning; even a close match can be a separate event. A broad location ID may cover multiple events; other locations, older events and weak matches can be missed. No claim of perfect duplicate detection or measured production accuracy is made. The coordinator can always choose separate creation.
+
+For a small dataset PostgreSQL may choose an exact scan and sort. At larger scale HNSW offers approximate retrieval, so it can miss neighbours. Iterative strict-order scans are enabled for filtered ANN queries. Tests verify the HNSW index and native vector-query eligibility without claiming that every filtered query uses that index or that it is faster on tiny data.
+
+## API and confirmation lifecycle
+
+1. **Report incident** form -> `POST /api/incidents/review`, with the complete validated draft.
+2. Coordinator authorization and Zod validation run. Missing/outdated embeddings are refreshed; inference is outside transactions, and conditional writes prevent vectors for changed source text.
+3. The API returns candidate details and a signed ten-minute review token bound to the exact draft, coordinator and candidate fingerprints. Review writes no incident, assignment or note.
+4. Changing the form invalidates the displayed review; late responses for an old draft are ignored. Tampered/expired tokens or changed drafts are rejected server-side.
+5. `POST /api/incidents/report` carries the human choice. Attachment rechecks that the selected incident is still eligible and unchanged. A coordinator can explicitly create separately despite a suggested match.
+6. A SQL decision receipt prevents switching one review from attach to create (or vice versa). Separate creation and its receipt commit in one SQL transaction. Attachment uses a MongoDB unique partial index on `report_review_id` plus `$setOnInsert`; retrying the same signed decision creates only one observation.
+
+Review signatures use a process-local random key: a server restart invalidates outstanding reviews. Run the check again after a restart. Idempotency covers retries of the same decision, not a new review deliberately submitted again.
+
+SQL and MongoDB do not share a distributed transaction. An attachment receipt records the chosen action; it is not proof that MongoDB saved the note. An unavailable MongoDB returns an explicit error without creating another incident or reporting success. Retry the same decision while its token remains valid. The original report is not auto-merged into the SQL description.
+
+If the embedding model is unavailable, review returns 503. The UI offers an explicit **Create new incident without duplicate check** action. This uses a request ID for idempotency and does not claim that duplicate screening succeeded. Core reporting and dispatch are not silently blocked by a model failure. Existing low-level `POST /api/incidents` remains compatible for programmatic incident creation; duplicate review is advisory, not a database uniqueness constraint.
+
+## Real SQL lab
+
+Every result is a fresh authenticated SQL query, not a stored result array. The tab executes immediately when opened or when the query changes, polls every five seconds while visible in the application, and offers **Refresh results now** plus the server execution timestamp. Failed requests clear old results instead of presenting them as current.
+
+The recursive calendar now generates `CURRENT_DATE-6` through `CURRENT_DATE` using the database's Asia/Kolkata timezone. Newly created incidents appear in the JOIN and latest-history CTE, in the unassigned query before dispatch, and in today's calendar count. Assignment views and grouping results change after dispatch. The nested query still applies its above-average condition; not every new incident belongs in every filtered result. A separate browser can use manual refresh for immediate verification; polling is not WebSocket push.
+
+## Course PDF to code
+
+Page numbers below are 1-based PDF pages in the supplied UE24CS351A_Merged_Slides.pdf.
+
+| Pages | Concept | Implemented location |
 |---|---|---|
-| 659-660 | Full-text search versus semantic search | MongoDB `$text` searches field-note words/tags; PostgreSQL incident search compares learned embeddings. They are separate features with separate labels. |
-| 675-681 | Embedding model; extract text, generate vectors, store and query | `lib/embeddings.ts` runs pinned MiniLM locally; `lib/semantic.ts` indexes incident descriptions and embeds the query. |
-| 681, 697-698 | `CREATE EXTENSION vector`, vector column, HNSW cosine index | `database/07_vector_search.sql`: `vector(384)` and `USING hnsw (embedding vector_cosine_ops)`. |
-| 685-687, 709 | Cosine similarity and distance | `embedding <=> $1::vector` is distance; lower is closer. `1 - distance` is similarity, not confidence/probability. |
-| 688-689 | Exact versus approximate nearest neighbours | The SQL query can use HNSW approximate search. Our small dataset may instead use an exact sequential scan; tests demonstrate index eligibility without claiming benchmark gains. |
-| 703, 708 | MiniLM model-generated sentence embeddings | We use the full 384 dimensions, mean pooling and normalization. The slides permit dimensions beyond their simplified 8-dimensional demo. JS/ONNX runs the same model family in our existing Node backend, avoiding a new Python service. |
-| 717-729 | NoSQL vector search and Redis examples | Retained as course context. We implemented the taught PostgreSQL path, not a Redis simulation or a claim of MongoDB native vector search. |
+| 659-660 | Keyword versus semantic search | MongoDB note `$text` remains keyword search; duplicate review compares incident embeddings. |
+| 675-681 | Generate, store and query sentence embeddings | `lib/embeddings.ts`, `lib/semantic.ts`, `lib/incident-review.ts` |
+| 681, 697-698 | pgvector column and HNSW cosine index | `database/07_vector_search.sql` |
+| 685-687, 709 | Cosine similarity/distance | Native `<=>` operator in `DUPLICATE_SQL`; smaller distance means closer meaning. |
+| 688-689 | Exact versus approximate nearest neighbours | Native vector query, HNSW index, explicit planner/recall limits above |
+| 703, 708 | MiniLM sentence embeddings | Full 384 dimensions, mean pooling, normalization and pinned model revision; JS/ONNX stays inside our existing Node backend. |
+| 717-729 | NoSQL/Redis vector examples | Course context; our implemented vector backend is the taught PostgreSQL path. No native MongoDB `$vectorSearch` claim. |
 
-## Exact runtime path
+Existing M:N bridge tables, keys/constraints, SQL CRUD, JOINs/subqueries, stored functions, audit/invalidation triggers, roles/grants, RLS and transactions remain. The duplicate-review query now also puts a CTE into a real operational workflow. MongoDB still provides flexible documents, validation, CRUD, keyword search, compound/text indexes and aggregation; the new unique partial index supports retry-safe attachments.
 
-1. Incidents screen: enter a situation in **Find similar incidents** and press **Search by meaning**.
-2. Browser sends `GET /api/incidents/search?q=...&limit=5`.
-3. Existing route handler authenticates the session. Zod validates query length (3-500) and result limit (1-10).
-4. `indexIncidents()` finds missing/outdated incident embeddings. Inference runs outside SQL transactions. A conditional update saves each vector only if its description is unchanged.
-5. `embedText()` generates the query vector using the identical pinned model, pooling, normalization and dimensions.
-6. `asActor()` executes the parameterized nearest-neighbour query under the authenticated SQL role.
-7. The browser displays ranked descriptions and cosine distances; selecting a result opens its incident details.
-
-```sql
-SELECT emergency_id, description,
-       embedding <=> $1::vector AS cosine_distance,
-       1 - (embedding <=> $1::vector) AS cosine_similarity
-FROM emergencies
-WHERE embedding IS NOT NULL AND embedding_model = $2
-ORDER BY embedding <=> $1::vector
-LIMIT $3;
-```
-
-`$1`, `$2` and `$3` are bound values. No arbitrary SQL or user-supplied embedding is accepted by the search API.
-
-## Schema and indexing lifecycle
-
-The additive migration adds `embedding vector(384)`, `embedding_model varchar(160)` and `embedded_at timestamptz`. No new domain entity or relationship is needed. The original ER/schema images show the base domain model; these three implementation columns extend emergencies and are listed in the regenerated data dictionary.
-
-`trg_invalidate_incident_embedding` is a BEFORE UPDATE OF description trigger. It clears the old vector/model/time only when the description actually changes. Updating status alone leaves the vector valid. The next semantic search reindexes pending rows. Existing seed/demo incidents are backfilled by `pnpm vector:setup` or the next search; new incident creation stays independent of model availability. Cached up-to-date vectors are reused.
-
-Derived-index writes are performed by the trusted backend database connection. Result reads use the actor's SQL role. Operational API endpoints never accept vector fields. The existing coordinator role can update incidents at the SQL level; no claim is made that the database owner or coordinator is prevented from changing all incident columns directly.
-
-## Setup and offline operation
-
-Stop the app before running standalone setup against its PGlite directory:
+## Setup and demonstration
 
 ```powershell
 pnpm install --frozen-lockfile
+# Stop the app before standalone setup uses its PGlite folder:
 pnpm vector:setup
 pnpm mongo
-# In another terminal:
+# In a second terminal:
 pnpm dev
 ```
 
-On first setup, model files download from the public Hugging Face repository into ignored `data/models`. No API key is required. Text inference runs locally; descriptions are not sent to a hosted embedding API. The model weights/tokenizer revision is pinned in code. Set `EMBEDDING_OFFLINE=1` to require the cached model without network access. Set `EMBEDDING_CACHE_DIR` to use another cache location.
+The pinned public model downloads once to ignored `data/models`. Inference then runs locally. `EMBEDDING_OFFLINE=1` requires the cached model. The source ZIP excludes private runtime databases and model cache; a new machine must run setup.
 
-If the model is missing/offline or inference fails, semantic search returns HTTP 503. It does not silently fall back to word matching, and incident reporting/dispatch and MongoDB operations retain their existing behaviour. On a larger dataset, incremental indexing should move to a background job; synchronizing pending vectors during a search is appropriate only for this bounded classroom demonstration. Concurrent searches may repeat inference but conditional updates prevent storing vectors for an edited description.
+Demo:
 
-## Demo and intricate questions
+1. Create a current incident at Demo Market using the warehouse-fire sentence above. Check, then choose new incident if no close candidate exists.
+2. Start another report at the same location using the paraphrased storage-building sentence.
+3. Check candidates and show the existing incident/time/deployed teams. Choose same incident.
+4. Show the original report as an `additional-report` note; show that incident/assignment counts did not increase.
+5. Repeat with a genuinely different event and choose create separately. Open SQL lab: JOIN/CTE and today's recursive count include the new incident; dispatch it to demonstrate view/group changes.
 
-For a custom query in a terminal while the app is running, use `pnpm vector:search "People trapped by rising water"`. Enter the current coordinator password in the hidden prompt. This signs in through the existing API, prints the model/dimensions/SQL and ranked results, then revokes its temporary session. It does not open a second PGlite connection. Change the quoted question to demonstrate an unseen query.
+For read-only custom terminal checks against the running app: `pnpm vector:search "A storage building is burning behind the shops" 1 1`. The final arguments are location ID and reported type ID; defaults are both 1. It asks for the coordinator password with hidden input, displays candidate records, then revokes its temporary session. It saves no report.
 
-- Try `People trapped by rising water` and compare the flood incident with unrelated fire/medical descriptions.
-- Try `A warehouse is burning` and inspect the warehouse-fire match.
-- Add a new incident using different wording; its first search indexes it automatically.
-- Scores are distances, not a percentage confidence. Search returns the nearest available records even if every record is weakly related; the operator must assess relevance.
-- HNSW is approximate. A defined index does not prove that the planner selected it or that a tiny dataset is faster. A test uses `SET LOCAL enable_seqscan=off` only to verify index eligibility; production search does not force it.
-- Same dimensions alone are insufficient: document and query vectors must use the same model and preprocessing. `embedding_model` stores that identity.
-- The 384 numbers are learned features, not labelled coordinates such as “fire score” or “flood score”. Cosine distance compares vector directions.
-- Existing MongoDB field-note search is still keyword search. Do not say it now uses `$vectorSearch`, embeddings or an Atlas index.
-- Existing SQL dispatch checks capability types and availability. Vector matches are never used to bypass these hard constraints.
+## Verification
 
-## Other course concepts already implemented
+Tests cover real offline embeddings, metadata filtering, read-only review, signed/expired/changed reviews, human choice, idempotent SQL creation and MongoDB attachment, conflicting decisions, stale candidate checks, vector invalidation, permissions, native vector-query eligibility, MongoDB/model outages and new-data SQL-lab queries. Full evidence is under docs/verification.
 
-ER-to-relational mapping, M:N bridge tables, keys and constraints, SQL CRUD, joins, subqueries, CTE/window/recursive queries, view/indexes, stored functions, audit trigger, transactions/rollback, locks, roles/grants and maintenance RLS remain valid. MongoDB still provides collection validation, document CRUD, a compound index, text index, filtering and aggregation. The detailed DATABASE_FEATURE_MAP guide links these features to code.
-
-## References
-
-- User-supplied course PDF: UE24CS351A_Merged_Slides.pdf, pages above.
-- https://pglite.dev/extensions/
-- https://github.com/pgvector/pgvector
-- https://huggingface.co/docs/transformers.js/en/pipelines
-- https://huggingface.co/Xenova/all-MiniLM-L6-v2
+References: https://pglite.dev/extensions/ ; https://github.com/pgvector/pgvector ; https://huggingface.co/docs/transformers.js/en/pipelines

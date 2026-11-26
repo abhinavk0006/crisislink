@@ -1,5 +1,6 @@
 {
   "tables": [
+    "app_incident_report_receipts",
     "app_login_attempts",
     "app_sessions",
     "assignments",
@@ -21,6 +22,54 @@
     "users"
   ],
   "columns": [
+    {
+      "table_name": "app_incident_report_receipts",
+      "column_name": "review_id",
+      "sql_type": "character varying(36)",
+      "nullable": false,
+      "identity": "",
+      "position": 1
+    },
+    {
+      "table_name": "app_incident_report_receipts",
+      "column_name": "user_id",
+      "sql_type": "integer",
+      "nullable": false,
+      "identity": "",
+      "position": 2
+    },
+    {
+      "table_name": "app_incident_report_receipts",
+      "column_name": "action",
+      "sql_type": "character varying(10)",
+      "nullable": false,
+      "identity": "",
+      "position": 3
+    },
+    {
+      "table_name": "app_incident_report_receipts",
+      "column_name": "draft_hash",
+      "sql_type": "character varying(64)",
+      "nullable": false,
+      "identity": "",
+      "position": 4
+    },
+    {
+      "table_name": "app_incident_report_receipts",
+      "column_name": "emergency_id",
+      "sql_type": "integer",
+      "nullable": true,
+      "identity": "",
+      "position": 5
+    },
+    {
+      "table_name": "app_incident_report_receipts",
+      "column_name": "created_at",
+      "sql_type": "timestamp with time zone",
+      "nullable": false,
+      "identity": "",
+      "position": 6
+    },
     {
       "table_name": "app_login_attempts",
       "column_name": "attempt_key",
@@ -864,6 +913,60 @@
   ],
   "constraints": [
     {
+      "table_name": "app_incident_report_receipts",
+      "constraint_name": "app_incident_report_receipts_action_check",
+      "type": "c",
+      "definition": "CHECK (((action)::text = ANY ((ARRAY['create'::character varying, 'attach'::character varying])::text[])))"
+    },
+    {
+      "table_name": "app_incident_report_receipts",
+      "constraint_name": "app_incident_report_receipts_action_not_null",
+      "type": "n",
+      "definition": "NOT NULL action"
+    },
+    {
+      "table_name": "app_incident_report_receipts",
+      "constraint_name": "app_incident_report_receipts_created_at_not_null",
+      "type": "n",
+      "definition": "NOT NULL created_at"
+    },
+    {
+      "table_name": "app_incident_report_receipts",
+      "constraint_name": "app_incident_report_receipts_draft_hash_not_null",
+      "type": "n",
+      "definition": "NOT NULL draft_hash"
+    },
+    {
+      "table_name": "app_incident_report_receipts",
+      "constraint_name": "app_incident_report_receipts_emergency_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (emergency_id) REFERENCES emergencies(emergency_id)"
+    },
+    {
+      "table_name": "app_incident_report_receipts",
+      "constraint_name": "app_incident_report_receipts_pkey",
+      "type": "p",
+      "definition": "PRIMARY KEY (review_id)"
+    },
+    {
+      "table_name": "app_incident_report_receipts",
+      "constraint_name": "app_incident_report_receipts_review_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL review_id"
+    },
+    {
+      "table_name": "app_incident_report_receipts",
+      "constraint_name": "app_incident_report_receipts_user_id_fkey",
+      "type": "f",
+      "definition": "FOREIGN KEY (user_id) REFERENCES users(user_id)"
+    },
+    {
+      "table_name": "app_incident_report_receipts",
+      "constraint_name": "app_incident_report_receipts_user_id_not_null",
+      "type": "n",
+      "definition": "NOT NULL user_id"
+    },
+    {
       "table_name": "app_login_attempts",
       "constraint_name": "app_login_attempts_attempt_key_not_null",
       "type": "n",
@@ -1435,6 +1538,11 @@
     }
   ],
   "indexes": [
+    {
+      "tablename": "app_incident_report_receipts",
+      "indexname": "app_incident_report_receipts_pkey",
+      "indexdef": "CREATE UNIQUE INDEX app_incident_report_receipts_pkey ON public.app_incident_report_receipts USING btree (review_id)"
+    },
     {
       "tablename": "app_login_attempts",
       "indexname": "app_login_attempts_pkey",

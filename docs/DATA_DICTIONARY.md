@@ -1,6 +1,29 @@
 # CrisisLink data dictionary
 
-Generated from the executed PostgreSQL schema: 17 domain tables and 2 internal tables. The metadata contains no row data, passwords or session tokens.
+Generated from the executed PostgreSQL schema: 17 domain tables and 3 internal tables. The metadata contains no row data, passwords or session tokens.
+
+## app_incident_report_receipts
+
+| Attribute | SQL type | Nullable | Identity |
+|---|---|---|---|
+| review_id | character varying(36) | No | No |
+| user_id | integer | No | No |
+| action | character varying(10) | No | No |
+| draft_hash | character varying(64) | No | No |
+| emergency_id | integer | Yes | No |
+| created_at | timestamp with time zone | No | No |
+
+Constraints:
+
+- **app_incident_report_receipts_action_check**: `CHECK (((action)::text = ANY ((ARRAY['create'::character varying, 'attach'::character varying])::text[])))`
+- **app_incident_report_receipts_action_not_null**: `NOT NULL action`
+- **app_incident_report_receipts_created_at_not_null**: `NOT NULL created_at`
+- **app_incident_report_receipts_draft_hash_not_null**: `NOT NULL draft_hash`
+- **app_incident_report_receipts_emergency_id_fkey**: `FOREIGN KEY (emergency_id) REFERENCES emergencies(emergency_id)`
+- **app_incident_report_receipts_pkey**: `PRIMARY KEY (review_id)`
+- **app_incident_report_receipts_review_id_not_null**: `NOT NULL review_id`
+- **app_incident_report_receipts_user_id_fkey**: `FOREIGN KEY (user_id) REFERENCES users(user_id)`
+- **app_incident_report_receipts_user_id_not_null**: `NOT NULL user_id`
 
 ## app_login_attempts
 
@@ -355,6 +378,10 @@ Constraints:
 - **users_user_id_not_null**: `NOT NULL user_id`
 
 ## Index definitions
+
+```sql
+CREATE UNIQUE INDEX app_incident_report_receipts_pkey ON public.app_incident_report_receipts USING btree (review_id);
+```
 
 ```sql
 CREATE UNIQUE INDEX app_login_attempts_pkey ON public.app_login_attempts USING btree (attempt_key);

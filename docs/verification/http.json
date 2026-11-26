@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-26T13:56:38.508Z",
+  "checkedAt": "2026-11-26T14:35:57.313Z",
   "passed": 12,
   "checks": [
     "Unauthenticated dashboard returns 401",

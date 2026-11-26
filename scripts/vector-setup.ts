@@ -6,5 +6,5 @@ const db = await getDb();
 try {
   await embedText("Prepare the emergency incident search model");
   console.log(JSON.stringify({ model: EMBEDDING_ID, indexed: await indexIncidents() }));
-  console.log("Ready. Cached model works offline. Start the app and use Find similar incidents.");
+  console.log("Ready. Cached model works offline. Start the app and use Report incident to check for possible duplicates.");
 } finally { await db.close(); }

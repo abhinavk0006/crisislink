@@ -42,3 +42,7 @@ SQL and MongoDB have independent transaction boundaries. Notes are not silently 
 The supported deployment is one local Next.js process, a filesystem-backed PGlite database and a separate MongoDB process bound to loopback. `pnpm setup` accepts a hidden password, persists only scrypt hashes and revokes existing demo sessions. Runtime configuration uses environment variables. No plaintext bootstrap password file is generated. Sessions persist only token hashes.
 
 The local MongoDB helper has no network exposure beyond loopback and does not configure authentication. Public GitHub publication shares source and fictional evidence only; it does not publish a running database. A hosted deployment requires authenticated MongoDB/TLS, HTTPS, managed secrets, a suitable PostgreSQL server architecture and a deployment-specific security review.
+
+## Duplicate-report decision boundary
+
+Report incident sends a draft for filtered vector review. The coordinator chooses attach or separate creation through signed ten-minute review tokens. SQL decision receipts make creation retry-safe and prevent conflicting decisions. MongoDB unique partial report_review_id indexing and upsert make attachment retries idempotent. A receipt records intent; it does not establish a distributed SQL/MongoDB commit. Failed attachments return an error and create no new incident. A model outage permits an explicit unchecked creation action. See COURSE_ALIGNMENT.md. SQL lab uses live authenticated queries, five-second polling, manual refresh and a current seven-day calendar.

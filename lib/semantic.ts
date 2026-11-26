@@ -1,6 +1,5 @@
-import { z } from "zod";
-import { getDb, asActor, type Actor } from "./db";
-import { embedText, EMBEDDING_ID, EMBEDDING_DIMENSIONS, vectorLiteral } from "./embeddings";
+import { getDb } from "./db";
+import { embedText, EMBEDDING_ID, vectorLiteral } from "./embeddings";
 
 // Incremental derived-index maintenance by the trusted backend, not a user write API.
 // Inference is outside SQL transactions; the conditional update prevents stale writes.
@@ -20,30 +19,4 @@ export async function indexIncidents() {
     indexed += changed.rows.length;
   }
   return indexed;
-}
-
-export const SEMANTIC_SQL = `SELECT emergency_id,description,status,severity_level,
-  embedding <=> $1::vector AS cosine_distance,
-  1 - (embedding <=> $1::vector) AS cosine_similarity
-FROM emergencies
-WHERE embedding IS NOT NULL AND embedding_model=$2
-ORDER BY embedding <=> $1::vector
-LIMIT $3`;
-
-export async function searchIncidents(actor: Actor, input: unknown) {
-  const { query, limit } = z.object({
-    query: z.string().trim().min(3).max(500),
-    limit: z.coerce.number().int().min(1).max(10).default(5),
-  }).parse(input);
-  const newlyIndexed = await indexIncidents();
-  const vector = vectorLiteral(await embedText(query));
-  return asActor(actor, async (tx) => {
-    const rows = (await tx.query(SEMANTIC_SQL, [vector, EMBEDDING_ID, limit])).rows;
-    const coverage = (await tx.query<{ total: number; indexed: number }>(
-      "SELECT COUNT(*)::int AS total,COUNT(*) FILTER(WHERE embedding IS NOT NULL AND embedding_model=$1)::int AS indexed FROM emergencies",
-      [EMBEDDING_ID],
-    )).rows[0];
-    return { rows, coverage, newlyIndexed, model: EMBEDDING_ID,
-      dimensions: EMBEDDING_DIMENSIONS, metric: "cosine distance", sql: SEMANTIC_SQL };
-  });
 }

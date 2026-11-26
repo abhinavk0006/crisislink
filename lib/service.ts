@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { createHash } from "node:crypto";
 import { asActor, type Actor } from "./db";
 import { requireRole, AppError } from "./auth";
 export const incidentInput = z.object({
@@ -115,10 +116,25 @@ export async function removeResourceTag(actor: Actor, input: unknown) {
     return { deleted: true, ...row };
   });
 }
-export async function createIncident(actor: Actor, input: unknown) {
+export async function createIncident(actor: Actor, input: unknown, requestId?: string) {
   requireRole(actor, "Coordinator");
   const data = incidentInput.parse(input);
   return asActor(actor, async (tx) => {
+    if (requestId) {
+      const claim = await tx.query(
+        "INSERT INTO app_incident_report_receipts(review_id,user_id,action,draft_hash) VALUES($1,$2,'create',$3) ON CONFLICT(review_id) DO NOTHING RETURNING review_id",
+        [requestId, actor.user_id, createHash('sha256').update(JSON.stringify(data)).digest('hex')],
+      );
+      if (!claim.rows.length) {
+        const receipt = (await tx.query<{emergency_id:number;action:string;draft_hash:string}>(
+          "SELECT emergency_id,action,draft_hash FROM app_incident_report_receipts WHERE review_id=$1 AND user_id=$2",
+          [requestId, actor.user_id],
+        )).rows[0];
+        if (!receipt || receipt.action !== "create" || !receipt.emergency_id || receipt.draft_hash!==createHash('sha256').update(JSON.stringify(data)).digest('hex'))
+          throw new AppError(409, "This report already has a different decision. Review it again.");
+        return { emergency_id: receipt.emergency_id };
+      }
+    }
     const row = (
       await tx.query<{ emergency_id: number }>(
         "INSERT INTO emergencies(type_id,location_id,reported_by,description,severity_level,people_affected,status,reported_at,updated_at) VALUES($1,$2,$3,$4,$5,$6,'reported',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP) RETURNING emergency_id",
@@ -137,6 +153,10 @@ export async function createIncident(actor: Actor, input: unknown) {
         "INSERT INTO emergency_required_capabilities(emergency_id,capability_id,quantity_required,location_id) VALUES($1,$2,1,$3)",
         [row.emergency_id, data.capability_id, data.location_id],
       );
+    if (requestId) await tx.query(
+      "UPDATE app_incident_report_receipts SET emergency_id=$1 WHERE review_id=$2",
+      [row.emergency_id, requestId],
+    );
     return row;
   });
 }
@@ -233,7 +253,7 @@ export const labQueries = {
     "SELECT e.emergency_id,e.status FROM emergencies e WHERE NOT EXISTS(SELECT 1 FROM assignments a WHERE a.emergency_id=e.emergency_id AND a.status IN ('active','dispatched'))",
   cte: "WITH ranked AS (SELECT history_id,emergency_id,status,changed_at,ROW_NUMBER() OVER(PARTITION BY emergency_id ORDER BY changed_at DESC,history_id DESC) AS rn FROM emergency_status_history) SELECT * FROM ranked WHERE rn=1 ORDER BY emergency_id",
   recursive:
-    "WITH RECURSIVE days(day) AS (SELECT DATE '2026-10-30' UNION ALL SELECT day+1 FROM days WHERE day<DATE '2026-11-05') SELECT d.day,COUNT(e.emergency_id) AS incidents FROM days d LEFT JOIN emergencies e ON e.reported_at::DATE=d.day GROUP BY d.day ORDER BY d.day",
+    "WITH RECURSIVE days(day) AS (SELECT CURRENT_DATE-6 UNION ALL SELECT day+1 FROM days WHERE day<CURRENT_DATE) SELECT d.day,COUNT(e.emergency_id) AS incidents FROM days d LEFT JOIN emergencies e ON e.reported_at::DATE=d.day GROUP BY d.day ORDER BY d.day",
   view: "SELECT * FROM v_assignment_summary ORDER BY assignment_id",
   aggregate:
     "SELECT emergency_id,COUNT(*) AS assignment_count FROM assignments GROUP BY emergency_id HAVING COUNT(*)>=1",
@@ -244,5 +264,6 @@ export async function runQuery(actor: Actor, key: string) {
   return asActor(actor, async (tx) => ({
     sql,
     rows: (await tx.query(sql)).rows,
+    executedAt: new Date().toISOString(),
   }));
 }

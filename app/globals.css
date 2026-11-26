@@ -1,12 +1,8 @@
 * {
   box-sizing: border-box;
 }
-.semantic-search { margin-bottom: 24px; }
-.semantic-controls { display: flex; gap: 12px; margin-top: 8px; flex-wrap: wrap; }
-.semantic-controls input { flex: 1; min-width: 200px; }
-.semantic-results { padding-left: 22px; }
-.semantic-results li { padding: 12px 0; border-bottom: 1px solid #d9e3dc; }
-.semantic-results p { margin: 8px 0; }
+.duplicate-review { margin-top: 24px; padding-top: 20px; border-top: 1px solid #d9e3dc; }
+.duplicate-candidate { padding: 16px; margin: 16px 0; background: #f4f7f1; border: 1px solid #d9e3dc; border-radius: 8px; }
 .resource-tags {
   margin-top: 16px;
 }

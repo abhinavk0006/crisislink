@@ -1,9 +1,9 @@
 {
-  "totalNamedChecks": 57,
-  "runnerTests": 40,
-  "namedDatabaseChecks": 38,
+  "totalNamedChecks": 60,
+  "runnerTests": 41,
+  "namedDatabaseChecks": 39,
   "httpChecks": 12,
-  "newVectorHTTPChecks": 5,
+  "newVectorHTTPChecks": 7,
   "outageChecks": 2,
   "typecheck": {
     "exitCode": 0
@@ -16,5 +16,5 @@
   "evaluationRubricsInReport": false,
   "pdfPageSize": "A4",
   "pdfPages": 25,
-  "browserVerification": "Isolated test instance: People trapped by rising water ranked incident 103 first (distance 0.6522), ahead of medical 0.8773 and fire 0.9406. Layout visually inspected; user accounts unchanged."
+  "browserVerification": "Isolated browser: created incident 104 from warehouse-fire report, reviewed paraphrased storage-building report (cosine distance 0.3950), attached it as additional-report note; counts unchanged. JOIN result included 104; rolling seven-day recursive query showed current-day count 1 with execution timestamp and refresh controls. Layout visually inspected."
 }

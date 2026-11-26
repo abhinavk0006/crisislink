@@ -37,3 +37,7 @@ Public source repository verified: https://github.com/abhinavk0006/crisislink
 ## Implemented course vector-search extension, 26 November 2026
 
 PostgreSQL now provides a real pgvector column, HNSW cosine index and semantic search of incident descriptions using pinned local MiniLM embeddings (384 dimensions). The Incidents screen calls an authenticated API. Description changes invalidate embeddings; incremental indexing and conditional writes prevent stale vectors. MongoDB field-note keyword search remains a separate feature. COURSE_ALIGNMENT.md maps this to course PDF pages 681 and 697-709. The original architecture, roles, domain relationships and workflows are preserved.
+
+## Duplicate-report workflow refinement
+
+The standalone vector-search panel has been removed. The Report incident flow now filters recent active incidents at the selected location, ranks them using pgvector and requires a coordinator decision to attach or create separately. SQL receipts and MongoDB unique-index upserts protect retries. The operational query uses a CTE. SQL lab executes live queries with polling/manual refresh, including a current seven-day recursive calendar. See COURSE_ALIGNMENT.md for precise scope and limits.
