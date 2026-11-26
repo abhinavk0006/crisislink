@@ -1,9 +1,9 @@
 {
-  "sourceRevision": "930e8af3b270039819f93ecc102e3b1414c74553",
-  "featureCount": 39,
-  "functionCount": 36,
-  "sourceFileCount": 27,
-  "referenceCount": 174,
+  "sourceRevision": "29b2431a20460e7f15b395f45c732a8933a2c656",
+  "featureCount": 41,
+  "functionCount": 39,
+  "sourceFileCount": 31,
+  "referenceCount": 186,
   "features": [
     {
       "id": "SQL01",
@@ -140,31 +140,31 @@
       "refs": [
         {
           "path": "lib/service.ts",
-          "line": 75,
+          "line": 78,
           "needle": "export async function addResourceTag",
           "label": "export async function addResourceTag"
         },
         {
           "path": "lib/service.ts",
-          "line": 89,
+          "line": 92,
           "needle": "export async function updateResourceTag",
           "label": "export async function updateResourceTag"
         },
         {
           "path": "lib/service.ts",
-          "line": 105,
+          "line": 108,
           "needle": "export async function removeResourceTag",
           "label": "export async function removeResourceTag"
         },
         {
           "path": "app/api/[...path]/route.ts",
-          "line": 79,
+          "line": 84,
           "needle": "if (path === \"resource-tags\")",
           "label": "if (path === \"resource-tags\")"
         },
         {
           "path": "app/page.tsx",
-          "line": 618,
+          "line": 684,
           "needle": "className=\"resource-tags\"",
           "label": "className=\"resource-tags\""
         },
@@ -188,7 +188,7 @@
       "refs": [
         {
           "path": "lib/service.ts",
-          "line": 17,
+          "line": 19,
           "needle": "`SELECT e.emergency_id,e.type_id",
           "label": "`SELECT e.emergency_id,e.type_id"
         },
@@ -200,7 +200,7 @@
         },
         {
           "path": "lib/service.ts",
-          "line": 249,
+          "line": 253,
           "needle": "  join: \"SELECT e.emergency_id",
           "label": "  join: \"SELECT e.emergency_id"
         },
@@ -224,7 +224,7 @@
       "refs": [
         {
           "path": "lib/service.ts",
-          "line": 258,
+          "line": 262,
           "needle": "  aggregate:",
           "label": "  aggregate:"
         },
@@ -236,7 +236,7 @@
         },
         {
           "path": "lib/service.ts",
-          "line": 261,
+          "line": 265,
           "needle": "export async function runQuery",
           "label": "export async function runQuery"
         }
@@ -254,7 +254,7 @@
       "refs": [
         {
           "path": "lib/service.ts",
-          "line": 250,
+          "line": 254,
           "needle": "  nested:",
           "label": "  nested:"
         },
@@ -278,7 +278,7 @@
       "refs": [
         {
           "path": "lib/service.ts",
-          "line": 252,
+          "line": 256,
           "needle": "  correlated:",
           "label": "  correlated:"
         },
@@ -308,7 +308,7 @@
       "refs": [
         {
           "path": "lib/service.ts",
-          "line": 254,
+          "line": 258,
           "needle": "  cte: \"WITH ranked AS",
           "label": "  cte: \"WITH ranked AS"
         },
@@ -320,13 +320,13 @@
         },
         {
           "path": "app/api/[...path]/route.ts",
-          "line": 87,
+          "line": 92,
           "needle": "if (path === \"queries\" && method === \"GET\")",
           "label": "if (path === \"queries\" && method === \"GET\")"
         },
         {
           "path": "app/page.tsx",
-          "line": 995,
+          "line": 1061,
           "needle": "SQL example",
           "label": "SQL example"
         }
@@ -344,7 +344,7 @@
       "refs": [
         {
           "path": "lib/service.ts",
-          "line": 255,
+          "line": 259,
           "needle": "  recursive:",
           "label": "  recursive:"
         },
@@ -374,13 +374,13 @@
         },
         {
           "path": "lib/service.ts",
-          "line": 30,
+          "line": 32,
           "needle": "\"SELECT * FROM v_assignment_summary ORDER BY assignment_id DESC\"",
           "label": "\"SELECT * FROM v_assignment_summary ORDER BY assignment_id DESC\""
         },
         {
           "path": "lib/service.ts",
-          "line": 257,
+          "line": 261,
           "needle": "  view: \"SELECT * FROM v_assignment_summary",
           "label": "  view: \"SELECT * FROM v_assignment_summary"
         }
@@ -416,7 +416,7 @@
         },
         {
           "path": "docs/DATA_DICTIONARY.md",
-          "line": 380,
+          "line": 391,
           "needle": "## Index definitions",
           "label": "## Index definitions"
         }
@@ -446,7 +446,7 @@
         },
         {
           "path": "tests/integration.test.ts",
-          "line": 267,
+          "line": 268,
           "needle": "Conflicting dispatch is rejected with no partial assignment",
           "label": "Conflicting dispatch is rejected with no partial assignment"
         }
@@ -470,19 +470,19 @@
         },
         {
           "path": "lib/service.ts",
-          "line": 163,
+          "line": 167,
           "needle": "export async function dispatch(",
           "label": "export async function dispatch("
         },
         {
           "path": "app/api/[...path]/route.ts",
-          "line": 73,
+          "line": 78,
           "needle": "if (path === \"dispatch\" && method === \"POST\")",
           "label": "if (path === \"dispatch\" && method === \"POST\")"
         },
         {
           "path": "app/page.tsx",
-          "line": 577,
+          "line": 643,
           "needle": "Dispatch team →",
           "label": "Dispatch team →"
         }
@@ -506,19 +506,19 @@
         },
         {
           "path": "lib/service.ts",
-          "line": 184,
+          "line": 188,
           "needle": "export async function complete(",
           "label": "export async function complete("
         },
         {
           "path": "app/api/[...path]/route.ts",
-          "line": 75,
+          "line": 80,
           "needle": "if (path === \"complete\" && method === \"POST\")",
           "label": "if (path === \"complete\" && method === \"POST\")"
         },
         {
           "path": "app/page.tsx",
-          "line": 517,
+          "line": 583,
           "needle": "Complete response",
           "label": "Complete response"
         }
@@ -548,19 +548,19 @@
         },
         {
           "path": "lib/service.ts",
-          "line": 119,
+          "line": 122,
           "needle": "export async function createIncident(",
           "label": "export async function createIncident("
         },
         {
           "path": "tests/integration.test.ts",
-          "line": 181,
+          "line": 182,
           "needle": "Creating an incident generates exactly one audit event",
           "label": "Creating an incident generates exactly one audit event"
         },
         {
           "path": "tests/integration.test.ts",
-          "line": 287,
+          "line": 288,
           "needle": "Unchanged status does not generate duplicate audit records",
           "label": "Unchanged status does not generate duplicate audit records"
         }
@@ -578,13 +578,13 @@
       "refs": [
         {
           "path": "lib/db.ts",
-          "line": 82,
+          "line": 84,
           "needle": "export async function asActor<T>(",
           "label": "export async function asActor<T>("
         },
         {
           "path": "lib/service.ts",
-          "line": 119,
+          "line": 122,
           "needle": "export async function createIncident(",
           "label": "export async function createIncident("
         },
@@ -596,7 +596,7 @@
         },
         {
           "path": "tests/integration.test.ts",
-          "line": 203,
+          "line": 204,
           "needle": "Failed requirement insert rolls back incident and audit together",
           "label": "Failed requirement insert rolls back incident and audit together"
         }
@@ -668,7 +668,7 @@
         },
         {
           "path": "lib/db.ts",
-          "line": 91,
+          "line": 93,
           "needle": "await tx.exec(`SET LOCAL ROLE",
           "label": "await tx.exec(`SET LOCAL ROLE"
         },
@@ -710,7 +710,7 @@
         },
         {
           "path": "tests/integration.test.ts",
-          "line": 419,
+          "line": 420,
           "needle": "Database role grants and RLS enforce maintenance author identity",
           "label": "Database role grants and RLS enforce maintenance author identity"
         }
@@ -728,19 +728,19 @@
       "refs": [
         {
           "path": "lib/service.ts",
-          "line": 83,
+          "line": 86,
           "needle": "\"INSERT INTO resource_tags(resource_id,tag) VALUES($1,$2)",
           "label": "\"INSERT INTO resource_tags(resource_id,tag) VALUES($1,$2)"
         },
         {
           "path": "lib/service.ts",
-          "line": 261,
+          "line": 265,
           "needle": "export async function runQuery(",
           "label": "export async function runQuery("
         },
         {
           "path": "app/api/[...path]/route.ts",
-          "line": 57,
+          "line": 58,
           "needle": "const actor = await authenticate(token);",
           "label": "const actor = await authenticate(token);"
         }
@@ -782,7 +782,7 @@
         },
         {
           "path": "app/api/[...path]/route.ts",
-          "line": 47,
+          "line": 48,
           "needle": "res.cookies.set(\"crisis_session\"",
           "label": "res.cookies.set(\"crisis_session\""
         }
@@ -842,7 +842,7 @@
         },
         {
           "path": "tests/integration.test.ts",
-          "line": 375,
+          "line": 376,
           "needle": "MongoDB collection validator rejects malformed direct inserts",
           "label": "MongoDB collection validator rejects malformed direct inserts"
         }
@@ -890,13 +890,13 @@
         },
         {
           "path": "app/api/[...path]/route.ts",
-          "line": 105,
+          "line": 110,
           "needle": "if (path === \"notes\" && method === \"POST\")",
           "label": "if (path === \"notes\" && method === \"POST\")"
         },
         {
           "path": "app/page.tsx",
-          "line": 966,
+          "line": 1032,
           "needle": "Save field note",
           "label": "Save field note"
         }
@@ -926,7 +926,7 @@
         },
         {
           "path": "app/api/[...path]/route.ts",
-          "line": 91,
+          "line": 96,
           "needle": "if (path === \"notes\" && method === \"GET\")",
           "label": "if (path === \"notes\" && method === \"GET\")"
         }
@@ -986,7 +986,7 @@
         },
         {
           "path": "app/page.tsx",
-          "line": 892,
+          "line": 958,
           "needle": "Delete note",
           "label": "Delete note"
         }
@@ -1010,7 +1010,7 @@
         },
         {
           "path": "app/page.tsx",
-          "line": 836,
+          "line": 902,
           "needle": "aria-label=\"Search notes\"",
           "label": "aria-label=\"Search notes\""
         }
@@ -1046,7 +1046,7 @@
         },
         {
           "path": "app/page.tsx",
-          "line": 843,
+          "line": 909,
           "needle": "className=\"tag-summary\"",
           "label": "className=\"tag-summary\""
         }
@@ -1064,7 +1064,7 @@
       "refs": [
         {
           "path": "lib/service.ts",
-          "line": 223,
+          "line": 227,
           "needle": "export async function ensureIncident(",
           "label": "export async function ensureIncident("
         },
@@ -1076,7 +1076,7 @@
         },
         {
           "path": "tests/integration.test.ts",
-          "line": 340,
+          "line": 341,
           "needle": "NoSQL validates SQL references assignment scope and ownership",
           "label": "NoSQL validates SQL references assignment scope and ownership"
         }
@@ -1100,7 +1100,7 @@
         },
         {
           "path": "app/api/[...path]/route.ts",
-          "line": 130,
+          "line": 135,
           "needle": "/Mongo(Network|ServerSelection|TopologyClosed|NotConnected)/",
           "label": "/Mongo(Network|ServerSelection|TopologyClosed|NotConnected)/"
         },
@@ -1172,13 +1172,13 @@
         },
         {
           "path": "app/api/[...path]/route.ts",
-          "line": 67,
+          "line": 72,
           "needle": "if (path === \"incidents/review\"",
           "label": "if (path === \"incidents/review\""
         },
         {
           "path": "app/page.tsx",
-          "line": 418,
+          "line": 483,
           "needle": "Check for existing incidents",
           "label": "Check for existing incidents"
         }
@@ -1256,7 +1256,7 @@
         },
         {
           "path": "app/page.tsx",
-          "line": 429,
+          "line": 494,
           "needle": "Same incident — attach this report",
           "label": "Same incident — attach this report"
         }
@@ -1274,19 +1274,19 @@
       "refs": [
         {
           "path": "lib/service.ts",
-          "line": 267,
+          "line": 271,
           "needle": "executedAt: new Date().toISOString()",
           "label": "executedAt: new Date().toISOString()"
         },
         {
           "path": "app/page.tsx",
-          "line": 1010,
+          "line": 1076,
           "needle": "Refresh results now",
           "label": "Refresh results now"
         },
         {
           "path": "app/page.tsx",
-          "line": 109,
+          "line": 138,
           "needle": "window.setInterval(() => void load(), 5000)",
           "label": "window.setInterval(() => void load(), 5000)"
         },
@@ -1299,6 +1299,84 @@
       ],
       "demo": "Create a new incident and open SQL lab: JOIN and latest-history CTE show its ID, and the current-day calendar count rises. Dispatch it and inspect view/group results. Not every record meets every filtered query.",
       "say": "These are current database results. The lab polls every five seconds while open and can refresh immediately; the calendar uses CURRENT_DATE rather than old sample dates.",
+      "presenter": "Sachin"
+    },
+    {
+      "id": "VEC05",
+      "title": "Campus locations, aliases and semantic location matching",
+      "category": "Integration",
+      "usage": "Operational reporting",
+      "purpose": "Resolve a typed landmark to a human-confirmed saved location before duplicate review, preserving building identity and original directions.",
+      "refs": [
+        {
+          "path": "lib/locations.ts",
+          "line": 8,
+          "needle": "export async function indexLocations(",
+          "label": "export async function indexLocations("
+        },
+        {
+          "path": "lib/locations.ts",
+          "line": 14,
+          "needle": "export async function resolveLocations(",
+          "label": "export async function resolveLocations("
+        },
+        {
+          "path": "lib/locations.ts",
+          "line": 24,
+          "needle": "export async function createLocation(",
+          "label": "export async function createLocation("
+        },
+        {
+          "path": "database/10_location_search.sql",
+          "line": 6,
+          "needle": "ON locations USING hnsw",
+          "label": "ON locations USING hnsw"
+        },
+        {
+          "path": "app/api/[...path]/route.ts",
+          "line": 68,
+          "needle": "if (path === \"locations/resolve\"",
+          "label": "if (path === \"locations/resolve\""
+        },
+        {
+          "path": "app/page.tsx",
+          "line": 411,
+          "needle": "RR Campus building / saved place",
+          "label": "RR Campus building / saved place"
+        },
+        {
+          "path": "tests/locations.test.ts",
+          "line": 48,
+          "needle": "Alias-confirmed building shares duplicate review",
+          "label": "Alias-confirmed building shares duplicate review"
+        }
+      ],
+      "demo": "Choose Banashankari, PES RR Campus, GJB Block. Search gjb or golden jubilee block and confirm the saved place. Show semantic suggestions separately from aliases, custom landmarks and original floor/room details.",
+      "say": "Location vectors use native cosine retrieval within an area. A human confirms the location; duplicate review then uses that canonical ID. A nearest place is not automatically the same address.",
+      "presenter": "Both"
+    },
+    {
+      "id": "SQL23",
+      "title": "Additive operational catalog and campus data",
+      "category": "SQL",
+      "usage": "Operational catalog",
+      "purpose": "Expand types, capabilities, resources, teams and saved places while preserving availability and passwords.",
+      "refs": [
+        {
+          "path": "database/09_operational_catalog.sql",
+          "line": 1,
+          "needle": "-- Generated by tools/build-catalog.py.",
+          "label": "-- Generated by tools/build-catalog.py."
+        },
+        {
+          "path": "tests/locations.test.ts",
+          "line": 24,
+          "needle": "Migration preserves changed resource status",
+          "label": "Migration preserves changed resource status"
+        }
+      ],
+      "demo": "Show 12 types,16 capabilities,20 resources,15 responders and30 saved places. Dispatch a hazmat unit to a hazardous-material report. Additional teams have no login; coordinator manages them.",
+      "say": "INSERT ON CONFLICT and guarded renames extend existing tables. No replacement architecture is required.",
       "presenter": "Sachin"
     }
   ],
@@ -1381,6 +1459,39 @@
       }
     },
     {
+      "name": "indexLocations",
+      "kind": "Application location helper",
+      "purpose": "Maintain/search/persist confirmed locations.",
+      "ref": {
+        "path": "lib/locations.ts",
+        "line": 8,
+        "needle": "export async function indexLocations(",
+        "label": "export async function indexLocations("
+      }
+    },
+    {
+      "name": "resolveLocations",
+      "kind": "Application location helper",
+      "purpose": "Maintain/search/persist confirmed locations.",
+      "ref": {
+        "path": "lib/locations.ts",
+        "line": 14,
+        "needle": "export async function resolveLocations(",
+        "label": "export async function resolveLocations("
+      }
+    },
+    {
+      "name": "createLocation",
+      "kind": "Application location helper",
+      "purpose": "Maintain/search/persist confirmed locations.",
+      "ref": {
+        "path": "lib/locations.ts",
+        "line": 24,
+        "needle": "export async function createLocation(",
+        "label": "export async function createLocation("
+      }
+    },
+    {
       "name": "app_actor",
       "kind": "Stored SQL function",
       "purpose": "Read the transaction actor ID used by audit and row policies.",
@@ -1441,7 +1552,7 @@
       "purpose": "Run an authenticated actor callback with a transaction-local SQL role.",
       "ref": {
         "path": "lib/db.ts",
-        "line": 82,
+        "line": 84,
         "needle": "export async function asActor",
         "label": "export async function asActor"
       }
@@ -1452,7 +1563,7 @@
       "purpose": "Read incident/resource/assignment/history/reference records and SQL tags.",
       "ref": {
         "path": "lib/service.ts",
-        "line": 13,
+        "line": 15,
         "needle": "export async function dashboard(",
         "label": "export async function dashboard("
       }
@@ -1463,7 +1574,7 @@
       "purpose": "Insert one SQL resource tag.",
       "ref": {
         "path": "lib/service.ts",
-        "line": 75,
+        "line": 78,
         "needle": "export async function addResourceTag(",
         "label": "export async function addResourceTag("
       }
@@ -1474,7 +1585,7 @@
       "purpose": "Rename one SQL resource tag.",
       "ref": {
         "path": "lib/service.ts",
-        "line": 89,
+        "line": 92,
         "needle": "export async function updateResourceTag(",
         "label": "export async function updateResourceTag("
       }
@@ -1485,7 +1596,7 @@
       "purpose": "Delete one SQL resource tag.",
       "ref": {
         "path": "lib/service.ts",
-        "line": 105,
+        "line": 108,
         "needle": "export async function removeResourceTag(",
         "label": "export async function removeResourceTag("
       }
@@ -1496,7 +1607,7 @@
       "purpose": "Insert incident and required capability together.",
       "ref": {
         "path": "lib/service.ts",
-        "line": 119,
+        "line": 122,
         "needle": "export async function createIncident(",
         "label": "export async function createIncident("
       }
@@ -1507,7 +1618,7 @@
       "purpose": "Invoke stored dispatch_response.",
       "ref": {
         "path": "lib/service.ts",
-        "line": 163,
+        "line": 167,
         "needle": "export async function dispatch(",
         "label": "export async function dispatch("
       }
@@ -1518,7 +1629,7 @@
       "purpose": "Invoke stored finish_response.",
       "ref": {
         "path": "lib/service.ts",
-        "line": 184,
+        "line": 188,
         "needle": "export async function complete(",
         "label": "export async function complete("
       }
@@ -1529,7 +1640,7 @@
       "purpose": "Insert an authored maintenance record.",
       "ref": {
         "path": "lib/service.ts",
-        "line": 203,
+        "line": 207,
         "needle": "export async function maintenance(",
         "label": "export async function maintenance("
       }
@@ -1540,7 +1651,7 @@
       "purpose": "Check SQL incident existence and assignment scope for notes.",
       "ref": {
         "path": "lib/service.ts",
-        "line": 223,
+        "line": 227,
         "needle": "export async function ensureIncident(",
         "label": "export async function ensureIncident("
       }
@@ -1551,7 +1662,7 @@
       "purpose": "Execute an allowlisted live SQL example.",
       "ref": {
         "path": "lib/service.ts",
-        "line": 261,
+        "line": 265,
         "needle": "export async function runQuery(",
         "label": "export async function runQuery("
       }
@@ -1703,30 +1814,34 @@
   "sourceHashes": {
     "database/00_schema.sql": "4ccfc84adfcabcb1334e3c25d1eae03a8d51b0ff53fb5c39e3239bc3c33f8afb",
     "database/02_advanced.sql": "c5f99eb01967100e7d90b4cd4b1d0c3f31c88ac09e769c387d909b3f0235fa2e",
-    "lib/db.ts": "8c4db8fa144073035d991f97450f9ba56f189fe7c1a0b89f1350134394f02e8f",
-    "tests/resource-tags.test.ts": "4c0f6a887ab5cdefecb591823cf639feb547090f9e03d2898216b8e23bab1de8",
+    "lib/db.ts": "9c00b47bd5a3999aaf91f85587b5d29eee27616498219bc6c8b586183bde63e7",
+    "tests/resource-tags.test.ts": "5b2bfbd917e40d9cee8e2e10a11e4169bace50fd3302a901c708f6ebf510f2ef",
     "database/06_ddl_demo.sql": "bf67d0ae14ea551531b30c582ea441e13cec5f0b1894d16272b1ce071047df91",
     "tests/ddl.test.ts": "7e9046ff5ef4d2d6e28d9b73f847953711335ba8fa2300bc1efa7feeb4569db8",
-    "database/01_seed.sql": "dd7aa0deb55108ca1b400b96270135b6f4f33b362a13bd138cf4e95e418c0577",
-    "lib/service.ts": "63ccaca3ab3904a4be0853cb64befb59f5176f70f3ced701e18e3dea5154016f",
-    "app/api/[...path]/route.ts": "c6b7cae1de133dd17abe28045726de49726eb5b6305d2a608d225f45a71e0e77",
-    "app/page.tsx": "13ee0bafe9df973423023912808a8bffc27e24f88a229d61c1252529d4262d42",
+    "database/01_seed.sql": "5bb86c392fe35b361ed13f509a066095fff5d37a94fdfb686a2ed1441a8d00a5",
+    "lib/service.ts": "fc7360473b55d3fd40425b5b73a0d6e03a4491d1c5f2023a42ecae5148aac099",
+    "app/api/[...path]/route.ts": "d7f23523803770892d08e134c93cc554e2bef49be850fd201d8f90001608b073",
+    "app/page.tsx": "dae79ae8602c4d1e8bdd41f9805ad5c524aa8971b4c1abab1a4928bd8cb85f81",
     "database/05_resource_tag_permissions.sql": "46891c9c1a1dc08988799557375b7f33f3dc49f69379c67f26b095f97bebe459",
     "database/03_queries.sql": "45909307ff7f832c170c617fef15bd3f734109cdd47be6b6c2e5edb192474877",
-    "docs/DATA_DICTIONARY.md": "298805903691755e3a92d5b810f3d0357bcd5839d3439dd0be085b69f75f921e",
-    "tests/integration.test.ts": "8844347d362cb6d971c3f64ec1600e573e36a6665992a4b1da7858fea2280f89",
+    "docs/DATA_DICTIONARY.md": "70af0fba8f8393d04fed1a9e84cfb866b0c936f79271be80837e411283b6c8a8",
+    "tests/integration.test.ts": "ff65d356f15bff0b23015e4a2a859dc606b8d302aec1597f9f5d7311b60ab83f",
     "lib/password.ts": "05cb05c7984c9a77401de4653e5241b21fef3ec29c9b8d2d2515eb7db5e072ca",
     "lib/auth.ts": "625719c4f80a557f95b4b74fd31a2f26cdd23ac18e70faf9b8f5484513689787",
-    "scripts/setup.ts": "83eec63b3e7177aa329647c9b5c9eb737b4f5f66370c267debc2ffd3e2c936a7",
-    "lib/mongo.ts": "423aba201f1f3464d366c417048c7083647685786e641afe52ce24d8f293f421",
+    "scripts/setup.ts": "4856a274148fa4f4601e520345ae746ca6fa46e82b00cd140acef9e1db69cecd",
+    "lib/mongo.ts": "19987ab302593811807912c03a39930e7d14ba597978dd7ac71dee070af852b3",
     "database/04_mongo_commands.js": "35ac665d34342c3d5126094546fe3396603ba2e2633b9e244d00fbecfb416c7d",
     "scripts/offline-smoke.mjs": "285d61ca4d39e2d7445ab940c0cfb2208c92b735f64b53ebd789245f1c98dd32",
     "lib/embeddings.ts": "f062a8b3f229998945b508fd2d4e4e8e10288b6c84523fa7695942ad744f6e63",
     "lib/semantic.ts": "e971654c51ed86beedd9008e8995194338906f41ebb9304b8a94079d7caf076c",
     "database/07_vector_search.sql": "db2f424405ab55aebfe4d32db79a35da7e7ff5f76bd5356108598ac6d396988a",
     "lib/incident-review.ts": "61442272d5b420f0f7d6c161c6a1833ad59db87be843880b54af37295987dcef",
-    "tests/semantic.test.ts": "96ff0cb56ea484d13cfbbbee08f3d6d3cfc0bb406319e1bf2fbd210d2ba5f1af",
+    "tests/semantic.test.ts": "cce8a7206c3415f71bca4b10ac21ec3d9bf53f7255840ec1ad1b04c0c562bc2d",
     "database/08_report_receipts.sql": "98bc6956911b2ab4e5d702bd77706c2111278418149ab5d36b9f29a50a9b678c",
-    "tests/live-lab.test.ts": "9fc79da44d83d2ce2d73cc3da2fd0f5ccab955b4be43ec2889fb9937bf65c1c8"
+    "tests/live-lab.test.ts": "0fb3ffc96769778cc48013b883ddb886fb7630b23ad252420c746d1c9d66f34f",
+    "lib/locations.ts": "ffee1766edab588e5dc9f93aa27f1bfbfd21327a3304d6fa9c3567690b1970a3",
+    "database/10_location_search.sql": "33c78fc1eb541806aa3513d9bb33fe9b2eebe68913a32cdae9429011add3179b",
+    "tests/locations.test.ts": "8f23593f6fd1668d0c795b4ec456ceb6fb92dcc7b0b3854cf09489ad78a06359",
+    "database/09_operational_catalog.sql": "d664f756431c243518bd006341505f4ce96bf1d61e8a713ccc15ebacf5951bb7"
   }
 }
