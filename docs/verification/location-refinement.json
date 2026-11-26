@@ -1,0 +1,19 @@
+{
+  "checkedOn": "2026-11-26 Asia/Calcutta",
+  "changes": [
+    "Duplicate lookback and attachment eligibility reduced to one hour",
+    "59-minute match included and61-minute match excluded",
+    "102 curated saved places;8-14 per area",
+    "No location-group selector; saved count shown directly",
+    "Typed street alone enables search and new-place selection",
+    "Area changes clear previous street and room"
+  ],
+  "verification": [
+    "Full database suite",
+    "Production build and TypeScript",
+    "Authenticated HTTP catalog coverage and windowHours=1",
+    "Existing SQL/MongoDB/authentication/outage checks"
+  ],
+  "visualCheck": "Not performed this revision: local browser access unavailable. Previous browser evidence is from before this refinement.",
+  "report": "No report update; prior delivered report retained."
+}

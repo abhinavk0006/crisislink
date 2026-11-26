@@ -31,6 +31,8 @@ try{
  await check("Campus catalog and location aliases are available through authenticated API",async()=>{
   const d=await request("dashboard");assert.equal(d.data.resources.length,20);assert.equal(d.data.types.length,12);
   assert.equal(d.data.locations.filter(l=>l.building).length,6);
+  assert.equal(d.data.locations.length,102);
+  for(const area of d.data.areas)assert.ok(d.data.locations.filter(l=>l.area===area).length>=8);
   const r=await request("locations/resolve","POST",{area:"Banashankari",query:"gjb"});assert.equal(r.status,200);assert.equal(r.data.candidates[0].location_id,26);
  });
  await check("Custom landmarks persist, deduplicate and enforce role permissions",async()=>{
@@ -45,7 +47,7 @@ try{
  const first=await request("incidents","POST",original);assert.equal(first.status,201);const target=first.data.emergency_id;
  let review;
  await check("Live review returns the paraphrased same-location incident",async()=>{
-  const r=await request("incidents/review","POST",incoming);assert.equal(r.status,200);review=r.data;
+  const r=await request("incidents/review","POST",incoming);assert.equal(r.status,200);review=r.data;assert.equal(review.windowHours,1);
   assert.equal(review.candidates[0].emergency_id,target);
  });
  await check("Attach decision and retry preserve one observation with no new SQL incident",async()=>{

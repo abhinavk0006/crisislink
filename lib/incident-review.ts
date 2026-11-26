@@ -7,7 +7,7 @@ import { indexIncidents } from "./semantic";
 import { embedText, EMBEDDING_ID, vectorLiteral } from "./embeddings";
 import { mongo, saveAdditionalReport } from "./mongo";
 
-export const DUPLICATE_WINDOW_HOURS = 24;
+export const DUPLICATE_WINDOW_HOURS = 1;
 // Candidate-screening heuristic, not a probability or proof of identity.
 export const MAX_DUPLICATE_DISTANCE = 0.65;
 const shared = globalThis as unknown as { crisisReviewSecret?: Buffer };
@@ -37,7 +37,7 @@ export const DUPLICATE_SQL = `WITH nearest AS MATERIALIZED (
   SELECT e.*, e.embedding <=> $1::vector AS cosine_distance
   FROM emergencies e
   WHERE e.location_id=$2 AND e.status IN ('reported','responding')
-    AND e.reported_at>=CURRENT_TIMESTAMP-INTERVAL '24 hours'
+    AND e.reported_at>=CURRENT_TIMESTAMP-INTERVAL '${DUPLICATE_WINDOW_HOURS} hours'
     AND e.reported_at<=CURRENT_TIMESTAMP
     AND e.embedding IS NOT NULL AND e.embedding_model=$3
   ORDER BY e.embedding <=> $1::vector LIMIT 5
@@ -94,7 +94,7 @@ export async function confirmIncidentReport(actor: Actor, input: unknown) {
   if (existing) return {action:"attached",emergency_id:incident,note_id:existing._id.toHexString()};
   await asActor(actor,async(tx)=>{
     const current = (await tx.query<any>(
-      "SELECT description,location_id,reported_at::text AS reported_at FROM emergencies WHERE emergency_id=$1 AND status IN ('reported','responding') AND reported_at>=CURRENT_TIMESTAMP-INTERVAL '24 hours' AND reported_at<=CURRENT_TIMESTAMP FOR UPDATE",
+      `SELECT description,location_id,reported_at::text AS reported_at FROM emergencies WHERE emergency_id=$1 AND status IN ('reported','responding') AND reported_at>=CURRENT_TIMESTAMP-INTERVAL '${DUPLICATE_WINDOW_HOURS} hours' AND reported_at<=CURRENT_TIMESTAMP FOR UPDATE`,
       [incident],
     )).rows[0];
     if (!current || fingerprint(current)!==candidate.fingerprint)

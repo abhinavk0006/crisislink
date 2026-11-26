@@ -32,15 +32,17 @@ test("Real vector review and human-confirmed report decisions",async(t)=>{
  const target=(await createIncident(coordinator,original)).emergency_id;
  await complete(coordinator,{assignment_id:301,outcome:"Training unit released for test"});
  await dispatch(coordinator,{emergency_id:target,resource_id:201,responder_id:1});
+ await db.query("UPDATE emergencies SET reported_at=CURRENT_TIMESTAMP-INTERVAL '59 minutes' WHERE emergency_id=$1",[target]);
  const elsewhere=(await createIncident(coordinator,{...original,location_id:2})).emergency_id;
  const old=(await createIncident(coordinator,original)).emergency_id;
- await db.query("UPDATE emergencies SET reported_at=CURRENT_TIMESTAMP-INTERVAL '48 hours' WHERE emergency_id=$1",[old]);
+ await db.query("UPDATE emergencies SET reported_at=CURRENT_TIMESTAMP-INTERVAL '61 minutes' WHERE emergency_id=$1",[old]);
  const resolved=(await createIncident(coordinator,original)).emergency_id;
  await db.query("UPDATE emergencies SET status='resolved' WHERE emergency_id=$1",[resolved]);
  await createIncident(coordinator,{...original,type_id:2,description:"Several people are injured after a bus collision near the market."});
  let review:any;
  await check("Paraphrase review excludes other locations, old and resolved incidents and shows deployed teams",async()=>{
   review=await reviewIncident(coordinator,incoming);
+  assert.equal(review.windowHours,1);
   assert.deepEqual(review.candidates.map((r:any)=>r.emergency_id),[target]);
   assert.equal(review.candidates[0].active_assignments.length,1);
   assert.ok(review.candidates[0].cosine_distance<0.65);assert.equal(await indexIncidents(),0);

@@ -18,14 +18,17 @@ test("Bengaluru catalog and campus location workflow",async t=>{
  const db=await getDb();
  async function check(name:string,fn:()=>Promise<void>){await t.test(name,async()=>{await fn();checks.push(name);});}
  await check("Catalog includes six named RR Campus buildings and expanded operational capacity",async()=>{
-  const d=await dashboard(actor); assert.equal(d.types.length,12);assert.equal(d.resources.length,20);assert.equal(d.capabilities.length,16);assert.equal(d.responders.length,15);assert.equal(d.locations.length,30);
+  const d=await dashboard(actor); assert.equal(d.types.length,12);assert.equal(d.resources.length,20);assert.equal(d.capabilities.length,16);assert.equal(d.responders.length,15);assert.equal(d.locations.length,102);
+  for(const area of d.areas)assert.ok(d.locations.filter((l:any)=>l.area===area).length>=8,area);
   assert.deepEqual(d.locations.filter((l:any)=>l.building).map((l:any)=>l.building).sort(),["BE Block","F Block","G Block","GJB Block","MRD Block","Tech Park"].sort());
  });
  await check("Migration preserves changed resource status, password hashes and custom locations",async()=>{
   const hash=(await db.query<any>("SELECT password_hash FROM users WHERE user_id=1")).rows[0].password_hash;
   await db.exec("UPDATE resources SET status='maintenance' WHERE resource_id=204");
-  const custom=await createLocation(actor,{area:"Banashankari",query:"East gate tea shop",street:"Third Cross"});assert.ok(custom.location_id>30);
+  const custom=await createLocation(actor,{area:"Banashankari",query:"East gate tea shop",street:"Third Cross"});assert.ok(custom.location_id>102);
   await db.exec(await readFile("database/09_operational_catalog.sql","utf8"));
+  await db.exec(await readFile("database/11_area_landmarks.sql","utf8"));
+  assert.equal(Number((await db.query<any>("SELECT count(*) AS n FROM locations")).rows[0].n),103);
   assert.equal((await db.query<any>("SELECT status FROM resources WHERE resource_id=204")).rows[0].status,"maintenance");
   assert.equal((await db.query<any>("SELECT password_hash FROM users WHERE user_id=1")).rows[0].password_hash,hash);
   assert.equal((await db.query<any>("SELECT location_name FROM locations WHERE location_id=$1",[custom.location_id])).rows[0].location_name,"East gate tea shop");
@@ -36,7 +39,7 @@ test("Bengaluru catalog and campus location workflow",async t=>{
   await assert.rejects(()=>asActor(responder,tx=>tx.exec("INSERT INTO locations(location_name) VALUES('Denied')")),(e:any)=>e.code==='42501');
  });
  await check("Location vectors are real, current and area constrained; aliases resolve to canonical IDs",async()=>{
-  assert.ok(await indexLocations()>=30);assert.equal(await indexLocations(),0);
+  assert.ok(await indexLocations()>=102);assert.equal(await indexLocations(),0);
   const alias=await resolveLocations(actor,{area:"Banashankari",query:"golden jubilee block"});
   assert.equal(alias.semanticAvailable,true);assert.equal(alias.candidates[0].location_id,26);assert.equal(alias.candidates[0].match_kind,"saved name or alias");
   const semantic=await resolveLocations(actor,{area:"Banashankari",query:"engineering building at PES university"});

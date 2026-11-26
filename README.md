@@ -16,7 +16,7 @@ Database Management Systems mini project, UE24CS351A.
 
 Students: Sachin R (PES1UG24CS688) and Abhinav Krishna Kandukuri (PES1UG24CS701).
 
-This runnable reconstruction starts from the supplied 17-table model and 63 fictional seed rows, then applies an additive operational catalog (251 domain rows on fresh setup). The supplied ZIP contains no application source. The former website's description of a 134-row application is a different version and is not the implementation packaged here.
+This runnable reconstruction starts from the supplied 17-table model and 63 fictional seed rows, then applies an additive operational catalog (323 domain rows on fresh setup). The supplied ZIP contains no application source. The former website's description of a 134-row application is a different version and is not the implementation packaged here.
 
 ## Stack and scope
 
@@ -145,4 +145,6 @@ HTTP checks request the current password using hidden input, or accept TEST_PASS
 
 
 
-See [Locations and catalog](docs/LOCATIONS_AND_CATALOG.md) for 30 saved places, RR Campus building selection, freeform addresses, location vectors and the expanded resource/capability catalog. Run `pnpm vector:setup` with the app stopped to warm both incident and location indexes.
+See [Locations and catalog](docs/LOCATIONS_AND_CATALOG.md) for 102 saved places, RR Campus building selection, freeform addresses, location vectors and the expanded resource/capability catalog. Run `pnpm vector:setup` with the app stopped to warm both incident and location indexes.
+
+Duplicate review considers active reports from the last hour. The area selector directly lists saved places/buildings (at least eight per area); there is no extra location-group dropdown. Typed addresses work without a separate landmark name. `database/11_area_landmarks.sql` adds 72 curated place labels using generated IDs and catalog keys, preserving custom data.

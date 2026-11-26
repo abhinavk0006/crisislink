@@ -1,5 +1,5 @@
 {
-  "checkedAt": "2026-11-26T15:49:28.126Z",
+  "checkedAt": "2026-11-26T16:18:19.771Z",
   "checks": [
     "Real pgvector, normalized offline MiniLM and HNSW index",
     "Paraphrase review excludes other locations, old and resolved incidents and shows deployed teams",
@@ -18,7 +18,7 @@
         "emergency_id": 104,
         "description": "Flames and heavy smoke are coming from a warehouse near the market.",
         "location_id": 1,
-        "reported_at": "2026-11-26 21:19:43.836+05:30",
+        "reported_at": "2026-11-26 20:49:27.46+05:30",
         "status": "responding",
         "type_name": "Fire",
         "cosine_distance": 0.3949644565581888,
@@ -29,7 +29,7 @@
             "resource_name": "Central Fire Engine",
             "employee_id": "EMP-F01",
             "status": "dispatched",
-            "assigned_at": "2026-11-26T21:19:43.915+05:30",
+            "assigned_at": "2026-11-26T21:48:27.45+05:30",
             "responder_id": 1,
             "user_id": 2
           }
@@ -68,7 +68,7 @@
       "QUERY PLAN": "                ->  Seq Scan on emergencies e_1  (cost=0.00..3.27 rows=1 width=1518)"
     },
     {
-      "QUERY PLAN": "                      Filter: ((embedding IS NOT NULL) AND ((status)::text = ANY ('{reported,responding}'::text[])) AND (location_id = 1) AND ((embedding_model)::text = 'Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean:normalized:q8'::text) AND (reported_at <= CURRENT_TIMESTAMP) AND (reported_at >= (CURRENT_TIMESTAMP - '24:00:00'::interval)))"
+      "QUERY PLAN": "                      Filter: ((embedding IS NOT NULL) AND ((status)::text = ANY ('{reported,responding}'::text[])) AND (location_id = 1) AND ((embedding_model)::text = 'Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean:normalized:q8'::text) AND (reported_at <= CURRENT_TIMESTAMP) AND (reported_at >= (CURRENT_TIMESTAMP - '01:00:00'::interval)))"
     },
     {
       "QUERY PLAN": "  ->  CTE Scan on nearest e  (cost=0.00..0.02 rows=1 width=576)"

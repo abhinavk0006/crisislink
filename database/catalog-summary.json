@@ -3,7 +3,7 @@
     "roles": 3,
     "users": 5,
     "emergency_types": 12,
-    "locations": 30,
+    "locations": 102,
     "emergencies": 3,
     "emergency_status_history": 6,
     "capabilities": 16,
@@ -18,6 +18,6 @@
     "responder_skills": 30,
     "resource_tags": 40
   },
-  "freshDomainRows": 251,
+  "freshDomainRows": 323,
   "areas": 12
 }

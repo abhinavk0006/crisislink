@@ -46,7 +46,6 @@ export default function Home() {
   const [draftRequestId, setDraftRequestId] = useState("");
   const draftVersion = useRef(0);
   const [locationArea, setLocationArea] = useState("Banashankari");
-  const [locationScope, setLocationScope] = useState("campus");
   const [locationStreet, setLocationStreet] = useState("");
   const [locationPlace, setLocationPlace] = useState("");
   const [locationDetail, setLocationDetail] = useState("");
@@ -60,7 +59,7 @@ export default function Home() {
   async function findLocation(save = false) {
     const version = locationVersion.current;
     await action(async () => {
-      const input = {area: locationArea, query: locationPlace, street: locationStreet};
+      const input = {area: locationArea, query: (locationPlace.trim() || locationStreet.trim()).slice(0,160), street: locationStreet};
       if (save) {
         const place = await api("locations", "POST", input);
         if (version === locationVersion.current) {setChosenLocation(place); setLocationMatches([]);}
@@ -69,7 +68,7 @@ export default function Home() {
         const result = await api("locations/resolve", "POST", input);
         if (version === locationVersion.current) {
           setLocationMatches(result.candidates);
-          setLocationNotice(result.semanticAvailable ? "Choose the correct saved place, or save a new landmark. Similarity is a suggestion." : "Semantic model unavailable. Exact saved names and aliases are shown; you can save a new place.");
+          setLocationNotice(result.semanticAvailable ? "Select a matching place below, or use the entered address as a new place. Similarity is a suggestion." : "Semantic model unavailable. Exact saved names and aliases are shown; you can save a new place.");
         }
       }
     });
@@ -367,7 +366,7 @@ export default function Home() {
                     onChange={resetReportReview}
                     onSubmit={(e) => {
                       const d = form(e);
-                      if (!chosenLocation) {setError("Choose a saved location or save the entered landmark first."); return;}
+                      if (!chosenLocation) {setError("Select a saved place, or enter an address/landmark and choose Use entered address / landmark."); return;}
                       const draft = { ...d, reported_location_text: [locationPlace || chosenLocation.location_name, locationDetail, locationStreet, locationArea].filter(Boolean).join(", "), type_id: Number(d.type_id), location_id: Number(d.location_id),
                         people_affected: Number(d.people_affected), capability_id: Number(d.capability_id) };
                       const version = draftVersion.current;
@@ -396,26 +395,21 @@ export default function Home() {
                     </label>
                     <label>
                       Bengaluru area
-                      <select value={locationArea} onChange={e=>{clearLocation();setLocationArea(e.target.value);setLocationScope("area");setLocationPlace("");}}>
+                      <select value={locationArea} onChange={e=>{clearLocation();setLocationArea(e.target.value);setLocationPlace("");setLocationStreet("");setLocationDetail("");}}>
                         {data?.areas.map((a:string)=><option key={a}>{a}</option>)}
                       </select>
                     </label>
                     <label>
-                      Location group
-                      <select value={locationScope} onChange={e=>{clearLocation();setLocationScope(e.target.value);setLocationPlace("");}}>
-                        <option value="area">Street / landmark in this area</option>
-                        {locationArea === "Banashankari" && <option value="campus">PES University — RR Campus</option>}
-                      </select>
-                    </label>
-                    <label>
-                      {locationScope === "campus" ? "RR Campus building / saved place" : "Saved place (optional)"}
+                      Saved place / building
                       <select value={chosenLocation?.location_id || ""} onChange={e=>{
-                        clearLocation(); const place=data?.locations.find((l:Row)=>l.location_id===Number(e.target.value));
-                        if(place){setChosenLocation(place);setLocationPlace(place.location_name);setLocationStreet(place.street || "");}
+                        clearLocation(); setLocationDetail(""); const place=data?.locations.find((l:Row)=>l.location_id===Number(e.target.value));
+                        setLocationPlace(place?.location_name || ""); setLocationStreet(place?.street || "");
+                        if(place)setChosenLocation(place);
                       }}>
-                        <option value="">Choose a building or place…</option>
-                        {data?.locations.filter((l:Row)=>l.area===locationArea && (locationScope !== "campus" || l.campus==="PES University RR Campus")).map((l:Row)=><option key={l.location_id} value={l.location_id}>{l.building || l.location_name}</option>)}
+                        <option value="">{data?.locations.filter((l:Row)=>l.area===locationArea).length || 0} saved places in {locationArea} — choose or type below</option>
+                        {data?.locations.filter((l:Row)=>l.area===locationArea).map((l:Row)=><option key={l.location_id} value={l.location_id}>{l.location_name}</option>)}
                       </select>
+                      <span className="small muted">Existing places are available now. Add your address below if yours is missing.</span>
                     </label>
                     <label>
                       Street / address
@@ -423,7 +417,7 @@ export default function Home() {
                     </label>
                     <label>
                       Landmark / place name
-                      <input value={locationPlace} minLength={2} maxLength={160} placeholder="e.g. GJB Block, PES uni cafe, shop or landmark" onChange={e=>{clearLocation();setLocationPlace(e.target.value);}} required />
+                      <input value={locationPlace} minLength={2} maxLength={160} placeholder="e.g. GJB Block, PES uni cafe, shop or landmark" onChange={e=>{clearLocation();setLocationPlace(e.target.value);}} />
                     </label>
                     <label>
                       Floor / room / directions (optional)
@@ -431,8 +425,8 @@ export default function Home() {
                     </label>
                     <input type="hidden" name="location_id" value={chosenLocation?.location_id || ""} />
                     <div className="location-actions">
-                      <button type="button" disabled={busy || locationPlace.trim().length<2} onClick={()=>void findLocation()}>Find saved place</button>{" "}
-                      <button type="button" disabled={busy || locationPlace.trim().length<2 || !!chosenLocation} onClick={()=>void findLocation(true)}>Save as new landmark</button>
+                      <button type="button" disabled={busy || Math.max(locationPlace.trim().length,locationStreet.trim().length)<2} onClick={()=>void findLocation()}>Find matching places</button>{" "}
+                      <button type="button" disabled={busy || Math.max(locationPlace.trim().length,locationStreet.trim().length)<2 || !!chosenLocation} onClick={()=>void findLocation(true)}>Use entered address / landmark</button>
                       {locationNotice && <p role="status">{locationNotice}</p>}
                       {locationMatches.map((l:Row)=><button type="button" key={l.location_id} onClick={()=>{resetReportReview();setChosenLocation(l);setLocationMatches([]);}}>
                         {l.location_name} · {l.match_kind}{typeof l.cosine_distance==="number" ? ` · distance ${l.cosine_distance.toFixed(3)}` : ""}
@@ -485,7 +479,7 @@ export default function Home() {
                   </form>
                   {duplicateReview && reportDraft && <div className="duplicate-review" aria-live="polite">
                     <h3>{duplicateReview.candidates.length ? "Could this be an existing incident?" : "No close matches found"}</h3>
-                    <p>Checked active incidents at the selected location reported in the last {duplicateReview.windowHours} hours. Similar wording is a suggestion, not proof of a duplicate. Review the details before choosing.</p>
+                    <p>Checked active incidents at the selected location reported in the last {duplicateReview.windowHours === 1 ? "hour" : `${duplicateReview.windowHours} hours`}. Older incidents remain in the incident list. Similar wording is a suggestion, not proof of a duplicate. Review the details before choosing.</p>
                     {duplicateReview.candidates.map((candidate: Row) => <article key={candidate.emergency_id} className="duplicate-candidate">
                       <h4>Incident #{candidate.emergency_id} · {candidate.type_name} · {candidate.status}</h4>
                       <p>{candidate.description}</p>

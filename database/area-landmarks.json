@@ -1,0 +1,584 @@
+[
+  {
+    "key": "chickpet-1",
+    "area": "Chickpet",
+    "name": "Chickpete Metro Station",
+    "aliases": [
+      "chickpete metro station"
+    ]
+  },
+  {
+    "key": "chickpet-2",
+    "area": "Chickpet",
+    "name": "Krishna Rajendra Market Metro Station",
+    "aliases": [
+      "krishna rajendra market metro station",
+      "kr market metro"
+    ]
+  },
+  {
+    "key": "chickpet-3",
+    "area": "Chickpet",
+    "name": "Avenue Road",
+    "aliases": [
+      "avenue road"
+    ]
+  },
+  {
+    "key": "chickpet-4",
+    "area": "Chickpet",
+    "name": "Chickpet Main Road",
+    "aliases": [
+      "chickpet main road"
+    ]
+  },
+  {
+    "key": "chickpet-5",
+    "area": "Chickpet",
+    "name": "Sultanpet Main Road",
+    "aliases": [
+      "sultanpet main road"
+    ]
+  },
+  {
+    "key": "chickpet-6",
+    "area": "Chickpet",
+    "name": "BVK Iyengar Road",
+    "aliases": [
+      "bvk iyengar road"
+    ]
+  },
+  {
+    "key": "rajarajeshwari-nagar-1",
+    "area": "Rajarajeshwari Nagar",
+    "name": "Sri Rajarajeshwari Temple",
+    "aliases": [
+      "sri rajarajeshwari temple"
+    ]
+  },
+  {
+    "key": "rajarajeshwari-nagar-2",
+    "area": "Rajarajeshwari Nagar",
+    "name": "Rajarajeshwari Nagar Metro Station",
+    "aliases": [
+      "rajarajeshwari nagar metro station"
+    ]
+  },
+  {
+    "key": "rajarajeshwari-nagar-3",
+    "area": "Rajarajeshwari Nagar",
+    "name": "Jnanakshi Vidyaniketan",
+    "aliases": [
+      "jnanakshi vidyaniketan"
+    ]
+  },
+  {
+    "key": "rajarajeshwari-nagar-4",
+    "area": "Rajarajeshwari Nagar",
+    "name": "Global Village Tech Park",
+    "aliases": [
+      "global village tech park"
+    ]
+  },
+  {
+    "key": "rajarajeshwari-nagar-5",
+    "area": "Rajarajeshwari Nagar",
+    "name": "Rajarajeshwari Nagar Double Road",
+    "aliases": [
+      "rajarajeshwari nagar double road"
+    ]
+  },
+  {
+    "key": "rajarajeshwari-nagar-6",
+    "area": "Rajarajeshwari Nagar",
+    "name": "BEML Layout Park",
+    "aliases": [
+      "beml layout park"
+    ]
+  },
+  {
+    "key": "hebbal-1",
+    "area": "Hebbal",
+    "name": "Hebbal Flyover",
+    "aliases": [
+      "hebbal flyover"
+    ]
+  },
+  {
+    "key": "hebbal-2",
+    "area": "Hebbal",
+    "name": "Hebbal Railway Station",
+    "aliases": [
+      "hebbal railway station"
+    ]
+  },
+  {
+    "key": "hebbal-3",
+    "area": "Hebbal",
+    "name": "Esteem Mall",
+    "aliases": [
+      "esteem mall"
+    ]
+  },
+  {
+    "key": "hebbal-4",
+    "area": "Hebbal",
+    "name": "Bangalore Baptist Hospital",
+    "aliases": [
+      "bangalore baptist hospital"
+    ]
+  },
+  {
+    "key": "hebbal-5",
+    "area": "Hebbal",
+    "name": "Lumbini Gardens",
+    "aliases": [
+      "lumbini gardens"
+    ]
+  },
+  {
+    "key": "hebbal-6",
+    "area": "Hebbal",
+    "name": "Hebbal Bus Stop",
+    "aliases": [
+      "hebbal bus stop"
+    ]
+  },
+  {
+    "key": "banashankari-1",
+    "area": "Banashankari",
+    "name": "Banashankari Metro Station",
+    "aliases": [
+      "banashankari metro station"
+    ]
+  },
+  {
+    "key": "banashankari-2",
+    "area": "Banashankari",
+    "name": "Banashankari Amma Temple",
+    "aliases": [
+      "banashankari amma temple"
+    ]
+  },
+  {
+    "key": "banashankari-3",
+    "area": "Banashankari",
+    "name": "Deve Gowda Petrol Bunk Junction",
+    "aliases": [
+      "deve gowda petrol bunk junction"
+    ]
+  },
+  {
+    "key": "banashankari-4",
+    "area": "Banashankari",
+    "name": "Kathriguppe Main Road",
+    "aliases": [
+      "kathriguppe main road"
+    ]
+  },
+  {
+    "key": "jayanagar-1",
+    "area": "Jayanagar",
+    "name": "Jayanagar Metro Station",
+    "aliases": [
+      "jayanagar metro station"
+    ]
+  },
+  {
+    "key": "jayanagar-2",
+    "area": "Jayanagar",
+    "name": "Jayanagar 4th Block Bus Station",
+    "aliases": [
+      "jayanagar 4th block bus station"
+    ]
+  },
+  {
+    "key": "jayanagar-3",
+    "area": "Jayanagar",
+    "name": "South End Circle Metro Station",
+    "aliases": [
+      "south end circle metro station"
+    ]
+  },
+  {
+    "key": "jayanagar-4",
+    "area": "Jayanagar",
+    "name": "Rashtreeya Vidyalaya Road Metro Station",
+    "aliases": [
+      "rashtreeya vidyalaya road metro station"
+    ]
+  },
+  {
+    "key": "jayanagar-5",
+    "area": "Jayanagar",
+    "name": "Madhavan Park",
+    "aliases": [
+      "madhavan park"
+    ]
+  },
+  {
+    "key": "jayanagar-6",
+    "area": "Jayanagar",
+    "name": "Ranadheera Kanteerava Park",
+    "aliases": [
+      "ranadheera kanteerava park"
+    ]
+  },
+  {
+    "key": "indiranagar-1",
+    "area": "Indiranagar",
+    "name": "CMH Road",
+    "aliases": [
+      "cmh road"
+    ]
+  },
+  {
+    "key": "indiranagar-2",
+    "area": "Indiranagar",
+    "name": "Indiranagar 100 Feet Road",
+    "aliases": [
+      "indiranagar 100 feet road"
+    ]
+  },
+  {
+    "key": "indiranagar-3",
+    "area": "Indiranagar",
+    "name": "Indiranagar 12th Main Road",
+    "aliases": [
+      "indiranagar 12th main road"
+    ]
+  },
+  {
+    "key": "indiranagar-4",
+    "area": "Indiranagar",
+    "name": "Chinmaya Mission Hospital",
+    "aliases": [
+      "chinmaya mission hospital"
+    ]
+  },
+  {
+    "key": "indiranagar-5",
+    "area": "Indiranagar",
+    "name": "Defence Colony Park",
+    "aliases": [
+      "defence colony park"
+    ]
+  },
+  {
+    "key": "indiranagar-6",
+    "area": "Indiranagar",
+    "name": "Swami Vivekananda Road Metro Station",
+    "aliases": [
+      "swami vivekananda road metro station"
+    ]
+  },
+  {
+    "key": "whitefield-1",
+    "area": "Whitefield",
+    "name": "Whitefield Kadugodi Metro Station",
+    "aliases": [
+      "whitefield kadugodi metro station"
+    ]
+  },
+  {
+    "key": "whitefield-2",
+    "area": "Whitefield",
+    "name": "Hopefarm Channasandra Metro Station",
+    "aliases": [
+      "hopefarm channasandra metro station"
+    ]
+  },
+  {
+    "key": "whitefield-3",
+    "area": "Whitefield",
+    "name": "Pattandur Agrahara Metro Station",
+    "aliases": [
+      "pattandur agrahara metro station"
+    ]
+  },
+  {
+    "key": "whitefield-4",
+    "area": "Whitefield",
+    "name": "International Tech Park Bangalore",
+    "aliases": [
+      "international tech park bangalore",
+      "itpl",
+      "itpb"
+    ]
+  },
+  {
+    "key": "whitefield-5",
+    "area": "Whitefield",
+    "name": "Nexus Shantiniketan",
+    "aliases": [
+      "nexus shantiniketan",
+      "forum shantiniketan"
+    ]
+  },
+  {
+    "key": "whitefield-6",
+    "area": "Whitefield",
+    "name": "Whitefield Railway Station",
+    "aliases": [
+      "whitefield railway station"
+    ]
+  },
+  {
+    "key": "electronic-city-1",
+    "area": "Electronic City",
+    "name": "Electronic City Metro Station",
+    "aliases": [
+      "electronic city metro station"
+    ]
+  },
+  {
+    "key": "electronic-city-2",
+    "area": "Electronic City",
+    "name": "Infosys Electronic City Campus",
+    "aliases": [
+      "infosys electronic city campus"
+    ]
+  },
+  {
+    "key": "electronic-city-3",
+    "area": "Electronic City",
+    "name": "Wipro Electronic City Campus",
+    "aliases": [
+      "wipro electronic city campus"
+    ]
+  },
+  {
+    "key": "electronic-city-4",
+    "area": "Electronic City",
+    "name": "ELCITA West Phase",
+    "aliases": [
+      "elcita west phase"
+    ]
+  },
+  {
+    "key": "electronic-city-5",
+    "area": "Electronic City",
+    "name": "Velankani Tech Park",
+    "aliases": [
+      "velankani tech park"
+    ]
+  },
+  {
+    "key": "electronic-city-6",
+    "area": "Electronic City",
+    "name": "Huskur Road Metro Station",
+    "aliases": [
+      "huskur road metro station"
+    ]
+  },
+  {
+    "key": "koramangala-1",
+    "area": "Koramangala",
+    "name": "St Johns Medical College",
+    "aliases": [
+      "st johns medical college"
+    ]
+  },
+  {
+    "key": "koramangala-2",
+    "area": "Koramangala",
+    "name": "Nexus Koramangala",
+    "aliases": [
+      "nexus koramangala",
+      "forum koramangala",
+      "forum mall koramangala"
+    ]
+  },
+  {
+    "key": "koramangala-3",
+    "area": "Koramangala",
+    "name": "Koramangala Indoor Stadium",
+    "aliases": [
+      "koramangala indoor stadium"
+    ]
+  },
+  {
+    "key": "koramangala-4",
+    "area": "Koramangala",
+    "name": "Koramangala Police Station",
+    "aliases": [
+      "koramangala police station"
+    ]
+  },
+  {
+    "key": "koramangala-5",
+    "area": "Koramangala",
+    "name": "Koramangala 80 Feet Road",
+    "aliases": [
+      "koramangala 80 feet road"
+    ]
+  },
+  {
+    "key": "koramangala-6",
+    "area": "Koramangala",
+    "name": "Lakshmidevi Park",
+    "aliases": [
+      "lakshmidevi park"
+    ]
+  },
+  {
+    "key": "yelahanka-1",
+    "area": "Yelahanka",
+    "name": "Yelahanka Lake",
+    "aliases": [
+      "yelahanka lake"
+    ]
+  },
+  {
+    "key": "yelahanka-2",
+    "area": "Yelahanka",
+    "name": "Yelahanka New Town Bus Station",
+    "aliases": [
+      "yelahanka new town bus station"
+    ]
+  },
+  {
+    "key": "yelahanka-3",
+    "area": "Yelahanka",
+    "name": "Yelahanka Government Hospital",
+    "aliases": [
+      "yelahanka government hospital"
+    ]
+  },
+  {
+    "key": "yelahanka-4",
+    "area": "Yelahanka",
+    "name": "RMZ Galleria",
+    "aliases": [
+      "rmz galleria"
+    ]
+  },
+  {
+    "key": "yelahanka-5",
+    "area": "Yelahanka",
+    "name": "Mother Dairy Yelahanka",
+    "aliases": [
+      "mother dairy yelahanka"
+    ]
+  },
+  {
+    "key": "yelahanka-6",
+    "area": "Yelahanka",
+    "name": "Allalasandra Lake",
+    "aliases": [
+      "allalasandra lake"
+    ]
+  },
+  {
+    "key": "marathahalli-1",
+    "area": "Marathahalli",
+    "name": "Marathahalli Kalamandir",
+    "aliases": [
+      "marathahalli kalamandir"
+    ]
+  },
+  {
+    "key": "marathahalli-2",
+    "area": "Marathahalli",
+    "name": "Marathahalli Multiplex Bus Stop",
+    "aliases": [
+      "marathahalli multiplex bus stop"
+    ]
+  },
+  {
+    "key": "marathahalli-3",
+    "area": "Marathahalli",
+    "name": "Kundalahalli Gate Junction",
+    "aliases": [
+      "kundalahalli gate junction"
+    ]
+  },
+  {
+    "key": "marathahalli-4",
+    "area": "Marathahalli",
+    "name": "Marathahalli Varthur Road Junction",
+    "aliases": [
+      "marathahalli varthur road junction"
+    ]
+  },
+  {
+    "key": "marathahalli-5",
+    "area": "Marathahalli",
+    "name": "HAL Old Airport Road - Marathahalli",
+    "aliases": [
+      "hal old airport road - marathahalli"
+    ]
+  },
+  {
+    "key": "marathahalli-6",
+    "area": "Marathahalli",
+    "name": "Marathahalli Sanjay Nagar Main Road",
+    "aliases": [
+      "marathahalli sanjay nagar main road"
+    ]
+  },
+  {
+    "key": "malleshwaram-1",
+    "area": "Malleshwaram",
+    "name": "Mantri Square Mall",
+    "aliases": [
+      "mantri square mall"
+    ]
+  },
+  {
+    "key": "malleshwaram-2",
+    "area": "Malleshwaram",
+    "name": "Sampige Road Metro Station",
+    "aliases": [
+      "sampige road metro station"
+    ]
+  },
+  {
+    "key": "malleshwaram-3",
+    "area": "Malleshwaram",
+    "name": "Srirampura Metro Station",
+    "aliases": [
+      "srirampura metro station"
+    ]
+  },
+  {
+    "key": "malleshwaram-4",
+    "area": "Malleshwaram",
+    "name": "Malleshwaram Railway Station",
+    "aliases": [
+      "malleshwaram railway station"
+    ]
+  },
+  {
+    "key": "malleshwaram-5",
+    "area": "Malleshwaram",
+    "name": "Kadu Malleshwara Temple",
+    "aliases": [
+      "kadu malleshwara temple"
+    ]
+  },
+  {
+    "key": "malleshwaram-6",
+    "area": "Malleshwaram",
+    "name": "Sankey Tank",
+    "aliases": [
+      "sankey tank"
+    ]
+  },
+  {
+    "key": "rajarajeshwari-nagar-7",
+    "area": "Rajarajeshwari Nagar",
+    "name": "RNS Institute of Technology",
+    "aliases": [
+      "rnsit"
+    ]
+  },
+  {
+    "key": "malleshwaram-7",
+    "area": "Malleshwaram",
+    "name": "Malleshwaram 8th Cross Market",
+    "aliases": [
+      "malleshwaram eighth cross market"
+    ]
+  }
+]

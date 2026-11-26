@@ -20,7 +20,7 @@ The architecture remains React -> Next.js authenticated API -> PostgreSQL/PGlite
 
 ## Candidate eligibility and honest limits
 
-The candidate must have the same location ID, be reported/responding, and have a reporting timestamp in the preceding 24 hours. Future timestamps and resolved/older incidents are excluded. We do not filter by the incoming type because callers can describe/classify the same event differently; both types are shown for human review.
+The candidate must have the same location ID, be reported/responding, and have a reporting timestamp in the preceding one hour. Future timestamps and resolved/older incidents are excluded. We do not filter by the incoming type because callers can describe/classify the same event differently; both types are shown for human review.
 
 Only the nearest five eligible candidates with cosine distance <= 0.65 are shown. This is a documented screening heuristic, not a calibrated confidence or duplicate probability. Lower distance means closer meaning; even a close match can be a separate event. A broad location ID may cover multiple events; other locations, older events and weak matches can be missed. No claim of perfect duplicate detection or measured production accuracy is made. The coordinator can always choose separate creation.
 

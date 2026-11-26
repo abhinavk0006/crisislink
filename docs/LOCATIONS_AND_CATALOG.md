@@ -1,17 +1,17 @@
 # Bengaluru locations and operational catalog
 
-The catalog now supplies 12 incident types, 16 capabilities, 20 resources, 15 responders and 30 saved places across 12 Bengaluru areas. The original 17 domain tables remain. A fresh initialization has 251 domain rows after the additive catalog migration; the original supplied package had 63. These are sample operational records, not a claim of actual emergency-service inventory.
+The catalog now supplies 12 incident types, 16 capabilities, 20 resources, 15 responders and 102 saved places across 12 Bengaluru areas. The original 17 domain tables remain. A fresh initialization has 323 domain rows after the additive catalog migration; the original supplied package had 63. These are sample operational records, not a claim of actual emergency-service inventory.
 
 ## Location entry
 
-Report incident offers area → location group → saved building/place. Under Banashankari, choose PES University — RR Campus. Buildings: MRD Block, GJB Block, BE Block, F Block, G Block and Tech Park. The campus as a whole and the cafeteria are also saved places. Optional floor/room/directions stay in reported_location_text and appear with the incident. Selecting BE Block never silently selects GJB Block.
+Report incident offers area → saved building/place. In Banashankari, the saved-place list includes PES University RR Campus and its buildings. Buildings: MRD Block, GJB Block, BE Block, F Block, G Block and Tech Park. The campus as a whole and the cafeteria are also saved places. Optional floor/room/directions stay in reported_location_text and appear with the incident. Selecting BE Block never silently selects GJB Block.
 
-Users can enter a street/address and landmark, search saved places, confirm a suggestion or explicitly save a new landmark. Custom locations persist in SQL, including addresses that are not in the initial catalog. Coordinates are not inferred. Area labels are catalog categories; this is not a geocoding or routing service.
+The redundant location-group selector is removed. The saved-place selector shows the count for the area and all its existing places directly. Changing area clears the previous street and room to avoid carrying an address into the wrong area. Users can enter a street/address or landmark, search saved places, confirm a suggestion or explicitly save a new landmark. Custom locations persist in SQL, including addresses that are not in the initial catalog. Coordinates are not inferred. Area labels are catalog categories; this is not a geocoding or routing service.
 
 ## Two uses of genuine vector search
 
 1. Location resolution: indexLocations embeds the saved place name, address, area, street, campus/building and aliases with the same pinned local 384-dimensional MiniLM model. resolveLocations first finds exact names/aliases, then performs native pgvector cosine retrieval within the chosen area. The UI labels exact and semantic results separately and requires a human selection. It does not equate a nearest neighbour with an exact address. A source-text comparison prevents stale vectors and concurrent source overwrites. On model failure, exact matches remain available and the UI states the limitation.
-2. Duplicate report review: after the coordinator confirms the canonical location ID, the existing incident vectors search active reports at that specific saved place within 24 hours. The human still chooses attach or create separately. Reported floor/room details help that decision. Canonical building-level matching may suggest events on different floors; no floor-level identity guarantee is claimed.
+2. Duplicate report review: after the coordinator confirms the canonical location ID, the existing incident vectors search active reports at that specific saved place within one hour. This is the duplicate-suggestion lookback, not a deadline for reporting or resolving emergencies. Older incidents remain visible. The human still chooses attach or create separately. Reported floor/room details help that decision. Canonical building-level matching may suggest events on different floors; no floor-level identity guarantee is claimed.
 
 The original typed location is retained in SQL for a new incident and in MongoDB assessment for an attached additional report. The existing SQL live lab, dispatch transactions, status triggers, MongoDB field-note CRUD and role checks are retained.
 
@@ -33,3 +33,7 @@ Additional responders are operational team records with no login (user_id NULL);
 Official PES sources: [MRD Block / CIE](https://cie.pes.edu/contact), [GJB event venue](https://events.pes.edu/10841/), [BE Block event venue](https://events.pes.edu/11438/), [G Block event venue](https://events.pes.edu/11135/), [Tech Park event venue](https://news.pes.edu/12150/), [RR Campus address](https://pes.edu/contact/).
 
 F Block and the broader campus building list were cross-checked against the community [RR Campus guide](https://pesqts.vercel.app/rrc-campus.html). Floor assignments, departments and individual rooms are not pre-populated from potentially changing guides; users enter the actual floor/room.
+
+## Expanded area lists
+
+The 72 additional area landmarks are in database/area-landmarks.json, generated into database/11_area_landmarks.sql by tools/build-landmarks.py. Each area now has at least eight choices (Banashankari has fourteen, including RR Campus). New entries use a unique catalog key and generated IDs so existing user-created locations are never replaced by fixed seed IDs. Names are curated landmark labels within broad area groupings; no exact coordinates, opening status or navigation accuracy is implied. BBMP park names were cross-checked at https://pms.bbmpgov.in/park and government tourism references at https://bengaluruurban.nic.in/en/tourism/.
