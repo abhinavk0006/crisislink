@@ -200,6 +200,7 @@ Constraints:
 | search_embedding | vector(384) | Yes | No |
 | search_model | character varying(160) | Yes | No |
 | search_text | text | Yes | No |
+| catalog_key | text | Yes | No |
 
 Constraints:
 
@@ -452,6 +453,10 @@ CREATE UNIQUE INDEX pk_emergency_types ON public.emergency_types USING btree (ty
 
 ```sql
 CREATE INDEX idx_location_embedding_hnsw ON public.locations USING hnsw (search_embedding vector_cosine_ops) WHERE (search_embedding IS NOT NULL);
+```
+
+```sql
+CREATE UNIQUE INDEX idx_locations_catalog_key ON public.locations USING btree (catalog_key);
 ```
 
 ```sql

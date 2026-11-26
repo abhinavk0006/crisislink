@@ -559,6 +559,14 @@
       "position": 14
     },
     {
+      "table_name": "locations",
+      "column_name": "catalog_key",
+      "sql_type": "text",
+      "nullable": true,
+      "identity": "",
+      "position": 15
+    },
+    {
       "table_name": "maintenance_records",
       "column_name": "maintenance_id",
       "sql_type": "integer",
@@ -1701,6 +1709,11 @@
       "tablename": "locations",
       "indexname": "idx_location_embedding_hnsw",
       "indexdef": "CREATE INDEX idx_location_embedding_hnsw ON public.locations USING hnsw (search_embedding vector_cosine_ops) WHERE (search_embedding IS NOT NULL)"
+    },
+    {
+      "tablename": "locations",
+      "indexname": "idx_locations_catalog_key",
+      "indexdef": "CREATE UNIQUE INDEX idx_locations_catalog_key ON public.locations USING btree (catalog_key)"
     },
     {
       "tablename": "locations",
