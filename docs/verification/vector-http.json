@@ -1,9 +1,11 @@
 {
-  "checkedAt": "2026-11-26T14:36:10.177Z",
-  "passed": 8,
-  "newNamedChecks": 7,
+  "checkedAt": "2026-11-26T15:54:07.756Z",
+  "passed": 10,
+  "newNamedChecks": 9,
   "checks": [
     "Unauthenticated duplicate review is rejected",
+    "Campus catalog and location aliases are available through authenticated API",
+    "Custom landmarks persist, deduplicate and enforce role permissions",
     "Live review returns the paraphrased same-location incident",
     "Attach decision and retry preserve one observation with no new SQL incident",
     "Changed draft cannot reuse a signed review",

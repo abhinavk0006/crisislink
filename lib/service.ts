@@ -1,3 +1,4 @@
+import { BENGALURU_AREAS } from "./location-catalog";
 import { z } from "zod";
 import { createHash } from "node:crypto";
 import { asActor, type Actor } from "./db";
@@ -5,6 +6,7 @@ import { requireRole, AppError } from "./auth";
 export const incidentInput = z.object({
   type_id: z.number().int().positive(),
   location_id: z.number().int().positive(),
+  reported_location_text: z.string().trim().max(600).optional(),
   description: z.string().trim().min(5).max(2000),
   severity_level: z.enum(["low", "medium", "high", "critical"]),
   people_affected: z.number().int().min(0).max(1000000),
@@ -14,7 +16,7 @@ export async function dashboard(actor: Actor) {
   return asActor(actor, async (tx) => {
     const incidents = (
       await tx.query(
-        `SELECT e.emergency_id,e.type_id,e.location_id,e.reported_by,e.description,e.severity_level,e.people_affected,e.status,e.reported_at,e.updated_at,t.type_name,l.location_name FROM emergencies e JOIN emergency_types t USING(type_id) JOIN locations l USING(location_id) ORDER BY e.reported_at DESC,e.emergency_id DESC`,
+        `SELECT e.emergency_id,e.type_id,e.location_id,e.reported_by,e.description,e.severity_level,e.people_affected,e.status,e.reported_at,e.updated_at,e.reported_location_text,t.type_name,l.location_name FROM emergencies e JOIN emergency_types t USING(type_id) JOIN locations l USING(location_id) ORDER BY e.reported_at DESC,e.emergency_id DESC`,
       )
     ).rows;
     const resources = (
@@ -39,7 +41,7 @@ export async function dashboard(actor: Actor) {
       await tx.query("SELECT * FROM emergency_types ORDER BY type_id")
     ).rows;
     const locations = (
-      await tx.query("SELECT * FROM locations ORDER BY location_id")
+      await tx.query("SELECT location_id,location_name,address,area,street,campus,building FROM locations ORDER BY location_name")
     ).rows;
     const capabilities = (
       await tx.query("SELECT * FROM capabilities ORDER BY capability_id")
@@ -62,6 +64,7 @@ export async function dashboard(actor: Actor) {
       history,
       types,
       locations,
+      areas: BENGALURU_AREAS,
       capabilities,
       maintenance,
       resourceTags,
@@ -137,7 +140,7 @@ export async function createIncident(actor: Actor, input: unknown, requestId?: s
     }
     const row = (
       await tx.query<{ emergency_id: number }>(
-        "INSERT INTO emergencies(type_id,location_id,reported_by,description,severity_level,people_affected,status,reported_at,updated_at) VALUES($1,$2,$3,$4,$5,$6,'reported',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP) RETURNING emergency_id",
+        "INSERT INTO emergencies(type_id,location_id,reported_by,description,severity_level,people_affected,reported_location_text,status,reported_at,updated_at) VALUES($1,$2,$3,$4,$5,$6,$7,'reported',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP) RETURNING emergency_id",
         [
           data.type_id,
           data.location_id,
@@ -145,6 +148,7 @@ export async function createIncident(actor: Actor, input: unknown, requestId?: s
           data.description,
           data.severity_level,
           data.people_affected,
+          data.reported_location_text || null,
         ],
       )
     ).rows[0];

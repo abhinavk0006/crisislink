@@ -1,0 +1,23 @@
+{
+  "freshTableCounts": {
+    "roles": 3,
+    "users": 5,
+    "emergency_types": 12,
+    "locations": 30,
+    "emergencies": 3,
+    "emergency_status_history": 6,
+    "capabilities": 16,
+    "emergency_required_capabilities": 3,
+    "responders": 15,
+    "resource_types": 14,
+    "resources": 20,
+    "resource_capabilities": 45,
+    "assignments": 3,
+    "maintenance_records": 3,
+    "responder_reports": 3,
+    "responder_skills": 30,
+    "resource_tags": 40
+  },
+  "freshDomainRows": 251,
+  "areas": 12
+}

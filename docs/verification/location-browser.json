@@ -1,0 +1,12 @@
+{
+  "checkedOn": "2026-11-26 Asia/Calcutta",
+  "environment": "Isolated production app on port3104; original data untouched",
+  "checks": [
+    "Six named RR Campus buildings visible in dropdown",
+    "GJB Block report created with preserved floor/room/address",
+    "Golden jubilee block alias resolves to GJB canonical location",
+    "Paraphrased report matches newly created GJB incident104 at cosine distance0.1290",
+    "Visible catalog includes12 types16 capabilities20 resources"
+  ],
+  "note": "Temporary test server stopped after verification; primary server stays on3100"
+}

@@ -60,3 +60,7 @@ Future enhancements include a separately hosted PostgreSQL service for multi-pro
 The two-member team and title must be approved by the instructor, and the title must be unique within the section. These are external facts the implementation cannot establish. Individual contributions and viva readiness must be evidenced by the students' actual work and explanations. The generated implementation commits are attributed to Codex; they do not claim student authorship.
 
 The assigned split and actual-evidence log are maintained in [CONTRIBUTIONS.md](../CONTRIBUTIONS.md). Sachin leads relational design, core SQL/trigger review, incident/resource/maintenance modules and integrity tests. Abhinav leads the document model, dispatch/completion functions, authentication/dashboard/field-note integration and security/end-to-end tests. Each has database and application work and reviews the other's modules. This allocation is a plan, not a record of completed contributions.
+
+## Location and operational catalog extension
+
+See [LOCATIONS_AND_CATALOG.md](LOCATIONS_AND_CATALOG.md) for typed addresses, canonical campus buildings, area-constrained vectors and expanded operational records.

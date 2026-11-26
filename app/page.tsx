@@ -45,6 +45,35 @@ export default function Home() {
   const [reviewUnavailable, setReviewUnavailable] = useState(false);
   const [draftRequestId, setDraftRequestId] = useState("");
   const draftVersion = useRef(0);
+  const [locationArea, setLocationArea] = useState("Banashankari");
+  const [locationScope, setLocationScope] = useState("campus");
+  const [locationStreet, setLocationStreet] = useState("");
+  const [locationPlace, setLocationPlace] = useState("");
+  const [locationDetail, setLocationDetail] = useState("");
+  const [chosenLocation, setChosenLocation] = useState<Row | null>(null);
+  const [locationMatches, setLocationMatches] = useState<Row[]>([]);
+  const [locationNotice, setLocationNotice] = useState("");
+  const locationVersion = useRef(0);
+  function clearLocation() {
+    locationVersion.current++; setChosenLocation(null); setLocationMatches([]); setLocationNotice(""); resetReportReview();
+  }
+  async function findLocation(save = false) {
+    const version = locationVersion.current;
+    await action(async () => {
+      const input = {area: locationArea, query: locationPlace, street: locationStreet};
+      if (save) {
+        const place = await api("locations", "POST", input);
+        if (version === locationVersion.current) {setChosenLocation(place); setLocationMatches([]);}
+        await refresh();
+      } else {
+        const result = await api("locations/resolve", "POST", input);
+        if (version === locationVersion.current) {
+          setLocationMatches(result.candidates);
+          setLocationNotice(result.semanticAvailable ? "Choose the correct saved place, or save a new landmark. Similarity is a suggestion." : "Semantic model unavailable. Exact saved names and aliases are shown; you can save a new place.");
+        }
+      }
+    });
+  }
   const [queryEpoch, setQueryEpoch] = useState(0);
   const [queryPending, setQueryPending] = useState(false);
   const [queryError, setQueryError] = useState("");
@@ -158,7 +187,7 @@ export default function Home() {
         <section className="login-card">
           <span className="eyebrow">TEAM ACCESS</span>
           <h2>Sign in to your workspace</h2>
-          <p className="muted">Use your assigned demonstration account.</p>
+          <p className="muted">Use your assigned account.</p>
           <form
             onSubmit={(e) => {
               const d = form(e);
@@ -197,7 +226,7 @@ export default function Home() {
             </button>
           </form>
           <p className="small muted">
-            Fictional classroom application. Not connected to emergency
+            Project application. Not connected to emergency
             services.
           </p>
         </section>
@@ -237,7 +266,7 @@ export default function Home() {
         </nav>
         <div className="sidebar-bottom">
           <span className="live-dot" />
-          Local project demonstration<p>PostgreSQL + MongoDB</p>
+          Bengaluru response workspace<p>PostgreSQL + MongoDB</p>
           <small>Sachin R · Abhinav Krishna Kandukuri</small>
         </div>
       </aside>
@@ -324,7 +353,7 @@ export default function Home() {
                 {coordinator && (
                   <button
                     className="primary"
-                    onClick={() => { setShowCreate(!showCreate); resetReportReview(); }}
+                    onClick={() => { if (!showCreate) { clearLocation(); setLocationStreet(""); setLocationPlace(""); setLocationDetail(""); } setShowCreate(!showCreate); resetReportReview(); }}
                   >
                     + Report incident
                   </button>
@@ -338,7 +367,8 @@ export default function Home() {
                     onChange={resetReportReview}
                     onSubmit={(e) => {
                       const d = form(e);
-                      const draft = { ...d, type_id: Number(d.type_id), location_id: Number(d.location_id),
+                      if (!chosenLocation) {setError("Choose a saved location or save the entered landmark first."); return;}
+                      const draft = { ...d, reported_location_text: [locationPlace || chosenLocation.location_name, locationDetail, locationStreet, locationArea].filter(Boolean).join(", "), type_id: Number(d.type_id), location_id: Number(d.location_id),
                         people_affected: Number(d.people_affected), capability_id: Number(d.capability_id) };
                       const version = draftVersion.current;
                       setReportDraft(draft); setDraftRequestId(crypto.randomUUID());
@@ -365,15 +395,50 @@ export default function Home() {
                       </select>
                     </label>
                     <label>
-                      Location
-                      <select name="location_id">
-                        {data?.locations.map((l: Row) => (
-                          <option key={l.location_id} value={l.location_id}>
-                            {l.location_name}
-                          </option>
-                        ))}
+                      Bengaluru area
+                      <select value={locationArea} onChange={e=>{clearLocation();setLocationArea(e.target.value);setLocationScope("area");setLocationPlace("");}}>
+                        {data?.areas.map((a:string)=><option key={a}>{a}</option>)}
                       </select>
                     </label>
+                    <label>
+                      Location group
+                      <select value={locationScope} onChange={e=>{clearLocation();setLocationScope(e.target.value);setLocationPlace("");}}>
+                        <option value="area">Street / landmark in this area</option>
+                        {locationArea === "Banashankari" && <option value="campus">PES University — RR Campus</option>}
+                      </select>
+                    </label>
+                    <label>
+                      {locationScope === "campus" ? "RR Campus building / saved place" : "Saved place (optional)"}
+                      <select value={chosenLocation?.location_id || ""} onChange={e=>{
+                        clearLocation(); const place=data?.locations.find((l:Row)=>l.location_id===Number(e.target.value));
+                        if(place){setChosenLocation(place);setLocationPlace(place.location_name);setLocationStreet(place.street || "");}
+                      }}>
+                        <option value="">Choose a building or place…</option>
+                        {data?.locations.filter((l:Row)=>l.area===locationArea && (locationScope !== "campus" || l.campus==="PES University RR Campus")).map((l:Row)=><option key={l.location_id} value={l.location_id}>{l.building || l.location_name}</option>)}
+                      </select>
+                    </label>
+                    <label>
+                      Street / address
+                      <input value={locationStreet} maxLength={200} placeholder="Street, cross or address" onChange={e=>{clearLocation();setLocationStreet(e.target.value);}} />
+                    </label>
+                    <label>
+                      Landmark / place name
+                      <input value={locationPlace} minLength={2} maxLength={160} placeholder="e.g. GJB Block, PES uni cafe, shop or landmark" onChange={e=>{clearLocation();setLocationPlace(e.target.value);}} required />
+                    </label>
+                    <label>
+                      Floor / room / directions (optional)
+                      <input value={locationDetail} maxLength={120} placeholder="e.g. 3rd floor, room 302, near east entrance" onChange={e=>setLocationDetail(e.target.value)} />
+                    </label>
+                    <input type="hidden" name="location_id" value={chosenLocation?.location_id || ""} />
+                    <div className="location-actions">
+                      <button type="button" disabled={busy || locationPlace.trim().length<2} onClick={()=>void findLocation()}>Find saved place</button>{" "}
+                      <button type="button" disabled={busy || locationPlace.trim().length<2 || !!chosenLocation} onClick={()=>void findLocation(true)}>Save as new landmark</button>
+                      {locationNotice && <p role="status">{locationNotice}</p>}
+                      {locationMatches.map((l:Row)=><button type="button" key={l.location_id} onClick={()=>{resetReportReview();setChosenLocation(l);setLocationMatches([]);}}>
+                        {l.location_name} · {l.match_kind}{typeof l.cosine_distance==="number" ? ` · distance ${l.cosine_distance.toFixed(3)}` : ""}
+                      </button>)}
+                      {chosenLocation && <p role="status">Selected: <strong>{chosenLocation.location_name}</strong></p>}
+                    </div>
                     <label>
                       Severity
                       <select name="severity_level">
@@ -484,6 +549,7 @@ export default function Home() {
                         {badge(incident.status)}
                       </div>
                       <h2>{incident.description}</h2>
+                      {incident.reported_location_text && <p>Reported location: {incident.reported_location_text}</p>}
                       <p className="muted">
                         {incident.location_name} · {incident.people_affected}{" "}
                         people affected
@@ -1018,7 +1084,7 @@ export default function Home() {
             </section>
           )}
           <p className="app-foot">
-            CrisisLink · Fictional DBMS mini project · Persistent PostgreSQL and
+            CrisisLink · Emergency Resource Coordination · PostgreSQL and
             MongoDB storage
           </p>
         </main>

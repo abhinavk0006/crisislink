@@ -28,6 +28,20 @@ try{
  await start(join(process.cwd(),"data/models"));
  await check("Unauthenticated duplicate review is rejected",async()=>assert.equal((await request("incidents/review","POST",incoming,null)).status,401));
  await login();
+ await check("Campus catalog and location aliases are available through authenticated API",async()=>{
+  const d=await request("dashboard");assert.equal(d.data.resources.length,20);assert.equal(d.data.types.length,12);
+  assert.equal(d.data.locations.filter(l=>l.building).length,6);
+  const r=await request("locations/resolve","POST",{area:"Banashankari",query:"gjb"});assert.equal(r.status,200);assert.equal(r.data.candidates[0].location_id,26);
+ });
+ await check("Custom landmarks persist, deduplicate and enforce role permissions",async()=>{
+  const input={area:"Banashankari",query:"PES east gate kiosk",street:"First Cross"};
+  const a=await request("locations","POST",input),b=await request("locations","POST",input);
+  assert.equal(a.status,201);assert.equal(a.data.location_id,b.data.location_id);assert.ok(a.data.location_id>30);
+  assert.equal((await request("locations","POST",input,null)).status,401);
+  const login=await request("auth/login","POST",{email:"fire@example.com",password},null);
+  const session=login.headers.get("set-cookie").split(";")[0];
+  assert.equal((await request("locations","POST",input,session)).status,403);
+ });
  const first=await request("incidents","POST",original);assert.equal(first.status,201);const target=first.data.emergency_id;
  let review;
  await check("Live review returns the paraphrased same-location incident",async()=>{
@@ -64,6 +78,8 @@ try{
   const a=await request("incidents/report","POST",body),b=await request("incidents/report","POST",body);
   assert.equal(a.status,201);assert.equal(a.data.reviewed,false);assert.equal(a.data.emergency_id,b.data.emergency_id);
   assert.equal((await request("dashboard")).status,200);
+  const exact=await request("locations/resolve","POST",{area:"Banashankari",query:"gjb"});
+  assert.equal(exact.status,200);assert.equal(exact.data.semanticAvailable,false);assert.equal(exact.data.candidates[0].location_id,26);
  });
  await stop();await start(join(process.cwd(),"data/models"),"mongodb://127.0.0.1:27999");await login();
  await check("MongoDB outage cannot turn an attachment into a successful save or new incident",async()=>{

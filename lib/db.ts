@@ -74,6 +74,8 @@ export async function getDb() {
       await db.transaction(async (tx) => {
         await tx.exec(await readFile(join(process.cwd(), "database/07_vector_search.sql"), "utf8"));
         await tx.exec(await readFile(join(process.cwd(), "database/08_report_receipts.sql"), "utf8"));
+        await tx.exec(await readFile(join(process.cwd(), "database/09_operational_catalog.sql"), "utf8"));
+        await tx.exec(await readFile(join(process.cwd(), "database/10_location_search.sql"), "utf8"));
       });
       return db;
     })();

@@ -6,7 +6,7 @@ import { readSecret } from "./secret-input.mjs";
 let password = process.env.DEMO_PASSWORD;
 if (!password) {
   password = await readSecret(
-    "Choose a demonstration password (12 to 200 characters, hidden): ",
+    "Choose an account password (12 to 200 characters, hidden): ",
   );
   const repeated = await readSecret("Repeat the password (hidden): ");
   if (password !== repeated) throw Error("Passwords do not match");

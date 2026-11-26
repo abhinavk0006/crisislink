@@ -1,0 +1,1 @@
+export const BENGALURU_AREAS = ["Chickpet", "Rajarajeshwari Nagar", "Hebbal", "Banashankari", "Jayanagar", "Indiranagar", "Whitefield", "Electronic City", "Koramangala", "Yelahanka", "Marathahalli", "Malleshwaram"] as const;

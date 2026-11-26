@@ -15,13 +15,13 @@ process.env.PGLITE_DATA_DIR = await mkdtemp(join(tmpdir(), "crisislink-tags-"));
 process.env.DEMO_PASSWORD = randomBytes(24).toString("base64url");
 const tech: Actor = {
   user_id: 5,
-  full_name: "Demo Technician",
+  full_name: "Maintenance Officer",
   email: "tech@example.com",
   role_name: "Technician",
 };
 const responder: Actor = {
   user_id: 2,
-  full_name: "Demo Firefighter",
+  full_name: "Fire Response Lead",
   email: "fire@example.com",
   role_name: "Responder",
 };

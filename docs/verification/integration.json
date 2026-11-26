@@ -1,8 +1,8 @@
 {
-  "checkedAt": "2026-11-26T14:34:56.855Z",
+  "checkedAt": "2026-11-26T15:48:24.315Z",
   "passed": 23,
   "checks": [
-    "Supplied seed has 17 domain tables and 63 rows",
+    "Operational catalog has 17 domain tables and expected rows",
     "Passwords are hashed and valid sign in creates a revocable session",
     "Invalid login and absent session are rejected",
     "All three roles can retrieve dashboard without credential data",

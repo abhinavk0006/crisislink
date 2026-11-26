@@ -112,6 +112,7 @@ Constraints:
 | embedding | vector(384) | Yes | No |
 | embedding_model | character varying(160) | Yes | No |
 | embedded_at | timestamp with time zone | Yes | No |
+| reported_location_text | text | Yes | No |
 
 Constraints:
 
@@ -191,11 +192,21 @@ Constraints:
 | latitude | numeric(10,7) | Yes | No |
 | longitude | numeric(10,7) | Yes | No |
 | risk_level | character varying(255) | Yes | No |
+| area | character varying(100) | No | No |
+| street | text | Yes | No |
+| campus | text | Yes | No |
+| building | text | Yes | No |
+| aliases | text[] | No | No |
+| search_embedding | vector(384) | Yes | No |
+| search_model | character varying(160) | Yes | No |
+| search_text | text | Yes | No |
 
 Constraints:
 
 - **ck_latitude**: `CHECK (((latitude >= ('-90'::integer)::numeric) AND (latitude <= (90)::numeric)))`
 - **ck_longitude**: `CHECK (((longitude >= ('-180'::integer)::numeric) AND (longitude <= (180)::numeric)))`
+- **locations_aliases_not_null**: `NOT NULL aliases`
+- **locations_area_not_null**: `NOT NULL area`
 - **locations_location_id_not_null**: `NOT NULL location_id`
 - **pk_locations**: `PRIMARY KEY (location_id)`
 
@@ -437,6 +448,10 @@ CREATE UNIQUE INDEX pk_emergency_status_history ON public.emergency_status_histo
 
 ```sql
 CREATE UNIQUE INDEX pk_emergency_types ON public.emergency_types USING btree (type_id);
+```
+
+```sql
+CREATE INDEX idx_location_embedding_hnsw ON public.locations USING hnsw (search_embedding vector_cosine_ops) WHERE (search_embedding IS NOT NULL);
 ```
 
 ```sql

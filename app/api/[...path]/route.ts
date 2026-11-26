@@ -14,6 +14,7 @@ import {
 } from "@/lib/service";
 import { listNotes, createNote, updateNote, deleteNote } from "@/lib/mongo";
 import { reviewIncident, confirmIncidentReport } from "@/lib/incident-review";
+import { resolveLocations, createLocation } from "@/lib/locations";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 async function handler(req: NextRequest) {
@@ -64,6 +65,10 @@ async function handler(req: NextRequest) {
     }
     if (path === "dashboard" && method === "GET")
       return respond(await dashboard(actor));
+    if (path === "locations/resolve" && method === "POST")
+      return respond(await resolveLocations(actor, await req.json()));
+    if (path === "locations" && method === "POST")
+      return respond(await createLocation(actor, await req.json()),201);
     if (path === "incidents/review" && method === "POST")
       return respond(await reviewIncident(actor,await req.json()));
     if (path === "incidents/report" && method === "POST")

@@ -156,14 +156,14 @@ export async function deleteNote(actor: Actor, id: string) {
 
 // Called only after the coordinator's signed duplicate-review decision is checked.
 export async function saveAdditionalReport(actor: Actor, incident: number, reviewId: string,
-  draft: {description:string;type_id:number;location_id:number;severity_level:string;people_affected:number;capability_id?:number}) {
+  draft: {description:string;type_id:number;location_id:number;severity_level:string;people_affected:number;capability_id?:number;reported_location_text?:string}) {
   const col = await mongo();
   const now = new Date();
   const document = {
     emergency_id: incident, author_id: actor.user_id, author_name: actor.full_name,
     text: draft.description, tags: ["additional-report"],
     assessment: { source: "Coordinator confirmed same incident", reported_type_id: String(draft.type_id),
-      reported_location_id: String(draft.location_id), reported_severity: draft.severity_level,
+      reported_location_id: String(draft.location_id), ...(draft.reported_location_text ? {reported_location_text:draft.reported_location_text} : {}), reported_severity: draft.severity_level,
       reported_people_affected: String(draft.people_affected),
       reported_capability_id: draft.capability_id ? String(draft.capability_id) : "Not specified" },
     created_at: now, updated_at: now, report_review_id: reviewId,

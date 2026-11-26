@@ -2,7 +2,7 @@
 
 Checked 17 November 2026. This checklist is separate from the final report, as requested. Status means implementation/evidence coverage, not an awarded mark.
 
-The friend's ZIP supplied a classroom MySQL model, seed, diagrams, slides and SQL output. It did **not** supply the Next.js app referenced by the website. The delivered application is a new local reconstruction using the same 17 domain tables and 63 seed rows, adapted to PostgreSQL/PGlite, with real MongoDB added. Do not describe it as the earlier 134-row application.
+The friend's ZIP supplied a classroom MySQL model, seed, diagrams, slides and SQL output. It did **not** supply the Next.js app referenced by the website. The delivered application is a new local reconstruction using the same 17 domain tables, original 63-row base and expanded 251-row fresh catalog, adapted to PostgreSQL/PGlite, with real MongoDB added. Do not describe it as the earlier 134-row application.
 
 | Criterion | Marks | Status | Evidence and changes |
 |---|---:|---|---|
@@ -23,7 +23,7 @@ The friend's ZIP supplied a classroom MySQL model, seed, diagrams, slides and SQ
 
 ## Verification record
 
-- The revised suite passed 41 runner tests (39 named checks plus two parents), including nine real local embedding/pgvector checks alongside the original SQL/MongoDB tests.
+- The revised suite passed 48 runner tests (45 named checks plus three parents), including nine real local embedding/pgvector checks alongside the original SQL/MongoDB tests.
 - 12 running HTTP checks passed, including incident/dispatch/completion, MongoDB CRUD and SQL tag CRUD. See docs/verification/http.json.
 - Two outage checks passed against a separate running production instance: an unavailable MongoDB endpoint returned 503, while the SQL dashboard remained available.
 - TypeScript checking and a production build passed. Final build/evidence files are included in the source package.
@@ -67,3 +67,5 @@ See docs/LEVEL3_REQUIREMENTS_AUDIT.md for all 18 requirements, PROJECT_SPECIFICA
 - [x] Human attach/create decisions; signed draft-bound review; stale/expired review rejection.
 - [x] Retry-safe MongoDB observation/SQL creation; original report details preserved without automatic counts/severity changes.
 - [x] SQL lab polls current data every five seconds, offers manual refresh and uses a rolling current-date calendar.
+
+Expanded catalog/location evidence: six RR Campus buildings, typed landmarks, native vector location matching and new hazmat dispatch are covered in `verification/locations.json`, `verification/vector-http.json` and `LOCATIONS_AND_CATALOG.md`.

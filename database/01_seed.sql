@@ -1,15 +1,15 @@
--- Fictional demonstration records; no real credentials or personal data.
+-- Fictional project records; no real credentials or personal data.
 BEGIN;
 INSERT INTO roles VALUES
 (1,'Coordinator','Assigns response teams'),
 (2,'Responder','Responds to incidents'),
 (3,'Technician','Maintains equipment');
 INSERT INTO users VALUES
-(1,'Demo Coordinator','coordinator@example.com','DEMO_NOT_A_REAL_HASH','9000000001',1,'active','2026-10-30 08:00:00'),
-(2,'Demo Firefighter','fire@example.com','DEMO_NOT_A_REAL_HASH','9000000002',2,'active','2026-10-30 08:00:00'),
-(3,'Demo Medic','medic@example.com','DEMO_NOT_A_REAL_HASH','9000000003',2,'active','2026-10-30 08:00:00'),
-(4,'Demo Rescue Worker','rescue@example.com','DEMO_NOT_A_REAL_HASH','9000000004',2,'active','2026-10-30 08:00:00'),
-(5,'Demo Technician','tech@example.com','DEMO_NOT_A_REAL_HASH','9000000005',3,'active','2026-10-30 08:00:00');
+(1,'Operations Coordinator','coordinator@example.com','UNINITIALIZED_PASSWORD_HASH','9000000001',1,'active','2026-10-30 08:00:00'),
+(2,'Fire Response Lead','fire@example.com','UNINITIALIZED_PASSWORD_HASH','9000000002',2,'active','2026-10-30 08:00:00'),
+(3,'Medical Response Lead','medic@example.com','UNINITIALIZED_PASSWORD_HASH','9000000003',2,'active','2026-10-30 08:00:00'),
+(4,'Water Rescue Lead','rescue@example.com','UNINITIALIZED_PASSWORD_HASH','9000000004',2,'active','2026-10-30 08:00:00'),
+(5,'Maintenance Officer','tech@example.com','UNINITIALIZED_PASSWORD_HASH','9000000005',3,'active','2026-10-30 08:00:00');
 INSERT INTO emergency_types VALUES
 (1,'Fire','Building or outdoor fire'),(2,'Medical','Medical assistance'),(3,'Flood','Water rescue');
 INSERT INTO locations VALUES
@@ -17,9 +17,9 @@ INSERT INTO locations VALUES
 (2,'Demo Campus','Training Road B',12.9352,77.6245,'medium'),
 (3,'Demo Riverside','Training Road C',13.0100,77.5800,'high');
 INSERT INTO emergencies VALUES
-(101,1,1,1,'Training warehouse fire','high',20,'responding','2026-10-30 09:00:00','2026-10-30 09:10:00'),
-(102,2,2,1,'Training medical incident','medium',2,'resolved','2026-10-30 10:00:00','2026-10-30 10:45:00'),
-(103,3,3,1,'Training flood rescue','high',12,'responding','2026-10-30 11:00:00','2026-10-30 11:10:00');
+(101,1,1,1,'Warehouse fire','high',20,'responding','2026-10-30 09:00:00','2026-10-30 09:10:00'),
+(102,2,2,1,'Medical incident','medium',2,'resolved','2026-10-30 10:00:00','2026-10-30 10:45:00'),
+(103,3,3,1,'Flood rescue','high',12,'responding','2026-10-30 11:00:00','2026-10-30 11:10:00');
 INSERT INTO emergency_status_history VALUES
 (1,101,'reported','Call registered',1,'2026-10-30 09:00:00'),
 (2,101,'responding','Fire team dispatched',1,'2026-10-30 09:10:00'),
@@ -40,9 +40,9 @@ INSERT INTO responders VALUES
 INSERT INTO resource_types VALUES
 (1,'Fire engine','Fire response vehicle'),(2,'Ambulance','Medical transport'),(3,'Rescue boat','Water rescue craft');
 INSERT INTO resources VALUES
-(201,1,'Demo Fire Engine','FIRE-01','assigned',1,6),
-(202,2,'Demo Ambulance','MED-01','available',2,2),
-(203,3,'Demo Rescue Boat','RESCUE-01','assigned',3,8);
+(201,1,'Central Fire Engine','FIRE-01','assigned',1,6),
+(202,2,'Campus Ambulance','MED-01','available',2,2),
+(203,3,'Riverside Rescue Boat','RESCUE-01','assigned',3,8);
 INSERT INTO resource_capabilities VALUES
 (201,1,'advanced'),(201,2,'basic'),(202,2,'advanced'),(203,3,'advanced');
 INSERT INTO assignments VALUES

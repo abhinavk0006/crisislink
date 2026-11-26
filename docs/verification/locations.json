@@ -1,0 +1,12 @@
+{
+  "checkedAt": "2026-11-26T15:48:49.786Z",
+  "checks": [
+    "Catalog includes six named RR Campus buildings and expanded operational capacity",
+    "Migration preserves changed resource status, password hashes and custom locations",
+    "Only coordinator may create locations, including at SQL permission level",
+    "Location vectors are real, current and area constrained; aliases resolve to canonical IDs",
+    "Alias-confirmed building shares duplicate review while another building stays distinct",
+    "New hazardous-material capability works through existing atomic dispatch and completion"
+  ],
+  "passed": 6
+}

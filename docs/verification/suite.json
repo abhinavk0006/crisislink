@@ -1,15 +1,16 @@
 {
   "failed": 0,
   "command": "node --import tsx --test --test-concurrency=1 tests/*.test.ts",
-  "passed": 41,
-  "runnerTests": 41,
-  "namedChecks": 39,
+  "passed": 48,
+  "runnerTests": 48,
+  "namedChecks": 45,
   "checkedOn": "2026-11-26 Asia/Calcutta",
   "coverage": [
     "Original SQL/MongoDB integration",
     "DDL, SQL CRUD and secure setup",
     "Real vector duplicate review and human-confirmed decisions",
     "Retry-safe SQL creation and MongoDB attachment",
-    "New incident and assignment data in live SQL lab"
+    "New incident and assignment data in live SQL lab",
+    "Bengaluru locations, campus aliases, real location vectors, permissions and expanded capability dispatch"
   ]
 }

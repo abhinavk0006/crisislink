@@ -91,3 +91,7 @@ For read-only custom terminal checks against the running app: `pnpm vector:searc
 Tests cover real offline embeddings, metadata filtering, read-only review, signed/expired/changed reviews, human choice, idempotent SQL creation and MongoDB attachment, conflicting decisions, stale candidate checks, vector invalidation, permissions, native vector-query eligibility, MongoDB/model outages and new-data SQL-lab queries. Full evidence is under docs/verification.
 
 References: https://pglite.dev/extensions/ ; https://github.com/pgvector/pgvector ; https://huggingface.co/docs/transformers.js/en/pipelines
+
+## Location and catalog extension
+
+See [location workflow and exact source mapping](LOCATIONS_AND_CATALOG.md) for Bengaluru area/campus/building selection, freeform landmarks, native pgvector location matching and retained incident-location details. The existing architecture is unchanged.

@@ -8,7 +8,7 @@ import {type Actor} from "../lib/db";
 import {createIncident,runQuery,dispatch} from "../lib/service";
 process.env.PGLITE_DATA_DIR=await mkdtemp(join(tmpdir(),"crisislink-live-lab-"));
 process.env.DEMO_PASSWORD=randomBytes(24).toString("base64url");
-const actor:Actor={user_id:1,full_name:"Demo Coordinator",email:"coordinator@example.com",role_name:"Coordinator"};
+const actor:Actor={user_id:1,full_name:"Operations Coordinator",email:"coordinator@example.com",role_name:"Coordinator"};
 test("SQL lab reads new incidents, current-day counts and new assignments",async()=>{
  const before=await runQuery(actor,"recursive");
  const count=before.rows.reduce((sum:number,r:any)=>sum+Number(r.incidents),0);

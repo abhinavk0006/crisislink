@@ -1,0 +1,822 @@
+{
+  "areas": [
+    "Chickpet",
+    "Rajarajeshwari Nagar",
+    "Hebbal",
+    "Banashankari",
+    "Jayanagar",
+    "Indiranagar",
+    "Whitefield",
+    "Electronic City",
+    "Koramangala",
+    "Yelahanka",
+    "Marathahalli",
+    "Malleshwaram"
+  ],
+  "locations": [
+    {
+      "id": 1,
+      "name": "City Market",
+      "area": "Chickpet",
+      "street": "Market Road",
+      "aliases": [
+        "kr market",
+        "city market",
+        "central market"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "PES University RR Campus",
+      "area": "Banashankari",
+      "street": "100 Feet Ring Road, BSK III Stage",
+      "aliases": [
+        "pes uni",
+        "pes rr campus",
+        "pes university"
+      ],
+      "campus": "PES University RR Campus"
+    },
+    {
+      "id": 3,
+      "name": "Hebbal Lake Perimeter",
+      "area": "Hebbal",
+      "street": "Lake Approach Road",
+      "aliases": [
+        "hebbal lake",
+        "lake perimeter"
+      ]
+    },
+    {
+      "id": 4,
+      "name": "PES University Cafeteria",
+      "area": "Banashankari",
+      "street": "100 Feet Ring Road, BSK III Stage",
+      "aliases": [
+        "pes uni cafe",
+        "pes cafe",
+        "pes canteen",
+        "university cafeteria"
+      ],
+      "campus": "PES University RR Campus"
+    },
+    {
+      "id": 5,
+      "name": "Banashankari Bus Station",
+      "area": "Banashankari",
+      "street": "Bus Station Road",
+      "aliases": [
+        "bsk bus stand"
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Jayanagar Shopping Complex",
+      "area": "Jayanagar",
+      "street": "Shopping Complex Road",
+      "aliases": [
+        "jayanagar complex"
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Indiranagar Metro Station",
+      "area": "Indiranagar",
+      "street": "Metro Station Road",
+      "aliases": [
+        "indiranagar metro"
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Whitefield Transit Hub",
+      "area": "Whitefield",
+      "street": "Transit Hub Road",
+      "aliases": [
+        "whitefield bus hub"
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Electronic City Tech Park",
+      "area": "Electronic City",
+      "street": "Tech Park Road",
+      "aliases": [
+        "e city tech park"
+      ]
+    },
+    {
+      "id": 10,
+      "name": "Koramangala Community Centre",
+      "area": "Koramangala",
+      "street": "Community Centre Road",
+      "aliases": [
+        "koramangala community hall"
+      ]
+    },
+    {
+      "id": 11,
+      "name": "Yelahanka Railway Station",
+      "area": "Yelahanka",
+      "street": "Station Approach Road",
+      "aliases": [
+        "yelahanka station"
+      ]
+    },
+    {
+      "id": 12,
+      "name": "Marathahalli Bridge",
+      "area": "Marathahalli",
+      "street": "Bridge Approach Road",
+      "aliases": [
+        "marathahalli flyover"
+      ]
+    },
+    {
+      "id": 13,
+      "name": "Malleshwaram Market",
+      "area": "Malleshwaram",
+      "street": "Market Street",
+      "aliases": [
+        "malleswaram market"
+      ]
+    },
+    {
+      "id": 14,
+      "name": "RR Nagar Residential Layout",
+      "area": "Rajarajeshwari Nagar",
+      "street": "Residential Main Road",
+      "aliases": [
+        "rr nagar layout"
+      ]
+    },
+    {
+      "id": 15,
+      "name": "Hebbal Transport Junction",
+      "area": "Hebbal",
+      "street": "Transport Junction Road",
+      "aliases": [
+        "hebbal junction"
+      ]
+    },
+    {
+      "id": 16,
+      "name": "Whitefield Industrial Area",
+      "area": "Whitefield",
+      "street": "Industrial Main Road",
+      "aliases": [
+        "whitefield factories"
+      ]
+    },
+    {
+      "id": 17,
+      "name": "Electronic City Residential Area",
+      "area": "Electronic City",
+      "street": "Residential Main Road",
+      "aliases": [
+        "e city housing"
+      ]
+    },
+    {
+      "id": 18,
+      "name": "Koramangala College Road",
+      "area": "Koramangala",
+      "street": "College Road",
+      "aliases": [
+        "college road koramangala"
+      ]
+    },
+    {
+      "id": 19,
+      "name": "Chickpet Commercial Street",
+      "area": "Chickpet",
+      "street": "Commercial Main Road",
+      "aliases": [
+        "chickpet shops"
+      ]
+    },
+    {
+      "id": 20,
+      "name": "Banashankari Residential Layout",
+      "area": "Banashankari",
+      "street": "Residential Main Road",
+      "aliases": [
+        "bsk layout"
+      ]
+    },
+    {
+      "id": 21,
+      "name": "Jayanagar Park",
+      "area": "Jayanagar",
+      "street": "Park Road",
+      "aliases": [
+        "jayanagar public park"
+      ]
+    },
+    {
+      "id": 22,
+      "name": "Indiranagar Market Street",
+      "area": "Indiranagar",
+      "street": "Market Street",
+      "aliases": [
+        "indiranagar shops"
+      ]
+    },
+    {
+      "id": 23,
+      "name": "Yelahanka Sports Ground",
+      "area": "Yelahanka",
+      "street": "Sports Ground Road",
+      "aliases": [
+        "yelahanka playground"
+      ]
+    },
+    {
+      "id": 24,
+      "name": "Marathahalli Residential Area",
+      "area": "Marathahalli",
+      "street": "Residential Main Road",
+      "aliases": [
+        "marathahalli housing"
+      ]
+    },
+    {
+      "id": 25,
+      "name": "PES RR Campus — MRD Block",
+      "area": "Banashankari",
+      "street": "100 Feet Ring Road, BSK III Stage",
+      "aliases": [
+        "mrd",
+        "silver jubilee block"
+      ],
+      "campus": "PES University RR Campus",
+      "building": "MRD Block"
+    },
+    {
+      "id": 26,
+      "name": "PES RR Campus — GJB Block",
+      "area": "Banashankari",
+      "street": "100 Feet Ring Road, BSK III Stage",
+      "aliases": [
+        "gjb",
+        "golden jubilee block"
+      ],
+      "campus": "PES University RR Campus",
+      "building": "GJB Block"
+    },
+    {
+      "id": 27,
+      "name": "PES RR Campus — BE Block",
+      "area": "Banashankari",
+      "street": "100 Feet Ring Road, BSK III Stage",
+      "aliases": [
+        "be block",
+        "engineering block"
+      ],
+      "campus": "PES University RR Campus",
+      "building": "BE Block"
+    },
+    {
+      "id": 28,
+      "name": "PES RR Campus — F Block",
+      "area": "Banashankari",
+      "street": "100 Feet Ring Road, BSK III Stage",
+      "aliases": [
+        "f block",
+        "first year block"
+      ],
+      "campus": "PES University RR Campus",
+      "building": "F Block"
+    },
+    {
+      "id": 29,
+      "name": "PES RR Campus — G Block",
+      "area": "Banashankari",
+      "street": "100 Feet Ring Road, BSK III Stage",
+      "aliases": [
+        "g block"
+      ],
+      "campus": "PES University RR Campus",
+      "building": "G Block"
+    },
+    {
+      "id": 30,
+      "name": "PES RR Campus — Tech Park",
+      "area": "Banashankari",
+      "street": "100 Feet Ring Road, BSK III Stage",
+      "aliases": [
+        "pes tech park",
+        "tech park building"
+      ],
+      "campus": "PES University RR Campus",
+      "building": "Tech Park"
+    }
+  ],
+  "capabilities": [
+    {
+      "id": 1,
+      "name": "Fire suppression",
+      "description": "Control building and vehicle fires"
+    },
+    {
+      "id": 2,
+      "name": "Medical support",
+      "description": "Provide first aid and emergency medical care"
+    },
+    {
+      "id": 3,
+      "name": "Water rescue",
+      "description": "Rescue people from floodwater"
+    },
+    {
+      "id": 4,
+      "name": "Technical rescue",
+      "description": "Extricate trapped people from vehicles or collapsed structures"
+    },
+    {
+      "id": 5,
+      "name": "Hazardous material containment",
+      "description": "Contain chemical spills with specialist protective equipment"
+    },
+    {
+      "id": 6,
+      "name": "High-angle rescue",
+      "description": "Access and rescue people at height"
+    },
+    {
+      "id": 7,
+      "name": "Debris clearance",
+      "description": "Clear fallen trees and structural debris"
+    },
+    {
+      "id": 8,
+      "name": "Emergency power",
+      "description": "Provide temporary electrical supply"
+    },
+    {
+      "id": 9,
+      "name": "Emergency shelter",
+      "description": "Provide temporary shelter and relief supplies"
+    },
+    {
+      "id": 10,
+      "name": "Search and detection",
+      "description": "Locate missing or trapped people"
+    },
+    {
+      "id": 11,
+      "name": "Traffic control",
+      "description": "Secure roads and manage incident traffic"
+    },
+    {
+      "id": 12,
+      "name": "Patient transport",
+      "description": "Transport patients to medical facilities"
+    },
+    {
+      "id": 13,
+      "name": "Incident communications",
+      "description": "Provide mobile radio coordination"
+    },
+    {
+      "id": 14,
+      "name": "Utility isolation",
+      "description": "Isolate damaged power and utility systems"
+    },
+    {
+      "id": 15,
+      "name": "Wildfire containment",
+      "description": "Contain vegetation fires"
+    },
+    {
+      "id": 16,
+      "name": "Evacuation transport",
+      "description": "Transport affected residents to a safe assembly point"
+    }
+  ],
+  "incidentTypes": [
+    {
+      "id": 4,
+      "name": "Road collision",
+      "description": "Vehicle collision and roadside rescue"
+    },
+    {
+      "id": 5,
+      "name": "Building collapse",
+      "description": "Structural failure and trapped occupants"
+    },
+    {
+      "id": 6,
+      "name": "Hazardous material release",
+      "description": "Chemical spill or hazardous leakage"
+    },
+    {
+      "id": 7,
+      "name": "Landslide",
+      "description": "Slope failure and debris obstruction"
+    },
+    {
+      "id": 8,
+      "name": "Wildfire",
+      "description": "Vegetation or open-land fire"
+    },
+    {
+      "id": 9,
+      "name": "Power outage",
+      "description": "Disrupted electrical supply"
+    },
+    {
+      "id": 10,
+      "name": "Storm damage",
+      "description": "Severe-weather damage"
+    },
+    {
+      "id": 11,
+      "name": "Missing person",
+      "description": "Search for a missing person"
+    },
+    {
+      "id": 12,
+      "name": "Crowd emergency",
+      "description": "Crowd evacuation and medical coordination"
+    }
+  ],
+  "resourceTypes": [
+    {
+      "id": 4,
+      "name": "Rescue tender",
+      "description": "Technical and water-rescue support vehicle"
+    },
+    {
+      "id": 5,
+      "name": "Hazmat unit",
+      "description": "Hazardous material response vehicle"
+    },
+    {
+      "id": 6,
+      "name": "Aerial platform",
+      "description": "Elevated access and rescue vehicle"
+    },
+    {
+      "id": 7,
+      "name": "Clearance loader",
+      "description": "Debris clearance machinery"
+    },
+    {
+      "id": 8,
+      "name": "Generator unit",
+      "description": "Mobile power equipment"
+    },
+    {
+      "id": 9,
+      "name": "Shelter support truck",
+      "description": "Relief and shelter support vehicle"
+    },
+    {
+      "id": 10,
+      "name": "Search unit",
+      "description": "Search-and-rescue team vehicle"
+    },
+    {
+      "id": 11,
+      "name": "Traffic patrol",
+      "description": "Traffic-control vehicle"
+    },
+    {
+      "id": 12,
+      "name": "Communications van",
+      "description": "Mobile incident communications"
+    },
+    {
+      "id": 13,
+      "name": "Evacuation bus",
+      "description": "Resident evacuation vehicle"
+    },
+    {
+      "id": 14,
+      "name": "Utility response unit",
+      "description": "Utility isolation and repair vehicle"
+    }
+  ],
+  "resources": [
+    {
+      "id": 204,
+      "type": 1,
+      "name": "North Fire Engine",
+      "callSign": "FIRE-02",
+      "location": 15,
+      "capacity": 6,
+      "capabilities": [
+        1,
+        4,
+        15
+      ]
+    },
+    {
+      "id": 205,
+      "type": 1,
+      "name": "South Fire Engine",
+      "callSign": "FIRE-03",
+      "location": 5,
+      "capacity": 6,
+      "capabilities": [
+        1,
+        4,
+        15
+      ]
+    },
+    {
+      "id": 206,
+      "type": 2,
+      "name": "East Ambulance",
+      "callSign": "MED-02",
+      "location": 7,
+      "capacity": 2,
+      "capabilities": [
+        2,
+        12
+      ]
+    },
+    {
+      "id": 207,
+      "type": 2,
+      "name": "Advanced Life Support Ambulance",
+      "callSign": "MED-03",
+      "location": 9,
+      "capacity": 2,
+      "capabilities": [
+        2,
+        12
+      ]
+    },
+    {
+      "id": 208,
+      "type": 3,
+      "name": "Lake Rescue Boat",
+      "callSign": "WATER-02",
+      "location": 3,
+      "capacity": 8,
+      "capabilities": [
+        3,
+        16
+      ]
+    },
+    {
+      "id": 209,
+      "type": 4,
+      "name": "Swift Water Rescue Unit",
+      "callSign": "WATER-03",
+      "location": 15,
+      "capacity": 6,
+      "capabilities": [
+        3,
+        4,
+        16
+      ]
+    },
+    {
+      "id": 210,
+      "type": 4,
+      "name": "Technical Rescue Tender",
+      "callSign": "RESCUE-02",
+      "location": 16,
+      "capacity": 6,
+      "capabilities": [
+        4,
+        6,
+        10
+      ]
+    },
+    {
+      "id": 211,
+      "type": 5,
+      "name": "Hazmat Response Unit",
+      "callSign": "HAZMAT-01",
+      "location": 16,
+      "capacity": 4,
+      "capabilities": [
+        5,
+        14,
+        13
+      ]
+    },
+    {
+      "id": 212,
+      "type": 6,
+      "name": "Aerial Rescue Platform",
+      "callSign": "AERIAL-01",
+      "location": 1,
+      "capacity": 4,
+      "capabilities": [
+        6,
+        4,
+        1
+      ]
+    },
+    {
+      "id": 213,
+      "type": 7,
+      "name": "Debris Clearance Loader",
+      "callSign": "CLEAR-01",
+      "location": 14,
+      "capacity": 1,
+      "capabilities": [
+        7
+      ]
+    },
+    {
+      "id": 214,
+      "type": 8,
+      "name": "Mobile Generator",
+      "callSign": "POWER-01",
+      "location": 11,
+      "capacity": 0,
+      "capabilities": [
+        8
+      ]
+    },
+    {
+      "id": 215,
+      "type": 9,
+      "name": "Shelter Support Truck",
+      "callSign": "SHELTER-01",
+      "location": 23,
+      "capacity": 4,
+      "capabilities": [
+        9,
+        16
+      ]
+    },
+    {
+      "id": 216,
+      "type": 10,
+      "name": "Search and Rescue Unit",
+      "callSign": "SEARCH-01",
+      "location": 10,
+      "capacity": 6,
+      "capabilities": [
+        10,
+        4,
+        2
+      ]
+    },
+    {
+      "id": 217,
+      "type": 11,
+      "name": "Traffic Control Patrol",
+      "callSign": "TRAFFIC-01",
+      "location": 12,
+      "capacity": 2,
+      "capabilities": [
+        11,
+        13
+      ]
+    },
+    {
+      "id": 218,
+      "type": 12,
+      "name": "Mobile Communications Unit",
+      "callSign": "COMMS-01",
+      "location": 6,
+      "capacity": 3,
+      "capabilities": [
+        13,
+        8
+      ]
+    },
+    {
+      "id": 219,
+      "type": 13,
+      "name": "Evacuation Bus",
+      "callSign": "EVAC-01",
+      "location": 8,
+      "capacity": 40,
+      "capabilities": [
+        16,
+        9
+      ]
+    },
+    {
+      "id": 220,
+      "type": 14,
+      "name": "Utility Isolation Unit",
+      "callSign": "UTILITY-01",
+      "location": 17,
+      "capacity": 3,
+      "capabilities": [
+        14,
+        8
+      ]
+    }
+  ],
+  "responders": [
+    {
+      "id": 4,
+      "employee": "EMP-F02",
+      "team": "North Fire Team",
+      "skills": [
+        "Fire suppression",
+        "Technical rescue"
+      ]
+    },
+    {
+      "id": 5,
+      "employee": "EMP-F03",
+      "team": "South Fire Team",
+      "skills": [
+        "Fire suppression",
+        "Wildfire response"
+      ]
+    },
+    {
+      "id": 6,
+      "employee": "EMP-M02",
+      "team": "East Medical Team",
+      "skills": [
+        "First aid",
+        "Patient transport"
+      ]
+    },
+    {
+      "id": 7,
+      "employee": "EMP-M03",
+      "team": "Advanced Medical Team",
+      "skills": [
+        "Emergency care",
+        "Patient transport"
+      ]
+    },
+    {
+      "id": 8,
+      "employee": "EMP-W02",
+      "team": "Lake Rescue Team",
+      "skills": [
+        "Swimming",
+        "Water rescue"
+      ]
+    },
+    {
+      "id": 9,
+      "employee": "EMP-T01",
+      "team": "Technical Rescue Team",
+      "skills": [
+        "Extrication",
+        "High-angle rescue"
+      ]
+    },
+    {
+      "id": 10,
+      "employee": "EMP-H01",
+      "team": "Hazmat Team",
+      "skills": [
+        "Hazard containment",
+        "Utility safety"
+      ]
+    },
+    {
+      "id": 11,
+      "employee": "EMP-C01",
+      "team": "Clearance Team",
+      "skills": [
+        "Heavy equipment",
+        "Debris clearance"
+      ]
+    },
+    {
+      "id": 12,
+      "employee": "EMP-P01",
+      "team": "Power Support Team",
+      "skills": [
+        "Generator operation",
+        "Electrical safety"
+      ]
+    },
+    {
+      "id": 13,
+      "employee": "EMP-S01",
+      "team": "Search Team",
+      "skills": [
+        "Search coordination",
+        "First aid"
+      ]
+    },
+    {
+      "id": 14,
+      "employee": "EMP-E01",
+      "team": "Evacuation Team",
+      "skills": [
+        "Evacuation",
+        "Relief support"
+      ]
+    },
+    {
+      "id": 15,
+      "employee": "EMP-L01",
+      "team": "Traffic and Logistics Team",
+      "skills": [
+        "Traffic control",
+        "Radio communication"
+      ]
+    }
+  ]
+}

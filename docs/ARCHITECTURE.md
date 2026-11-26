@@ -46,3 +46,7 @@ The local MongoDB helper has no network exposure beyond loopback and does not co
 ## Duplicate-report decision boundary
 
 Report incident sends a draft for filtered vector review. The coordinator chooses attach or separate creation through signed ten-minute review tokens. SQL decision receipts make creation retry-safe and prevent conflicting decisions. MongoDB unique partial report_review_id indexing and upsert make attachment retries idempotent. A receipt records intent; it does not establish a distributed SQL/MongoDB commit. Failed attachments return an error and create no new incident. A model outage permits an explicit unchecked creation action. See COURSE_ALIGNMENT.md. SQL lab uses live authenticated queries, five-second polling, manual refresh and a current seven-day calendar.
+
+## Location and catalog extension
+
+See [location workflow and exact source mapping](LOCATIONS_AND_CATALOG.md) for Bengaluru area/campus/building selection, freeform landmarks, native pgvector location matching and retained incident-location details. The existing architecture is unchanged.

@@ -16,7 +16,7 @@ Database Management Systems mini project, UE24CS351A.
 
 Students: Sachin R (PES1UG24CS688) and Abhinav Krishna Kandukuri (PES1UG24CS701).
 
-This runnable reconstruction uses the 17-table model and 63 fictional seed rows in the supplied Final DBMS Presentation Package. The supplied ZIP contains no application source. The former website's description of a 134-row application is a different version and is not the implementation packaged here.
+This runnable reconstruction starts from the supplied 17-table model and 63 fictional seed rows, then applies an additive operational catalog (251 domain rows on fresh setup). The supplied ZIP contains no application source. The former website's description of a 134-row application is a different version and is not the implementation packaged here.
 
 ## Stack and scope
 
@@ -86,7 +86,7 @@ Configuration defaults are documented in `.env.example`. Next.js loads `.env.loc
 
 ## Database structure and commands
 
-`database/00_schema.sql` defines the 17 domain tables. `01_seed.sql` preserves the 63 supplied seed records; initialization replaces nonfunctional sample hash values with real password hashes. `02_advanced.sql` adds stronger constraints, functions, trigger, roles, RLS and two internal authentication tables. There are 26 domain foreign keys. Internal tables add a session-to-user foreign key and two decision-receipt references. `07_vector_search.sql` adds vector metadata/indexing; `08_report_receipts.sql` adds the third internal table for retry-safe report decisions. `03_queries.sql` contains standalone SQL demonstrations, including rollback-safe DML. `04_mongo_commands.js` contains mongosh collection creation and CRUD/search/aggregation examples for a fresh MongoDB database.
+`database/00_schema.sql` defines the 17 domain tables. `01_seed.sql` retains the 63-row base with cleaned display labels; initialization replaces nonfunctional sample hash values with real password hashes. `02_advanced.sql` adds stronger constraints, functions, trigger, roles, RLS and two internal authentication tables. There are 26 domain foreign keys. Internal tables add a session-to-user foreign key and two decision-receipt references. `07_vector_search.sql` adds vector metadata/indexing; `08_report_receipts.sql` adds the third internal table for retry-safe report decisions. `03_queries.sql` contains standalone SQL demonstrations, including rollback-safe DML. `04_mongo_commands.js` contains mongosh collection creation and CRUD/search/aggregation examples for a fresh MongoDB database.
 
 The conceptual diagram shows derived priority and available capacity attributes. Neither is stored in this classroom-based application. Readiness is determined by resource status; dispatch is exclusive per active resource and responder. The application strengthens selected nullability and uniqueness rules; these extensions are documented in the SQL migration and report. One resource must cover all requested capability types for its dispatch; quantities greater than one are outside this demonstration's dispatch model.
 
@@ -144,3 +144,5 @@ See docs/PROJECT_SPECIFICATION.md for the problem, objectives, scope, functional
 HTTP checks request the current password using hidden input, or accept TEST_PASSWORD in the process environment. They do not read or create a password file.
 
 
+
+See [Locations and catalog](docs/LOCATIONS_AND_CATALOG.md) for 30 saved places, RR Campus building selection, freeform addresses, location vectors and the expanded resource/capability catalog. Run `pnpm vector:setup` with the app stopped to warm both incident and location indexes.

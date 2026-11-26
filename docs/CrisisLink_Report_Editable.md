@@ -24,7 +24,7 @@ CrisisLink is an emergency response management application that connects inciden
 
 The project combines PostgreSQL, executed through PGlite, with MongoDB. PostgreSQL maintains the structured operational records and enforces keys, constraints, transactions and access permissions. MongoDB stores flexible field notes with tags and assessment details. The Next.js interface connects both databases through authenticated APIs. The implementation includes stored functions, an automatic audit trigger, nested and correlated queries, CTEs, a recursive query, a view and supporting indexes.
 
-The initial relational dataset contains 63 fictional records across 17 domain tables. Three internal tables support sessions, login throttling and report-decision receipts. The system is a local classroom demonstration and does not connect to emergency services.
+The supplied base dataset contains 63 fictional records across 17 domain tables. The additive catalog produces 251 domain records on fresh setup. Three internal tables support sessions, login throttling and report-decision receipts. The system is a local classroom demonstration and does not connect to emergency services.
 
 A course-aligned extension adds duplicate-report review using PostgreSQL pgvector, a pinned local MiniLM model, 384-dimensional embeddings, cosine distance and an HNSW index. MongoDB field-note search remains a separate keyword-search feature.
 
@@ -481,6 +481,36 @@ COURSE_ALIGNMENT.md explains slide references, metadata filters, CTE, cosine dis
 
 ---
 
+4.11 Bengaluru addresses and RR Campus buildings
+
+The operational catalog expands the existing tables to 12 incident types, 16 capabilities, 20 resources, 15 responders and 30 saved places across 12 Bengaluru areas. Fresh setup has 251 domain rows after the additive migration; the supplied base package had 63. Passwords, existing availability, assignments and custom records are retained. Additional teams have no login account; the coordinator manages dispatch and completion.
+
+Report incident offers area, location group and saved building/place selectors. Banashankari contains PES University RR Campus with MRD Block, GJB Block, BE Block, F Block, G Block and Tech Park. Street/address and landmark can also be typed. Optional floor/room/directions are retained with the report and displayed on the incident. A new landmark can be saved explicitly; it is not restricted to the initial catalog.
+
+Location resolution uses a second native pgvector index within the same PostgreSQL database. The saved name, address, area, street, campus/building and aliases are embedded with the pinned local MiniLM model. Exact alias matches are labelled separately from semantic suggestions. The coordinator confirms a canonical location ID; duplicate-report review then uses that ID. Different buildings stay distinct. No geocoding, automatically inferred coordinates or automatic location identity is claimed.
+
+```
+ALTER TABLE locations ADD COLUMN IF NOT EXISTS
+  search_embedding vector(384);
+CREATE INDEX IF NOT EXISTS idx_location_embedding_hnsw
+  ON locations USING hnsw
+  (search_embedding vector_cosine_ops)
+  WHERE search_embedding IS NOT NULL;
+-- Bound query vector and selected area:
+SELECT location_id,location_name,
+  search_embedding <=> $1::vector AS cosine_distance
+FROM locations
+WHERE area=$2 AND search_embedding IS NOT NULL
+ORDER BY search_embedding <=> $1::vector LIMIT 5;
+```
+
+lib/locations.ts implements indexing, source-text freshness checks, matching and creation. POST /api/locations/resolve searches saved places; POST /api/locations creates a coordinator-authorized custom place. With the model unavailable, exact names/aliases still work and the UI states that semantic suggestions are unavailable. Reported location details persist in SQL for a new incident and in MongoDB assessment for an attached report. See docs/LOCATIONS_AND_CATALOG.md for code paths and naming sources.
+
+PES official sources confirm MRD/CIE (cie.pes.edu/contact), GJB (events.pes.edu/10841), BE (events.pes.edu/11438), G Block (events.pes.edu/11135), Tech Park (news.pes.edu/12150) and the RR address (pes.edu/contact). F Block was cross-checked against the community RR Campus guide at pesqts.vercel.app/rrc-campus.html. No changing floor-by-floor department directory is asserted.
+
+
+---
+
 5 NoSQL Database Commands
 
 5.1 Collection creation and validation
@@ -579,6 +609,8 @@ crisislink-app/
     embeddings.ts              Pinned local MiniLM vector generation
     semantic.ts                Incremental embedding maintenance
     incident-review.ts         Filtered vector review and human decisions
+    locations.ts               Place vectors, aliases and custom landmarks
+    location-catalog.ts        Bengaluru area options
     mongo.ts                   Validation notes CRUD search aggregation
   database/
     00_schema.sql              PostgreSQL domain DDL
@@ -589,6 +621,8 @@ crisislink-app/
     05_resource_tag_permissions.sql  Role grants for tag CRUD
     06_ddl_demo.sql             Isolated CREATE ALTER DROP demo
     07_vector_search.sql        pgvector HNSW and invalidation trigger
+    09_operational_catalog.sql Expanded resources, types and locations
+    10_location_search.sql     Place vectors and reported location text
     08_report_receipts.sql       Internal retry/decision records
     mysql/                     Original classroom SQL and outputs
   scripts/
@@ -629,6 +663,8 @@ The authenticated API validates each request and calls the SQL, semantic-search 
 | GET /api/auth/me | Resolve the current authenticated user and role. |
 | POST /api/auth/logout | Revoke the session. |
 | GET /api/dashboard | Retrieve incidents, resources, assignments, history and reference records. |
+| POST /api/locations/resolve | Find saved places by alias and local vectors. |
+| POST /api/locations | Coordinator saves a new landmark. |
 | POST /api/incidents/review | Read-only duplicate review using filters and pgvector. |
 | POST /api/incidents/report | Coordinator confirms attachment or separate incident creation. |
 | POST /api/incidents | Coordinator creates incident and required capability. |
@@ -670,7 +706,7 @@ Figure 2 MongoDB note creation source excerpt
 
 7.2 Incident and field note demonstration
 
-The browser demonstration created incident 104 at Demo Campus, dispatched the ambulance and medical responder, and saved a field update to MongoDB. The left capture shows the active assignment and automatic history entries. The right capture shows the saved document, tags and assessment. Captures use the responsive interface at the available browser width.
+The historical browser capture (before the location/catalog extension) created incident 104 at the then-labelled Demo Campus, dispatched the ambulance and medical responder, and saved a field update to MongoDB. The left capture shows the active assignment and automatic history entries. The right capture shows the saved document, tags and assessment. Captures use the responsive interface at the available browser width.
 
 
 ---
@@ -683,7 +719,7 @@ Figure 5 CTE query and recorded application result
 
 Verification performed
 
-The integration suite passed 23 named checks against isolated PostgreSQL and MongoDB data. Additional tests cover temporary-object DDL, SQL tag CRUD and permission denial, hash-only bootstrap persistence and secure setup/reset. The combined runner passed 41 tests (39 named checks plus two parents), including real-vector review/decision tests and live SQL-lab new-data verification. Seven additional HTTP checks cover review, attachment, signed drafts, current results and outage behaviour. The HTTP suite passed 12 checks. Type checking and the production build passed.
+The integration suite passed 23 named checks against isolated PostgreSQL and MongoDB data. Additional tests cover temporary-object DDL, SQL tag CRUD and permission denial, hash-only bootstrap persistence and secure setup/reset. The combined runner passed 48 tests (45 named checks plus three parents), including real-vector review/decision tests and live SQL-lab new-data verification. Nine additional HTTP checks cover location catalog/roles, review, attachment, signed drafts, current results and outage behaviour. The HTTP suite passed 12 checks. Type checking and the production build passed.
 
 Two outage checks verified an unavailable MongoDB endpoint returns an explicit failure while the SQL dashboard remains available. Browser captures document coordinator login, incident creation, dispatch, a persisted field note and live SQL results.
 

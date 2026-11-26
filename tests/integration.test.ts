@@ -24,25 +24,25 @@ import {
 } from "../lib/mongo";
 const coordinator: Actor = {
   user_id: 1,
-  full_name: "Demo Coordinator",
+  full_name: "Operations Coordinator",
   email: "coordinator@example.com",
   role_name: "Coordinator",
 };
 const fire: Actor = {
   user_id: 2,
-  full_name: "Demo Firefighter",
+  full_name: "Fire Response Lead",
   email: "fire@example.com",
   role_name: "Responder",
 };
 const medic: Actor = {
   user_id: 3,
-  full_name: "Demo Medic",
+  full_name: "Medical Response Lead",
   email: "medic@example.com",
   role_name: "Responder",
 };
 const technician: Actor = {
   user_id: 5,
-  full_name: "Demo Technician",
+  full_name: "Maintenance Officer",
   email: "tech@example.com",
   role_name: "Technician",
 };
@@ -59,7 +59,7 @@ test("CrisisLink integration evidence", async (t) => {
       passed.push(name);
     });
   }
-  await check("Supplied seed has 17 domain tables and 63 rows", async () => {
+  await check("Operational catalog has 17 domain tables and expected rows", async () => {
     const tables = (
       await db.query<{ table_name: string }>(
         "SELECT table_name FROM information_schema.tables WHERE table_schema='public' AND table_type='BASE TABLE' AND table_name NOT LIKE 'app_%' ORDER BY table_name",
@@ -75,7 +75,8 @@ test("CrisisLink integration evidence", async (t) => {
           )
         ).rows[0].n,
       );
-    assert.equal(count, 63);
+    const expected=JSON.parse(await readFile("database/catalog-summary.json","utf8"));
+    assert.equal(count, expected.freshDomainRows);
   });
   await check(
     "Passwords are hashed and valid sign in creates a revocable session",
