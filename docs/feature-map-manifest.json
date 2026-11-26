@@ -1,9 +1,9 @@
 {
-  "sourceRevision": "29b2431a20460e7f15b395f45c732a8933a2c656",
+  "sourceRevision": "def5e89292bbed3c121a0a55525b0f18e83e4d7a",
   "featureCount": 41,
   "functionCount": 39,
-  "sourceFileCount": 31,
-  "referenceCount": 186,
+  "sourceFileCount": 32,
+  "referenceCount": 187,
   "features": [
     {
       "id": "SQL01",
@@ -164,7 +164,7 @@
         },
         {
           "path": "app/page.tsx",
-          "line": 684,
+          "line": 678,
           "needle": "className=\"resource-tags\"",
           "label": "className=\"resource-tags\""
         },
@@ -326,7 +326,7 @@
         },
         {
           "path": "app/page.tsx",
-          "line": 1061,
+          "line": 1055,
           "needle": "SQL example",
           "label": "SQL example"
         }
@@ -416,7 +416,7 @@
         },
         {
           "path": "docs/DATA_DICTIONARY.md",
-          "line": 391,
+          "line": 392,
           "needle": "## Index definitions",
           "label": "## Index definitions"
         }
@@ -482,7 +482,7 @@
         },
         {
           "path": "app/page.tsx",
-          "line": 643,
+          "line": 637,
           "needle": "Dispatch team →",
           "label": "Dispatch team →"
         }
@@ -518,7 +518,7 @@
         },
         {
           "path": "app/page.tsx",
-          "line": 583,
+          "line": 577,
           "needle": "Complete response",
           "label": "Complete response"
         }
@@ -578,7 +578,7 @@
       "refs": [
         {
           "path": "lib/db.ts",
-          "line": 84,
+          "line": 85,
           "needle": "export async function asActor<T>(",
           "label": "export async function asActor<T>("
         },
@@ -668,7 +668,7 @@
         },
         {
           "path": "lib/db.ts",
-          "line": 93,
+          "line": 94,
           "needle": "await tx.exec(`SET LOCAL ROLE",
           "label": "await tx.exec(`SET LOCAL ROLE"
         },
@@ -896,7 +896,7 @@
         },
         {
           "path": "app/page.tsx",
-          "line": 1032,
+          "line": 1026,
           "needle": "Save field note",
           "label": "Save field note"
         }
@@ -986,7 +986,7 @@
         },
         {
           "path": "app/page.tsx",
-          "line": 958,
+          "line": 952,
           "needle": "Delete note",
           "label": "Delete note"
         }
@@ -1010,7 +1010,7 @@
         },
         {
           "path": "app/page.tsx",
-          "line": 902,
+          "line": 896,
           "needle": "aria-label=\"Search notes\"",
           "label": "aria-label=\"Search notes\""
         }
@@ -1046,7 +1046,7 @@
         },
         {
           "path": "app/page.tsx",
-          "line": 909,
+          "line": 903,
           "needle": "className=\"tag-summary\"",
           "label": "className=\"tag-summary\""
         }
@@ -1178,7 +1178,7 @@
         },
         {
           "path": "app/page.tsx",
-          "line": 483,
+          "line": 477,
           "needle": "Check for existing incidents",
           "label": "Check for existing incidents"
         }
@@ -1214,7 +1214,7 @@
         },
         {
           "path": "tests/semantic.test.ts",
-          "line": 80,
+          "line": 82,
           "needle": "description edits invalidate vectors",
           "label": "description edits invalidate vectors"
         }
@@ -1256,7 +1256,7 @@
         },
         {
           "path": "app/page.tsx",
-          "line": 494,
+          "line": 488,
           "needle": "Same incident — attach this report",
           "label": "Same incident — attach this report"
         }
@@ -1280,13 +1280,13 @@
         },
         {
           "path": "app/page.tsx",
-          "line": 1076,
+          "line": 1070,
           "needle": "Refresh results now",
           "label": "Refresh results now"
         },
         {
           "path": "app/page.tsx",
-          "line": 138,
+          "line": 137,
           "needle": "window.setInterval(() => void load(), 5000)",
           "label": "window.setInterval(() => void load(), 5000)"
         },
@@ -1340,18 +1340,18 @@
         },
         {
           "path": "app/page.tsx",
-          "line": 411,
-          "needle": "RR Campus building / saved place",
-          "label": "RR Campus building / saved place"
+          "line": 403,
+          "needle": "Saved place / building",
+          "label": "Saved place / building"
         },
         {
           "path": "tests/locations.test.ts",
-          "line": 48,
+          "line": 51,
           "needle": "Alias-confirmed building shares duplicate review",
           "label": "Alias-confirmed building shares duplicate review"
         }
       ],
-      "demo": "Choose Banashankari, PES RR Campus, GJB Block. Search gjb or golden jubilee block and confirm the saved place. Show semantic suggestions separately from aliases, custom landmarks and original floor/room details.",
+      "demo": "Choose Banashankari, then PES RR Campus — GJB Block. Search gjb or golden jubilee block and confirm the saved place. Show semantic suggestions separately from aliases, custom landmarks and original floor/room details.",
       "say": "Location vectors use native cosine retrieval within an area. A human confirms the location; duplicate review then uses that canonical ID. A nearest place is not automatically the same address.",
       "presenter": "Both"
     },
@@ -1369,13 +1369,19 @@
           "label": "-- Generated by tools/build-catalog.py."
         },
         {
+          "path": "database/11_area_landmarks.sql",
+          "line": 3,
+          "needle": "CREATE UNIQUE INDEX IF NOT EXISTS idx_locations_catalog_key",
+          "label": "CREATE UNIQUE INDEX IF NOT EXISTS idx_locations_catalog_key"
+        },
+        {
           "path": "tests/locations.test.ts",
-          "line": 24,
+          "line": 25,
           "needle": "Migration preserves changed resource status",
           "label": "Migration preserves changed resource status"
         }
       ],
-      "demo": "Show 12 types,16 capabilities,20 resources,15 responders and30 saved places. Dispatch a hazmat unit to a hazardous-material report. Additional teams have no login; coordinator manages them.",
+      "demo": "Show 12 types,16 capabilities,20 resources,15 responders and102 saved places. Dispatch a hazmat unit to a hazardous-material report. Additional teams have no login; coordinator manages them.",
       "say": "INSERT ON CONFLICT and guarded renames extend existing tables. No replacement architecture is required.",
       "presenter": "Sachin"
     }
@@ -1552,7 +1558,7 @@
       "purpose": "Run an authenticated actor callback with a transaction-local SQL role.",
       "ref": {
         "path": "lib/db.ts",
-        "line": 84,
+        "line": 85,
         "needle": "export async function asActor",
         "label": "export async function asActor"
       }
@@ -1814,17 +1820,17 @@
   "sourceHashes": {
     "database/00_schema.sql": "4ccfc84adfcabcb1334e3c25d1eae03a8d51b0ff53fb5c39e3239bc3c33f8afb",
     "database/02_advanced.sql": "c5f99eb01967100e7d90b4cd4b1d0c3f31c88ac09e769c387d909b3f0235fa2e",
-    "lib/db.ts": "9c00b47bd5a3999aaf91f85587b5d29eee27616498219bc6c8b586183bde63e7",
+    "lib/db.ts": "909b0515a9610a066508f009b1d60540b5973d5141ec98c18467c817bf80d456",
     "tests/resource-tags.test.ts": "5b2bfbd917e40d9cee8e2e10a11e4169bace50fd3302a901c708f6ebf510f2ef",
     "database/06_ddl_demo.sql": "bf67d0ae14ea551531b30c582ea441e13cec5f0b1894d16272b1ce071047df91",
     "tests/ddl.test.ts": "7e9046ff5ef4d2d6e28d9b73f847953711335ba8fa2300bc1efa7feeb4569db8",
     "database/01_seed.sql": "5bb86c392fe35b361ed13f509a066095fff5d37a94fdfb686a2ed1441a8d00a5",
     "lib/service.ts": "fc7360473b55d3fd40425b5b73a0d6e03a4491d1c5f2023a42ecae5148aac099",
     "app/api/[...path]/route.ts": "d7f23523803770892d08e134c93cc554e2bef49be850fd201d8f90001608b073",
-    "app/page.tsx": "dae79ae8602c4d1e8bdd41f9805ad5c524aa8971b4c1abab1a4928bd8cb85f81",
+    "app/page.tsx": "126ef2a87fe031be64b7bd05438085ff0b6402b7c1bb2a312d90c599291b2f49",
     "database/05_resource_tag_permissions.sql": "46891c9c1a1dc08988799557375b7f33f3dc49f69379c67f26b095f97bebe459",
     "database/03_queries.sql": "45909307ff7f832c170c617fef15bd3f734109cdd47be6b6c2e5edb192474877",
-    "docs/DATA_DICTIONARY.md": "70af0fba8f8393d04fed1a9e84cfb866b0c936f79271be80837e411283b6c8a8",
+    "docs/DATA_DICTIONARY.md": "9ba41d09f8a8e1138a4fa71280fb8017b366f14a5f847cc4d977add2635b851c",
     "tests/integration.test.ts": "ff65d356f15bff0b23015e4a2a859dc606b8d302aec1597f9f5d7311b60ab83f",
     "lib/password.ts": "05cb05c7984c9a77401de4653e5241b21fef3ec29c9b8d2d2515eb7db5e072ca",
     "lib/auth.ts": "625719c4f80a557f95b4b74fd31a2f26cdd23ac18e70faf9b8f5484513689787",
@@ -1835,13 +1841,14 @@
     "lib/embeddings.ts": "f062a8b3f229998945b508fd2d4e4e8e10288b6c84523fa7695942ad744f6e63",
     "lib/semantic.ts": "e971654c51ed86beedd9008e8995194338906f41ebb9304b8a94079d7caf076c",
     "database/07_vector_search.sql": "db2f424405ab55aebfe4d32db79a35da7e7ff5f76bd5356108598ac6d396988a",
-    "lib/incident-review.ts": "61442272d5b420f0f7d6c161c6a1833ad59db87be843880b54af37295987dcef",
-    "tests/semantic.test.ts": "cce8a7206c3415f71bca4b10ac21ec3d9bf53f7255840ec1ad1b04c0c562bc2d",
+    "lib/incident-review.ts": "bfc47f39fb073e3394139c9838cf8293df3764a7edcf0d052f68c806143bcfcb",
+    "tests/semantic.test.ts": "5262bc2f39b8f0690187458d559714f4e315e14eb37ed1c1acce5f96a3465bba",
     "database/08_report_receipts.sql": "98bc6956911b2ab4e5d702bd77706c2111278418149ab5d36b9f29a50a9b678c",
     "tests/live-lab.test.ts": "0fb3ffc96769778cc48013b883ddb886fb7630b23ad252420c746d1c9d66f34f",
     "lib/locations.ts": "ffee1766edab588e5dc9f93aa27f1bfbfd21327a3304d6fa9c3567690b1970a3",
     "database/10_location_search.sql": "33c78fc1eb541806aa3513d9bb33fe9b2eebe68913a32cdae9429011add3179b",
-    "tests/locations.test.ts": "8f23593f6fd1668d0c795b4ec456ceb6fb92dcc7b0b3854cf09489ad78a06359",
-    "database/09_operational_catalog.sql": "d664f756431c243518bd006341505f4ce96bf1d61e8a713ccc15ebacf5951bb7"
+    "tests/locations.test.ts": "f3fd928345bc6061a7ae4487333e827601617b9a9f75cefc860dba9098f66b59",
+    "database/09_operational_catalog.sql": "478f28b1aefbd5cfe7da14ca1ab0b93dadecec947720f8eb60028c3bf400eca1",
+    "database/11_area_landmarks.sql": "5cda1d684c55f1aac8574b1f434919caac7644a958d01d40a15e01ac279cc22c"
   }
 }

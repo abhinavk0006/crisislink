@@ -2,7 +2,7 @@
 
 **Crisis Link Emergency Resource Coordination & Response Management System**
 
-Source-code snapshot: `29b2431a20460e7f15b395f45c732a8933a2c656`. Line numbers and marker strings were checked directly against the supplied source files. If code is edited, rerun `python tools/build-feature-map.py` to regenerate this guide.
+Source-code snapshot: `def5e89292bbed3c121a0a55525b0f18e83e4d7a`. Line numbers and marker strings were checked directly against the supplied source files. If code is edited, rerun `python tools/build-feature-map.py` to regenerate this guide.
 
 ## Start here when the teacher asks
 
@@ -26,47 +26,47 @@ Open **DATABASE_FEATURE_MAP.html** for a searchable offline guide. Its Open code
 
 | Concept | What it implements | Where it runs | First file to open |
 |---|---|---|---|
-| [SQL01 DDL tables primary keys foreign keys and CHECK constraints](#sql01) | Define the 17 operational relations and reject invalid IDs, references, coordinates, counts and costs. | Setup + enforced during operations | [database/00_schema.sql:45](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/00_schema.sql#L45) |
-| [SQL02 Composite keys and multivalued attribute mapping](#sql02) | Store responder skills and resource tags as separate rows and prevent duplicate values per owner. | Operational | [database/00_schema.sql:235](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/00_schema.sql#L235) |
-| [SQL03 CREATE ALTER and DROP lifecycle](#sql03) | Demonstrate changing and removing structure without dropping operational tables. | Isolated demonstration | [database/06_ddl_demo.sql:3](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/06_ddl_demo.sql#L3) |
-| [SQL04 Seed INSERT commands](#sql04) | Populate the relational model with 63 fictional domain records in parent-before-child order. | First setup | [database/01_seed.sql:3](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/01_seed.sql#L3) |
-| [SQL05 SQL CRUD used by the Resources screen](#sql05) | Add, list, rename and remove resource tags in PostgreSQL through the interface. | Operational | [lib/service.ts:78](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/service.ts#L78) |
-| [SQL06 JOIN queries](#sql06) | Combine incidents with type/location and assignments with resource/responder information. | Operational + SQL lab | [lib/service.ts:19](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/service.ts#L19) |
-| [SQL07 GROUP BY HAVING COUNT and ORDER BY](#sql07) | Summarize assignments per incident and retain groups having at least one assignment. | Live SQL lab example | [lib/service.ts:262](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/service.ts#L262) |
-| [SQL08 Nested scalar subquery](#sql08) | Find incidents whose affected-person count exceeds the current overall average. | Live SQL lab example | [lib/service.ts:254](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/service.ts#L254) |
-| [SQL09 Correlated NOT EXISTS query](#sql09) | Find incidents without active assignments; correlated capability checks also validate a dispatch. | Live SQL lab example + dispatch validation | [lib/service.ts:256](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/service.ts#L256) |
-| [SQL10 CTE with ROW_NUMBER window function](#sql10) | Return the latest recorded status event for each incident. | Live SQL lab example | [lib/service.ts:258](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/service.ts#L258) |
-| [SQL11 Recursive CTE](#sql11) | Generate a seven-day reporting calendar and retain dates with zero incidents. | Live SQL lab example | [lib/service.ts:259](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/service.ts#L259) |
-| [SQL12 SQL view v_assignment_summary](#sql12) | Provide reusable joined assignment/resource/responder data for the dashboard. | Operational + SQL lab | [database/02_advanced.sql:45](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/02_advanced.sql#L45) |
-| [SQL13 Supporting SQL indexes](#sql13) | Support incident/status, per-incident history and assignment lookup patterns. | Defined in application schema | [database/02_advanced.sql:30](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/02_advanced.sql#L30) |
-| [SQL14 Partial unique indexes](#sql14) | Prevent the same resource or responder from having two active/dispatched assignments while retaining historical completed assignments. | Operational integrity enforcement | [database/02_advanced.sql:26](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/02_advanced.sql#L26) |
-| [SQL15 Stored SQL function dispatch_response](#sql15) | Validate and reserve an incident response atomically, including capability coverage. | Operational | [database/02_advanced.sql:68](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/02_advanced.sql#L68) |
-| [SQL16 Stored SQL function finish_response](#sql16) | Create an assignment-linked report, release the resource/responder, and resolve the incident when no active response remains. | Operational | [database/02_advanced.sql:94](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/02_advanced.sql#L94) |
-| [SQL17 Automatic incident-history trigger](#sql17) | Write status history automatically when an incident is created or its status actually changes. | Operational | [database/02_advanced.sql:55](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/02_advanced.sql#L55) |
-| [SQL18 Transactions COMMIT and ROLLBACK](#sql18) | Keep incident/requirements, dispatch reservations, reports/releases and their audit entries consistent. | Operational + isolated demonstration | [lib/db.ts:84](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/db.ts#L84) |
-| [SQL19 Row locks with FOR UPDATE](#sql19) | Lock the rows examined by dispatch/completion during their transaction. | Operational | [database/02_advanced.sql:72](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/02_advanced.sql#L72) |
-| [SQL20 Database roles GRANT REVOKE and function permissions](#sql20) | Restrict SQL actions separately from the front-end controls and service role checks. | Operational | [database/02_advanced.sql:4](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/02_advanced.sql#L4) |
-| [SQL21 Row level security policy](#sql21) | Reject a maintenance insert attributed to someone other than the current authenticated actor. | Operational | [database/02_advanced.sql:135](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/02_advanced.sql#L135) |
-| [APP01 Bound SQL parameters and query allowlist](#app01) | Keep submitted values separate from SQL syntax and restrict the query explorer to predefined SQL. | Operational | [lib/service.ts:86](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/service.ts#L86) |
-| [APP02 Authentication password hashes and session storage](#app02) | Authenticate role accounts without persisting a plaintext password or raw session token. | Operational | [lib/password.ts:7](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/password.ts#L7) |
-| [NO01 MongoDB database and collection creation](#no01) | Use a real document database for variable incident field updates. | Operational lazy initialization | [lib/mongo.ts:42](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/mongo.ts#L42) |
-| [NO02 MongoDB collection validation](#no02) | Require valid incident/author IDs, bounded note text, tags, assessment objects and date fields even for direct document inserts. | Operational integrity enforcement | [lib/mongo.ts:6](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/mongo.ts#L6) |
-| [NO03 MongoDB compound and text indexes](#no03) | Support per-incident chronological retrieval and keyword search across note text and tags. | Operational | [lib/mongo.ts:61](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/mongo.ts#L61) |
-| [NO04 MongoDB CREATE insertOne](#no04) | Save a field note with server-derived author and creation/update timestamps. | Operational | [lib/mongo.ts:115](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/mongo.ts#L115) |
-| [NO05 MongoDB READ find sort and limit](#no05) | Read up to 100 notes for the selected SQL incident in newest-first order. | Operational | [lib/mongo.ts:94](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/mongo.ts#L94) |
-| [NO06 MongoDB UPDATE updateOne and $set](#no06) | Edit note text/tags/assessment while retaining its author, creation date and incident link. | Operational | [lib/mongo.ts:142](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/mongo.ts#L142) |
-| [NO07 MongoDB DELETE deleteOne](#no07) | Delete only an authorized field note selected by ObjectId. | Operational | [lib/mongo.ts:151](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/mongo.ts#L151) |
-| [NO08 Full text search with $text](#no08) | Search selected-incident note text and tags using MongoDB’s text index. | Operational | [lib/mongo.ts:98](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/mongo.ts#L98) |
-| [NO09 MongoDB aggregation pipeline](#no09) | Count field-note tag occurrences for the selected incident. | Operational | [lib/mongo.ts:104](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/mongo.ts#L104) |
-| [NO10 Cross database references and note ownership](#no10) | Validate SQL incident existence/assignment scope before MongoDB writes and enforce author/coordinator edit rights. | Operational service validation | [lib/service.ts:227](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/service.ts#L227) |
-| [OPS01 Database outage failure handling](#ops01) | Return an explicit failed/unconfirmed note operation while keeping independent SQL functionality available. | Operational + isolated outage test | [lib/mongo.ts:81](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/mongo.ts#L81) |
-| [VEC01 Learned sentence embeddings](#vec01) | Encode incident descriptions and incoming reports as normalized 384-dimensional vectors using the same pinned local MiniLM model. | Operational duplicate-report review | [lib/embeddings.ts:14](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/embeddings.ts#L14) |
-| [VEC02 pgvector cosine distance and HNSW index](#vec02) | Suggest possible duplicate active incidents using same-location/recent-time filters and native vector nearest neighbours. | Operational duplicate-report review | [database/07_vector_search.sql:2](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/07_vector_search.sql#L2) |
-| [VEC03 Embedding invalidation and incremental indexing](#vec03) | Prevent a description edit from leaving a searchable embedding for old text, while keeping incident reporting independent of the model. | Operational derived-index maintenance | [database/07_vector_search.sql:12](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/07_vector_search.sql#L12) |
-| [VEC04 Human-confirmed duplicate decisions and idempotent reports](#vec04) | Attach an additional report once without another incident or dispatch, or deliberately create a separate event. | Operational reporting | [lib/incident-review.ts:71](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/incident-review.ts#L71) |
-| [SQL22 Live SQL results and rolling calendar](#sql22) | Show new incidents and assignments using real queries with five-second polling, manual refresh and a server execution timestamp. | Operational SQL lab | [lib/service.ts:271](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/service.ts#L271) |
-| [VEC05 Campus locations, aliases and semantic location matching](#vec05) | Resolve a typed landmark to a human-confirmed saved location before duplicate review, preserving building identity and original directions. | Operational reporting | [lib/locations.ts:8](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/locations.ts#L8) |
-| [SQL23 Additive operational catalog and campus data](#sql23) | Expand types, capabilities, resources, teams and saved places while preserving availability and passwords. | Operational catalog | [database/09_operational_catalog.sql:1](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/09_operational_catalog.sql#L1) |
+| [SQL01 DDL tables primary keys foreign keys and CHECK constraints](#sql01) | Define the 17 operational relations and reject invalid IDs, references, coordinates, counts and costs. | Setup + enforced during operations | [database/00_schema.sql:45](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/00_schema.sql#L45) |
+| [SQL02 Composite keys and multivalued attribute mapping](#sql02) | Store responder skills and resource tags as separate rows and prevent duplicate values per owner. | Operational | [database/00_schema.sql:235](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/00_schema.sql#L235) |
+| [SQL03 CREATE ALTER and DROP lifecycle](#sql03) | Demonstrate changing and removing structure without dropping operational tables. | Isolated demonstration | [database/06_ddl_demo.sql:3](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/06_ddl_demo.sql#L3) |
+| [SQL04 Seed INSERT commands](#sql04) | Populate the relational model with 63 fictional domain records in parent-before-child order. | First setup | [database/01_seed.sql:3](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/01_seed.sql#L3) |
+| [SQL05 SQL CRUD used by the Resources screen](#sql05) | Add, list, rename and remove resource tags in PostgreSQL through the interface. | Operational | [lib/service.ts:78](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/service.ts#L78) |
+| [SQL06 JOIN queries](#sql06) | Combine incidents with type/location and assignments with resource/responder information. | Operational + SQL lab | [lib/service.ts:19](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/service.ts#L19) |
+| [SQL07 GROUP BY HAVING COUNT and ORDER BY](#sql07) | Summarize assignments per incident and retain groups having at least one assignment. | Live SQL lab example | [lib/service.ts:262](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/service.ts#L262) |
+| [SQL08 Nested scalar subquery](#sql08) | Find incidents whose affected-person count exceeds the current overall average. | Live SQL lab example | [lib/service.ts:254](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/service.ts#L254) |
+| [SQL09 Correlated NOT EXISTS query](#sql09) | Find incidents without active assignments; correlated capability checks also validate a dispatch. | Live SQL lab example + dispatch validation | [lib/service.ts:256](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/service.ts#L256) |
+| [SQL10 CTE with ROW_NUMBER window function](#sql10) | Return the latest recorded status event for each incident. | Live SQL lab example | [lib/service.ts:258](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/service.ts#L258) |
+| [SQL11 Recursive CTE](#sql11) | Generate a seven-day reporting calendar and retain dates with zero incidents. | Live SQL lab example | [lib/service.ts:259](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/service.ts#L259) |
+| [SQL12 SQL view v_assignment_summary](#sql12) | Provide reusable joined assignment/resource/responder data for the dashboard. | Operational + SQL lab | [database/02_advanced.sql:45](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/02_advanced.sql#L45) |
+| [SQL13 Supporting SQL indexes](#sql13) | Support incident/status, per-incident history and assignment lookup patterns. | Defined in application schema | [database/02_advanced.sql:30](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/02_advanced.sql#L30) |
+| [SQL14 Partial unique indexes](#sql14) | Prevent the same resource or responder from having two active/dispatched assignments while retaining historical completed assignments. | Operational integrity enforcement | [database/02_advanced.sql:26](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/02_advanced.sql#L26) |
+| [SQL15 Stored SQL function dispatch_response](#sql15) | Validate and reserve an incident response atomically, including capability coverage. | Operational | [database/02_advanced.sql:68](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/02_advanced.sql#L68) |
+| [SQL16 Stored SQL function finish_response](#sql16) | Create an assignment-linked report, release the resource/responder, and resolve the incident when no active response remains. | Operational | [database/02_advanced.sql:94](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/02_advanced.sql#L94) |
+| [SQL17 Automatic incident-history trigger](#sql17) | Write status history automatically when an incident is created or its status actually changes. | Operational | [database/02_advanced.sql:55](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/02_advanced.sql#L55) |
+| [SQL18 Transactions COMMIT and ROLLBACK](#sql18) | Keep incident/requirements, dispatch reservations, reports/releases and their audit entries consistent. | Operational + isolated demonstration | [lib/db.ts:85](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/db.ts#L85) |
+| [SQL19 Row locks with FOR UPDATE](#sql19) | Lock the rows examined by dispatch/completion during their transaction. | Operational | [database/02_advanced.sql:72](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/02_advanced.sql#L72) |
+| [SQL20 Database roles GRANT REVOKE and function permissions](#sql20) | Restrict SQL actions separately from the front-end controls and service role checks. | Operational | [database/02_advanced.sql:4](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/02_advanced.sql#L4) |
+| [SQL21 Row level security policy](#sql21) | Reject a maintenance insert attributed to someone other than the current authenticated actor. | Operational | [database/02_advanced.sql:135](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/02_advanced.sql#L135) |
+| [APP01 Bound SQL parameters and query allowlist](#app01) | Keep submitted values separate from SQL syntax and restrict the query explorer to predefined SQL. | Operational | [lib/service.ts:86](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/service.ts#L86) |
+| [APP02 Authentication password hashes and session storage](#app02) | Authenticate role accounts without persisting a plaintext password or raw session token. | Operational | [lib/password.ts:7](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/password.ts#L7) |
+| [NO01 MongoDB database and collection creation](#no01) | Use a real document database for variable incident field updates. | Operational lazy initialization | [lib/mongo.ts:42](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/mongo.ts#L42) |
+| [NO02 MongoDB collection validation](#no02) | Require valid incident/author IDs, bounded note text, tags, assessment objects and date fields even for direct document inserts. | Operational integrity enforcement | [lib/mongo.ts:6](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/mongo.ts#L6) |
+| [NO03 MongoDB compound and text indexes](#no03) | Support per-incident chronological retrieval and keyword search across note text and tags. | Operational | [lib/mongo.ts:61](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/mongo.ts#L61) |
+| [NO04 MongoDB CREATE insertOne](#no04) | Save a field note with server-derived author and creation/update timestamps. | Operational | [lib/mongo.ts:115](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/mongo.ts#L115) |
+| [NO05 MongoDB READ find sort and limit](#no05) | Read up to 100 notes for the selected SQL incident in newest-first order. | Operational | [lib/mongo.ts:94](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/mongo.ts#L94) |
+| [NO06 MongoDB UPDATE updateOne and $set](#no06) | Edit note text/tags/assessment while retaining its author, creation date and incident link. | Operational | [lib/mongo.ts:142](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/mongo.ts#L142) |
+| [NO07 MongoDB DELETE deleteOne](#no07) | Delete only an authorized field note selected by ObjectId. | Operational | [lib/mongo.ts:151](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/mongo.ts#L151) |
+| [NO08 Full text search with $text](#no08) | Search selected-incident note text and tags using MongoDB’s text index. | Operational | [lib/mongo.ts:98](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/mongo.ts#L98) |
+| [NO09 MongoDB aggregation pipeline](#no09) | Count field-note tag occurrences for the selected incident. | Operational | [lib/mongo.ts:104](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/mongo.ts#L104) |
+| [NO10 Cross database references and note ownership](#no10) | Validate SQL incident existence/assignment scope before MongoDB writes and enforce author/coordinator edit rights. | Operational service validation | [lib/service.ts:227](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/service.ts#L227) |
+| [OPS01 Database outage failure handling](#ops01) | Return an explicit failed/unconfirmed note operation while keeping independent SQL functionality available. | Operational + isolated outage test | [lib/mongo.ts:81](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/mongo.ts#L81) |
+| [VEC01 Learned sentence embeddings](#vec01) | Encode incident descriptions and incoming reports as normalized 384-dimensional vectors using the same pinned local MiniLM model. | Operational duplicate-report review | [lib/embeddings.ts:14](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/embeddings.ts#L14) |
+| [VEC02 pgvector cosine distance and HNSW index](#vec02) | Suggest possible duplicate active incidents using same-location/recent-time filters and native vector nearest neighbours. | Operational duplicate-report review | [database/07_vector_search.sql:2](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/07_vector_search.sql#L2) |
+| [VEC03 Embedding invalidation and incremental indexing](#vec03) | Prevent a description edit from leaving a searchable embedding for old text, while keeping incident reporting independent of the model. | Operational derived-index maintenance | [database/07_vector_search.sql:12](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/07_vector_search.sql#L12) |
+| [VEC04 Human-confirmed duplicate decisions and idempotent reports](#vec04) | Attach an additional report once without another incident or dispatch, or deliberately create a separate event. | Operational reporting | [lib/incident-review.ts:71](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/incident-review.ts#L71) |
+| [SQL22 Live SQL results and rolling calendar](#sql22) | Show new incidents and assignments using real queries with five-second polling, manual refresh and a server execution timestamp. | Operational SQL lab | [lib/service.ts:271](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/service.ts#L271) |
+| [VEC05 Campus locations, aliases and semantic location matching](#vec05) | Resolve a typed landmark to a human-confirmed saved location before duplicate review, preserving building identity and original directions. | Operational reporting | [lib/locations.ts:8](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/locations.ts#L8) |
+| [SQL23 Additive operational catalog and campus data](#sql23) | Expand types, capabilities, resources, teams and saved places while preserving availability and passwords. | Operational catalog | [database/09_operational_catalog.sql:1](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/09_operational_catalog.sql#L1) |
 
 ## Detailed code paths and demonstrations
 
@@ -79,10 +79,10 @@ Open **DATABASE_FEATURE_MAP.html** for a searchable offline guide. Its Open code
 
 **Open the code in this order:**
 
-- [database/00_schema.sql:45](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/00_schema.sql#L45) — search `CREATE TABLE emergencies (`
-- [database/00_schema.sql:66](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/00_schema.sql#L66) — search `CONSTRAINT ck_people_affected`
-- [database/02_advanced.sql:10](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/02_advanced.sql#L10) — search `ALTER TABLE users ADD CONSTRAINT uq_users_email`
-- [lib/db.ts:18](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/db.ts#L18) — search `export async function getDb()`
+- [database/00_schema.sql:45](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/00_schema.sql#L45) — search `CREATE TABLE emergencies (`
+- [database/00_schema.sql:66](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/00_schema.sql#L66) — search `CONSTRAINT ck_people_affected`
+- [database/02_advanced.sql:10](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/02_advanced.sql#L10) — search `ALTER TABLE users ADD CONSTRAINT uq_users_email`
+- [lib/db.ts:18](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/db.ts#L18) — search `export async function getDb()`
 
 **Demonstrate:** Open the table DDL and its named constraints. Show the failing-key/FK/CHECK test in tests/integration.test.ts. SQL enforces these rules even if the UI is bypassed.
 
@@ -97,9 +97,9 @@ Open **DATABASE_FEATURE_MAP.html** for a searchable offline guide. Its Open code
 
 **Open the code in this order:**
 
-- [database/00_schema.sql:235](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/00_schema.sql#L235) — search `CREATE TABLE responder_skills (`
-- [database/00_schema.sql:244](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/00_schema.sql#L244) — search `CREATE TABLE resource_tags (`
-- [tests/resource-tags.test.ts:64](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/tests/resource-tags.test.ts#L64) — search `Duplicate missing invalid and unknown resource tags fail explicitly`
+- [database/00_schema.sql:235](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/00_schema.sql#L235) — search `CREATE TABLE responder_skills (`
+- [database/00_schema.sql:244](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/00_schema.sql#L244) — search `CREATE TABLE resource_tags (`
+- [tests/resource-tags.test.ts:64](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/tests/resource-tags.test.ts#L64) — search `Duplicate missing invalid and unknown resource tags fail explicitly`
 
 **Demonstrate:** Show PRIMARY KEY(responder_id,skill) and PRIMARY KEY(resource_id,tag). Try adding an existing tag through Resources; the database rejects the duplicate.
 
@@ -114,10 +114,10 @@ Open **DATABASE_FEATURE_MAP.html** for a searchable offline guide. Its Open code
 
 **Open the code in this order:**
 
-- [database/06_ddl_demo.sql:3](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/06_ddl_demo.sql#L3) — search `CREATE TEMPORARY TABLE`
-- [database/06_ddl_demo.sql:7](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/06_ddl_demo.sql#L7) — search `ALTER TABLE crisislink_ddl_example`
-- [database/06_ddl_demo.sql:11](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/06_ddl_demo.sql#L11) — search `DROP TABLE crisislink_ddl_example`
-- [tests/ddl.test.ts:5](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/tests/ddl.test.ts#L5) — search `CREATE ALTER and DROP operate only`
+- [database/06_ddl_demo.sql:3](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/06_ddl_demo.sql#L3) — search `CREATE TEMPORARY TABLE`
+- [database/06_ddl_demo.sql:7](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/06_ddl_demo.sql#L7) — search `ALTER TABLE crisislink_ddl_example`
+- [database/06_ddl_demo.sql:11](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/06_ddl_demo.sql#L11) — search `DROP TABLE crisislink_ddl_example`
+- [tests/ddl.test.ts:5](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/tests/ddl.test.ts#L5) — search `CREATE ALTER and DROP operate only`
 
 **Demonstrate:** Open database/06_ddl_demo.sql and run pnpm test. The temporary object receives a column, returns its example row and is dropped. This script is a classroom/test demonstration, not an app startup migration.
 
@@ -132,8 +132,8 @@ Open **DATABASE_FEATURE_MAP.html** for a searchable offline guide. Its Open code
 
 **Open the code in this order:**
 
-- [database/01_seed.sql:3](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/01_seed.sql#L3) — search `INSERT INTO roles VALUES`
-- [lib/db.ts:31](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/db.ts#L31) — search `for (const file of ["00_schema.sql", "01_seed.sql"])`
+- [database/01_seed.sql:3](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/01_seed.sql#L3) — search `INSERT INTO roles VALUES`
+- [lib/db.ts:31](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/db.ts#L31) — search `for (const file of ["00_schema.sql", "01_seed.sql"])`
 
 **Demonstrate:** Show the seed SQL and startup loader. The seed is applied only when the roles table is absent; it is not reinserted for every request. Demo password placeholders are replaced with real hashes during setup.
 
@@ -148,12 +148,12 @@ Open **DATABASE_FEATURE_MAP.html** for a searchable offline guide. Its Open code
 
 **Open the code in this order:**
 
-- [lib/service.ts:78](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/service.ts#L78) — search `export async function addResourceTag`
-- [lib/service.ts:92](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/service.ts#L92) — search `export async function updateResourceTag`
-- [lib/service.ts:108](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/service.ts#L108) — search `export async function removeResourceTag`
-- [app/api/[...path]/route.ts:84](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/app/api/%5B...path%5D/route.ts#L84) — search `if (path === "resource-tags")`
-- [app/page.tsx:684](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/app/page.tsx#L684) — search `className="resource-tags"`
-- [database/05_resource_tag_permissions.sql:3](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/05_resource_tag_permissions.sql#L3) — search `GRANT INSERT, UPDATE, DELETE`
+- [lib/service.ts:78](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/service.ts#L78) — search `export async function addResourceTag`
+- [lib/service.ts:92](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/service.ts#L92) — search `export async function updateResourceTag`
+- [lib/service.ts:108](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/service.ts#L108) — search `export async function removeResourceTag`
+- [app/api/[...path]/route.ts:84](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/app/api/%5B...path%5D/route.ts#L84) — search `if (path === "resource-tags")`
+- [app/page.tsx:678](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/app/page.tsx#L678) — search `className="resource-tags"`
+- [database/05_resource_tag_permissions.sql:3](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/05_resource_tag_permissions.sql#L3) — search `GRANT INSERT, UPDATE, DELETE`
 
 **Demonstrate:** Sign in as coordinator or technician. In Resources add a temporary tag, rename it, then remove it. Refresh and confirm persistence. A responder has no write controls and direct API/SQL writes are denied.
 
@@ -168,10 +168,10 @@ Open **DATABASE_FEATURE_MAP.html** for a searchable offline guide. Its Open code
 
 **Open the code in this order:**
 
-- [lib/service.ts:19](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/service.ts#L19) — search ``SELECT e.emergency_id,e.type_id`
-- [database/02_advanced.sql:45](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/02_advanced.sql#L45) — search `CREATE VIEW v_assignment_summary`
-- [lib/service.ts:253](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/service.ts#L253) — search `  join: "SELECT e.emergency_id`
-- [database/03_queries.sql:1](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/03_queries.sql#L1) — search `-- JOIN:`
+- [lib/service.ts:19](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/service.ts#L19) — search ``SELECT e.emergency_id,e.type_id`
+- [database/02_advanced.sql:45](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/02_advanced.sql#L45) — search `CREATE VIEW v_assignment_summary`
+- [lib/service.ts:253](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/service.ts#L253) — search `  join: "SELECT e.emergency_id`
+- [database/03_queries.sql:1](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/03_queries.sql#L1) — search `-- JOIN:`
 
 **Demonstrate:** Use SQL lab > Multiple JOINs for a live result. Then show dashboard() and the assignment view: JOINs also supply the operational interface.
 
@@ -186,9 +186,9 @@ Open **DATABASE_FEATURE_MAP.html** for a searchable offline guide. Its Open code
 
 **Open the code in this order:**
 
-- [lib/service.ts:262](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/service.ts#L262) — search `  aggregate:`
-- [database/03_queries.sql:30](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/03_queries.sql#L30) — search `-- Grouping and HAVING.`
-- [lib/service.ts:265](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/service.ts#L265) — search `export async function runQuery`
+- [lib/service.ts:262](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/service.ts#L262) — search `  aggregate:`
+- [database/03_queries.sql:30](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/03_queries.sql#L30) — search `-- Grouping and HAVING.`
+- [lib/service.ts:265](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/service.ts#L265) — search `export async function runQuery`
 
 **Demonstrate:** Choose SQL lab > GROUP BY and HAVING. Open the aggregate query to show grouping and filtering after aggregation. ORDER BY is also visible in JOIN/history queries.
 
@@ -203,8 +203,8 @@ Open **DATABASE_FEATURE_MAP.html** for a searchable offline guide. Its Open code
 
 **Open the code in this order:**
 
-- [lib/service.ts:254](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/service.ts#L254) — search `  nested:`
-- [database/03_queries.sql:6](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/03_queries.sql#L6) — search `-- Nested scalar query:`
+- [lib/service.ts:254](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/service.ts#L254) — search `  nested:`
+- [database/03_queries.sql:6](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/03_queries.sql#L6) — search `-- Nested scalar query:`
 
 **Demonstrate:** Choose SQL lab > Nested query. On the untouched seed, 20 and 12 exceed 34/3, so incidents 101 and 103 qualify. Additional app-created data changes that average.
 
@@ -219,9 +219,9 @@ Open **DATABASE_FEATURE_MAP.html** for a searchable offline guide. Its Open code
 
 **Open the code in this order:**
 
-- [lib/service.ts:256](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/service.ts#L256) — search `  correlated:`
-- [database/03_queries.sql:10](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/03_queries.sql#L10) — search `-- Correlated query:`
-- [database/02_advanced.sql:78](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/02_advanced.sql#L78) — search `  IF EXISTS(SELECT 1 FROM emergency_required_capabilities c`
+- [lib/service.ts:256](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/service.ts#L256) — search `  correlated:`
+- [database/03_queries.sql:10](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/03_queries.sql#L10) — search `-- Correlated query:`
+- [database/02_advanced.sql:78](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/02_advanced.sql#L78) — search `  IF EXISTS(SELECT 1 FROM emergency_required_capabilities c`
 
 **Demonstrate:** Choose SQL lab > Correlated NOT EXISTS. Point to a.emergency_id=e.emergency_id. Separately show the nested capability check inside dispatch_response.
 
@@ -236,10 +236,10 @@ Open **DATABASE_FEATURE_MAP.html** for a searchable offline guide. Its Open code
 
 **Open the code in this order:**
 
-- [lib/service.ts:258](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/service.ts#L258) — search `  cte: "WITH ranked AS`
-- [database/03_queries.sql:16](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/03_queries.sql#L16) — search `WITH ranked AS (`
-- [app/api/[...path]/route.ts:92](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/app/api/%5B...path%5D/route.ts#L92) — search `if (path === "queries" && method === "GET")`
-- [app/page.tsx:1061](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/app/page.tsx#L1061) — search `SQL example`
+- [lib/service.ts:258](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/service.ts#L258) — search `  cte: "WITH ranked AS`
+- [database/03_queries.sql:16](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/03_queries.sql#L16) — search `WITH ranked AS (`
+- [app/api/[...path]/route.ts:92](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/app/api/%5B...path%5D/route.ts#L92) — search `if (path === "queries" && method === "GET")`
+- [app/page.tsx:1055](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/app/page.tsx#L1055) — search `SQL example`
 
 **Demonstrate:** Choose SQL lab > CTE and window function. Explain PARTITION BY emergency_id, descending changed_at/history_id, and rn=1. This CTE is a query-explorer example; dashboard() reads history separately.
 
@@ -254,8 +254,8 @@ Open **DATABASE_FEATURE_MAP.html** for a searchable offline guide. Its Open code
 
 **Open the code in this order:**
 
-- [lib/service.ts:259](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/service.ts#L259) — search `  recursive:`
-- [database/03_queries.sql:23](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/03_queries.sql#L23) — search `WITH RECURSIVE days(day) AS (`
+- [lib/service.ts:259](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/service.ts#L259) — search `  recursive:`
+- [database/03_queries.sql:23](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/03_queries.sql#L23) — search `WITH RECURSIVE days(day) AS (`
 
 **Demonstrate:** Choose SQL lab > Recursive CTE. The result has seven dates from 30 October to 5 November 2026. Show the anchor date, UNION ALL step, stopping condition and LEFT JOIN.
 
@@ -270,9 +270,9 @@ Open **DATABASE_FEATURE_MAP.html** for a searchable offline guide. Its Open code
 
 **Open the code in this order:**
 
-- [database/02_advanced.sql:45](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/02_advanced.sql#L45) — search `CREATE VIEW v_assignment_summary AS`
-- [lib/service.ts:32](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/service.ts#L32) — search `"SELECT * FROM v_assignment_summary ORDER BY assignment_id DESC"`
-- [lib/service.ts:261](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/service.ts#L261) — search `  view: "SELECT * FROM v_assignment_summary`
+- [database/02_advanced.sql:45](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/02_advanced.sql#L45) — search `CREATE VIEW v_assignment_summary AS`
+- [lib/service.ts:32](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/service.ts#L32) — search `"SELECT * FROM v_assignment_summary ORDER BY assignment_id DESC"`
+- [lib/service.ts:261](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/service.ts#L261) — search `  view: "SELECT * FROM v_assignment_summary`
 
 **Demonstrate:** Open the CREATE VIEW definition, then dashboard() to show its real consumer. SQL lab > Assignment summary view displays the same view directly.
 
@@ -287,10 +287,10 @@ Open **DATABASE_FEATURE_MAP.html** for a searchable offline guide. Its Open code
 
 **Open the code in this order:**
 
-- [database/02_advanced.sql:30](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/02_advanced.sql#L30) — search `CREATE INDEX idx_emergency_status_time`
-- [database/02_advanced.sql:31](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/02_advanced.sql#L31) — search `CREATE INDEX idx_history_time`
-- [database/02_advanced.sql:32](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/02_advanced.sql#L32) — search `CREATE INDEX idx_assignment_emergency`
-- [docs/DATA_DICTIONARY.md:391](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/docs/DATA_DICTIONARY.md#L391) — search `## Index definitions`
+- [database/02_advanced.sql:30](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/02_advanced.sql#L30) — search `CREATE INDEX idx_emergency_status_time`
+- [database/02_advanced.sql:31](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/02_advanced.sql#L31) — search `CREATE INDEX idx_history_time`
+- [database/02_advanced.sql:32](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/02_advanced.sql#L32) — search `CREATE INDEX idx_assignment_emergency`
+- [docs/DATA_DICTIONARY.md:392](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/docs/DATA_DICTIONARY.md#L392) — search `## Index definitions`
 
 **Demonstrate:** Show the three CREATE INDEX statements and the generated dictionary. Explain indexed columns/order. The optimizer chooses a plan; small seed data may still use a sequential scan. No speed-up benchmark is claimed.
 
@@ -305,9 +305,9 @@ Open **DATABASE_FEATURE_MAP.html** for a searchable offline guide. Its Open code
 
 **Open the code in this order:**
 
-- [database/02_advanced.sql:26](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/02_advanced.sql#L26) — search `CREATE UNIQUE INDEX uq_active_resource`
-- [database/02_advanced.sql:28](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/02_advanced.sql#L28) — search `CREATE UNIQUE INDEX uq_active_responder`
-- [tests/integration.test.ts:268](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/tests/integration.test.ts#L268) — search `Conflicting dispatch is rejected with no partial assignment`
+- [database/02_advanced.sql:26](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/02_advanced.sql#L26) — search `CREATE UNIQUE INDEX uq_active_resource`
+- [database/02_advanced.sql:28](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/02_advanced.sql#L28) — search `CREATE UNIQUE INDEX uq_active_responder`
+- [tests/integration.test.ts:268](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/tests/integration.test.ts#L268) — search `Conflicting dispatch is rejected with no partial assignment`
 
 **Demonstrate:** Show the WHERE status IN (active,dispatched) predicates. The conflicting-dispatch test demonstrates rejection; the index also independently enforces uniqueness for direct SQL writes.
 
@@ -322,10 +322,10 @@ Open **DATABASE_FEATURE_MAP.html** for a searchable offline guide. Its Open code
 
 **Open the code in this order:**
 
-- [database/02_advanced.sql:68](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/02_advanced.sql#L68) — search `CREATE FUNCTION dispatch_response(`
-- [lib/service.ts:167](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/service.ts#L167) — search `export async function dispatch(`
-- [app/api/[...path]/route.ts:78](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/app/api/%5B...path%5D/route.ts#L78) — search `if (path === "dispatch" && method === "POST")`
-- [app/page.tsx:643](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/app/page.tsx#L643) — search `Dispatch team →`
+- [database/02_advanced.sql:68](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/02_advanced.sql#L68) — search `CREATE FUNCTION dispatch_response(`
+- [lib/service.ts:167](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/service.ts#L167) — search `export async function dispatch(`
+- [app/api/[...path]/route.ts:78](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/app/api/%5B...path%5D/route.ts#L78) — search `if (path === "dispatch" && method === "POST")`
+- [app/page.tsx:637](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/app/page.tsx#L637) — search `Dispatch team →`
 
 **Demonstrate:** As coordinator create a Medical incident requiring Medical support; dispatch Demo Ambulance and EMP-M01 if available. Show the SELECT dispatch_response call and resulting assignment/resource/responder/history changes.
 
@@ -340,10 +340,10 @@ Open **DATABASE_FEATURE_MAP.html** for a searchable offline guide. Its Open code
 
 **Open the code in this order:**
 
-- [database/02_advanced.sql:94](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/02_advanced.sql#L94) — search `CREATE FUNCTION finish_response(`
-- [lib/service.ts:188](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/service.ts#L188) — search `export async function complete(`
-- [app/api/[...path]/route.ts:80](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/app/api/%5B...path%5D/route.ts#L80) — search `if (path === "complete" && method === "POST")`
-- [app/page.tsx:583](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/app/page.tsx#L583) — search `Complete response`
+- [database/02_advanced.sql:94](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/02_advanced.sql#L94) — search `CREATE FUNCTION finish_response(`
+- [lib/service.ts:188](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/service.ts#L188) — search `export async function complete(`
+- [app/api/[...path]/route.ts:80](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/app/api/%5B...path%5D/route.ts#L80) — search `if (path === "complete" && method === "POST")`
+- [app/page.tsx:577](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/app/page.tsx#L577) — search `Complete response`
 
 **Demonstrate:** Sign in as the assigned responder (medic for EMP-M01) or coordinator, select the incident and complete the response. Show ownership validation, report INSERT and release UPDATEs. Another responder is rejected.
 
@@ -358,11 +358,11 @@ Open **DATABASE_FEATURE_MAP.html** for a searchable offline guide. Its Open code
 
 **Open the code in this order:**
 
-- [database/02_advanced.sql:55](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/02_advanced.sql#L55) — search `CREATE FUNCTION record_emergency_status()`
-- [database/02_advanced.sql:65](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/02_advanced.sql#L65) — search `CREATE TRIGGER trg_emergency_status`
-- [lib/service.ts:122](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/service.ts#L122) — search `export async function createIncident(`
-- [tests/integration.test.ts:182](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/tests/integration.test.ts#L182) — search `Creating an incident generates exactly one audit event`
-- [tests/integration.test.ts:288](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/tests/integration.test.ts#L288) — search `Unchanged status does not generate duplicate audit records`
+- [database/02_advanced.sql:55](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/02_advanced.sql#L55) — search `CREATE FUNCTION record_emergency_status()`
+- [database/02_advanced.sql:65](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/02_advanced.sql#L65) — search `CREATE TRIGGER trg_emergency_status`
+- [lib/service.ts:122](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/service.ts#L122) — search `export async function createIncident(`
+- [tests/integration.test.ts:182](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/tests/integration.test.ts#L182) — search `Creating an incident generates exactly one audit event`
+- [tests/integration.test.ts:288](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/tests/integration.test.ts#L288) — search `Unchanged status does not generate duplicate audit records`
 
 **Demonstrate:** Create an incident, then dispatch and complete it. The timeline gains reported/responding/resolved entries. Show the trigger definition and its NEW/OLD status comparison. TypeScript does not call the trigger function explicitly.
 
@@ -377,10 +377,10 @@ Open **DATABASE_FEATURE_MAP.html** for a searchable offline guide. Its Open code
 
 **Open the code in this order:**
 
-- [lib/db.ts:84](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/db.ts#L84) — search `export async function asActor<T>(`
-- [lib/service.ts:122](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/service.ts#L122) — search `export async function createIncident(`
-- [database/03_queries.sql:35](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/03_queries.sql#L35) — search `-- Rollback-safe DML example`
-- [tests/integration.test.ts:204](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/tests/integration.test.ts#L204) — search `Failed requirement insert rolls back incident and audit together`
+- [lib/db.ts:85](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/db.ts#L85) — search `export async function asActor<T>(`
+- [lib/service.ts:122](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/service.ts#L122) — search `export async function createIncident(`
+- [database/03_queries.sql:35](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/03_queries.sql#L35) — search `-- Rollback-safe DML example`
+- [tests/integration.test.ts:204](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/tests/integration.test.ts#L204) — search `Failed requirement insert rolls back incident and audit together`
 
 **Demonstrate:** Show asActor() wrapping the service callback in db.transaction(). Show the invalid-capability test: both incident and trigger audit row roll back. The tag demo ends with explicit ROLLBACK. The transaction wrapper commits successful callbacks and rolls back thrown errors.
 
@@ -395,10 +395,10 @@ Open **DATABASE_FEATURE_MAP.html** for a searchable offline guide. Its Open code
 
 **Open the code in this order:**
 
-- [database/02_advanced.sql:72](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/02_advanced.sql#L72) — search `SELECT * INTO e FROM emergencies`
-- [database/02_advanced.sql:74](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/02_advanced.sql#L74) — search `SELECT * INTO r FROM resources`
-- [database/02_advanced.sql:76](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/02_advanced.sql#L76) — search `SELECT * INTO p FROM responders`
-- [database/02_advanced.sql:98](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/02_advanced.sql#L98) — search `SELECT * INTO a FROM assignments`
+- [database/02_advanced.sql:72](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/02_advanced.sql#L72) — search `SELECT * INTO e FROM emergencies`
+- [database/02_advanced.sql:74](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/02_advanced.sql#L74) — search `SELECT * INTO r FROM resources`
+- [database/02_advanced.sql:76](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/02_advanced.sql#L76) — search `SELECT * INTO p FROM responders`
+- [database/02_advanced.sql:98](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/02_advanced.sql#L98) — search `SELECT * INTO a FROM assignments`
 
 **Demonstrate:** Open the SELECT ... FOR UPDATE statements in both stored functions. Explain their relationship to the surrounding transaction and unique active-allocation indexes. This local deployment uses one PGlite app process; it is not a multi-server load test.
 
@@ -413,11 +413,11 @@ Open **DATABASE_FEATURE_MAP.html** for a searchable offline guide. Its Open code
 
 **Open the code in this order:**
 
-- [database/02_advanced.sql:4](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/02_advanced.sql#L4) — search `CREATE ROLE crisis_coordinator`
-- [database/02_advanced.sql:129](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/02_advanced.sql#L129) — search `REVOKE EXECUTE ON ALL FUNCTIONS`
-- [database/02_advanced.sql:131](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/02_advanced.sql#L131) — search `GRANT EXECUTE ON FUNCTION dispatch_response`
-- [lib/db.ts:93](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/db.ts#L93) — search `await tx.exec(`SET LOCAL ROLE`
-- [database/05_resource_tag_permissions.sql:3](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/05_resource_tag_permissions.sql#L3) — search `GRANT INSERT, UPDATE, DELETE`
+- [database/02_advanced.sql:4](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/02_advanced.sql#L4) — search `CREATE ROLE crisis_coordinator`
+- [database/02_advanced.sql:129](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/02_advanced.sql#L129) — search `REVOKE EXECUTE ON ALL FUNCTIONS`
+- [database/02_advanced.sql:131](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/02_advanced.sql#L131) — search `GRANT EXECUTE ON FUNCTION dispatch_response`
+- [lib/db.ts:94](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/db.ts#L94) — search `await tx.exec(`SET LOCAL ROLE`
+- [database/05_resource_tag_permissions.sql:3](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/05_resource_tag_permissions.sql#L3) — search `GRANT INSERT, UPDATE, DELETE`
 
 **Demonstrate:** Show the three NOLOGIN roles and their grants. Then show asActor() selecting only a server-defined role after authentication. The integration/tag tests directly attempt forbidden SQL writes, independently of the UI.
 
@@ -432,10 +432,10 @@ Open **DATABASE_FEATURE_MAP.html** for a searchable offline guide. Its Open code
 
 **Open the code in this order:**
 
-- [database/02_advanced.sql:135](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/02_advanced.sql#L135) — search `ALTER TABLE maintenance_records ENABLE ROW LEVEL SECURITY`
-- [database/02_advanced.sql:138](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/02_advanced.sql#L138) — search `CREATE POLICY maintenance_author`
-- [database/02_advanced.sql:51](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/02_advanced.sql#L51) — search `CREATE FUNCTION app_actor()`
-- [tests/integration.test.ts:420](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/tests/integration.test.ts#L420) — search `Database role grants and RLS enforce maintenance author identity`
+- [database/02_advanced.sql:135](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/02_advanced.sql#L135) — search `ALTER TABLE maintenance_records ENABLE ROW LEVEL SECURITY`
+- [database/02_advanced.sql:138](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/02_advanced.sql#L138) — search `CREATE POLICY maintenance_author`
+- [database/02_advanced.sql:51](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/02_advanced.sql#L51) — search `CREATE FUNCTION app_actor()`
+- [tests/integration.test.ts:420](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/tests/integration.test.ts#L420) — search `Database role grants and RLS enforce maintenance author identity`
 
 **Demonstrate:** Show WITH CHECK(performed_by=app_actor()). The test inserts as a technician with another author ID and expects failure. The API also supplies the author from the session.
 
@@ -450,9 +450,9 @@ Open **DATABASE_FEATURE_MAP.html** for a searchable offline guide. Its Open code
 
 **Open the code in this order:**
 
-- [lib/service.ts:86](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/service.ts#L86) — search `"INSERT INTO resource_tags(resource_id,tag) VALUES($1,$2)`
-- [lib/service.ts:265](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/service.ts#L265) — search `export async function runQuery(`
-- [app/api/[...path]/route.ts:58](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/app/api/%5B...path%5D/route.ts#L58) — search `const actor = await authenticate(token);`
+- [lib/service.ts:86](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/service.ts#L86) — search `"INSERT INTO resource_tags(resource_id,tag) VALUES($1,$2)`
+- [lib/service.ts:265](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/service.ts#L265) — search `export async function runQuery(`
+- [app/api/[...path]/route.ts:58](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/app/api/%5B...path%5D/route.ts#L58) — search `const actor = await authenticate(token);`
 
 **Demonstrate:** Show a $1/$2 parameterized query and its values array, then the labQueries key check. There is no endpoint that executes arbitrary user-entered SQL.
 
@@ -467,11 +467,11 @@ Open **DATABASE_FEATURE_MAP.html** for a searchable offline guide. Its Open code
 
 **Open the code in this order:**
 
-- [lib/password.ts:7](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/password.ts#L7) — search `export function hashPassword(`
-- [lib/auth.ts:13](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/auth.ts#L13) — search `export async function login(`
-- [lib/auth.ts:45](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/auth.ts#L45) — search `export async function authenticate(`
-- [scripts/setup.ts:17](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/scripts/setup.ts#L17) — search `const db = await getDb();`
-- [app/api/[...path]/route.ts:48](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/app/api/%5B...path%5D/route.ts#L48) — search `res.cookies.set("crisis_session"`
+- [lib/password.ts:7](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/password.ts#L7) — search `export function hashPassword(`
+- [lib/auth.ts:13](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/auth.ts#L13) — search `export async function login(`
+- [lib/auth.ts:45](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/auth.ts#L45) — search `export async function authenticate(`
+- [scripts/setup.ts:17](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/scripts/setup.ts#L17) — search `const db = await getDb();`
+- [app/api/[...path]/route.ts:48](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/app/api/%5B...path%5D/route.ts#L48) — search `res.cookies.set("crisis_session"`
 
 **Demonstrate:** Show scrypt plus random salts, SHA-256 token hashing, the session expiry query and HttpOnly/SameSite cookie. Secure setup uses hidden terminal input. These TypeScript helpers are application functions, not stored SQL routines.
 
@@ -486,9 +486,9 @@ Open **DATABASE_FEATURE_MAP.html** for a searchable offline guide. Its Open code
 
 **Open the code in this order:**
 
-- [lib/mongo.ts:42](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/mongo.ts#L42) — search `export async function mongo()`
-- [lib/mongo.ts:52](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/mongo.ts#L52) — search `await db.createCollection("field_notes"`
-- [database/04_mongo_commands.js:4](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/04_mongo_commands.js#L4) — search `db.createCollection('field_notes'`
+- [lib/mongo.ts:42](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/mongo.ts#L42) — search `export async function mongo()`
+- [lib/mongo.ts:52](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/mongo.ts#L52) — search `await db.createCollection("field_notes"`
+- [database/04_mongo_commands.js:4](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/04_mongo_commands.js#L4) — search `db.createCollection('field_notes'`
 
 **Demonstrate:** Open mongo() to show the real MongoClient connection and collection creation. The application initializes the collection on first note access; the mongosh file is a separate fresh-database demonstration.
 
@@ -503,9 +503,9 @@ Open **DATABASE_FEATURE_MAP.html** for a searchable offline guide. Its Open code
 
 **Open the code in this order:**
 
-- [lib/mongo.ts:6](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/mongo.ts#L6) — search `export const noteValidator`
-- [lib/mongo.ts:54](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/mongo.ts#L54) — search `validationAction: "error"`
-- [tests/integration.test.ts:376](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/tests/integration.test.ts#L376) — search `MongoDB collection validator rejects malformed direct inserts`
+- [lib/mongo.ts:6](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/mongo.ts#L6) — search `export const noteValidator`
+- [lib/mongo.ts:54](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/mongo.ts#L54) — search `validationAction: "error"`
+- [tests/integration.test.ts:376](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/tests/integration.test.ts#L376) — search `MongoDB collection validator rejects malformed direct inserts`
 
 **Demonstrate:** Show $jsonSchema required/properties and validationAction:error. The integration test writes an incomplete document directly and confirms MongoDB rejects it, independently of Zod.
 
@@ -520,8 +520,8 @@ Open **DATABASE_FEATURE_MAP.html** for a searchable offline guide. Its Open code
 
 **Open the code in this order:**
 
-- [lib/mongo.ts:61](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/mongo.ts#L61) — search `.createIndex({ emergency_id: 1, created_at: -1 })`
-- [lib/mongo.ts:64](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/mongo.ts#L64) — search `.createIndex({ text: "text", tags: "text" })`
+- [lib/mongo.ts:61](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/mongo.ts#L61) — search `.createIndex({ emergency_id: 1, created_at: -1 })`
+- [lib/mongo.ts:64](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/mongo.ts#L64) — search `.createIndex({ text: "text", tags: "text" })`
 
 **Demonstrate:** Show both createIndex calls and their matching find/sort/$text queries. Explain column order and the separate text index. Do not claim a measured speed-up from the small demo dataset.
 
@@ -536,9 +536,9 @@ Open **DATABASE_FEATURE_MAP.html** for a searchable offline guide. Its Open code
 
 **Open the code in this order:**
 
-- [lib/mongo.ts:115](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/mongo.ts#L115) — search `export async function createNote(`
-- [app/api/[...path]/route.ts:110](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/app/api/%5B...path%5D/route.ts#L110) — search `if (path === "notes" && method === "POST")`
-- [app/page.tsx:1032](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/app/page.tsx#L1032) — search `Save field note`
+- [lib/mongo.ts:115](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/mongo.ts#L115) — search `export async function createNote(`
+- [app/api/[...path]/route.ts:110](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/app/api/%5B...path%5D/route.ts#L110) — search `if (path === "notes" && method === "POST")`
+- [app/page.tsx:1026](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/app/page.tsx#L1026) — search `Save field note`
 
 **Demonstrate:** In Field notes select an incident and save a text update with two tags and an optional assessment. The API returns the inserted ObjectId and the saved note appears after refresh.
 
@@ -553,9 +553,9 @@ Open **DATABASE_FEATURE_MAP.html** for a searchable offline guide. Its Open code
 
 **Open the code in this order:**
 
-- [lib/mongo.ts:94](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/mongo.ts#L94) — search `export async function listNotes(`
-- [lib/mongo.ts:100](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/mongo.ts#L100) — search `.find(filter)`
-- [app/api/[...path]/route.ts:96](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/app/api/%5B...path%5D/route.ts#L96) — search `if (path === "notes" && method === "GET")`
+- [lib/mongo.ts:94](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/mongo.ts#L94) — search `export async function listNotes(`
+- [lib/mongo.ts:100](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/mongo.ts#L100) — search `.find(filter)`
+- [app/api/[...path]/route.ts:96](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/app/api/%5B...path%5D/route.ts#L96) — search `if (path === "notes" && method === "GET")`
 
 **Demonstrate:** Select another incident in Field notes. Show the emergency_id filter, created_at sort and limit(100). Results are incident-specific, not a dump of the whole collection.
 
@@ -570,9 +570,9 @@ Open **DATABASE_FEATURE_MAP.html** for a searchable offline guide. Its Open code
 
 **Open the code in this order:**
 
-- [lib/mongo.ts:142](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/mongo.ts#L142) — search `export async function updateNote(`
-- [lib/mongo.ts:144](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/mongo.ts#L144) — search `const d = noteInput.omit({ emergency_id: true })`
-- [lib/mongo.ts:147](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/mongo.ts#L147) — search `{ $set: { ...d, updated_at: new Date() } }`
+- [lib/mongo.ts:142](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/mongo.ts#L142) — search `export async function updateNote(`
+- [lib/mongo.ts:144](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/mongo.ts#L144) — search `const d = noteInput.omit({ emergency_id: true })`
+- [lib/mongo.ts:147](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/mongo.ts#L147) — search `{ $set: { ...d, updated_at: new Date() } }`
 
 **Demonstrate:** Use Edit note as its author or coordinator, save changes and refresh. Show ownedNote() and the editable-field schema before updateOne. The incident ID is not an editable field.
 
@@ -587,9 +587,9 @@ Open **DATABASE_FEATURE_MAP.html** for a searchable offline guide. Its Open code
 
 **Open the code in this order:**
 
-- [lib/mongo.ts:151](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/mongo.ts#L151) — search `export async function deleteNote(`
-- [lib/mongo.ts:153](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/mongo.ts#L153) — search `await col.deleteOne({ _id: note._id })`
-- [app/page.tsx:958](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/app/page.tsx#L958) — search `Delete note`
+- [lib/mongo.ts:151](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/mongo.ts#L151) — search `export async function deleteNote(`
+- [lib/mongo.ts:153](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/mongo.ts#L153) — search `await col.deleteOne({ _id: note._id })`
+- [app/page.tsx:952](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/app/page.tsx#L952) — search `Delete note`
 
 **Demonstrate:** Create a disposable note and delete it using Delete note. Confirm it disappears after reload. A different responder cannot delete a note they do not own.
 
@@ -604,8 +604,8 @@ Open **DATABASE_FEATURE_MAP.html** for a searchable offline guide. Its Open code
 
 **Open the code in this order:**
 
-- [lib/mongo.ts:98](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/mongo.ts#L98) — search `filter.$text = { $search: search.slice(0, 100) }`
-- [app/page.tsx:902](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/app/page.tsx#L902) — search `aria-label="Search notes"`
+- [lib/mongo.ts:98](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/mongo.ts#L98) — search `filter.$text = { $search: search.slice(0, 100) }`
+- [app/page.tsx:896](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/app/page.tsx#L896) — search `aria-label="Search notes"`
 
 **Demonstrate:** Save a note containing a distinctive word such as evacuation, then search it in Field notes. Show the incident filter plus $text query and the text-index definition.
 
@@ -620,10 +620,10 @@ Open **DATABASE_FEATURE_MAP.html** for a searchable offline guide. Its Open code
 
 **Open the code in this order:**
 
-- [lib/mongo.ts:104](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/mongo.ts#L104) — search `const summary = await col`
-- [lib/mongo.ts:107](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/mongo.ts#L107) — search `{ $unwind: "$tags" }`
-- [lib/mongo.ts:108](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/mongo.ts#L108) — search `{ $group: { _id: "$tags", count: { $sum: 1 } } }`
-- [app/page.tsx:909](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/app/page.tsx#L909) — search `className="tag-summary"`
+- [lib/mongo.ts:104](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/mongo.ts#L104) — search `const summary = await col`
+- [lib/mongo.ts:107](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/mongo.ts#L107) — search `{ $unwind: "$tags" }`
+- [lib/mongo.ts:108](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/mongo.ts#L108) — search `{ $group: { _id: "$tags", count: { $sum: 1 } } }`
+- [app/page.tsx:903](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/app/page.tsx#L903) — search `className="tag-summary"`
 
 **Demonstrate:** Add a note tagged medical and safety. Each tag’s count increases by one. Show $match, $unwind, $group, $sort and $limit, then the tag-summary display.
 
@@ -638,9 +638,9 @@ Open **DATABASE_FEATURE_MAP.html** for a searchable offline guide. Its Open code
 
 **Open the code in this order:**
 
-- [lib/service.ts:227](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/service.ts#L227) — search `export async function ensureIncident(`
-- [lib/mongo.ts:129](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/mongo.ts#L129) — search `async function ownedNote(`
-- [tests/integration.test.ts:341](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/tests/integration.test.ts#L341) — search `NoSQL validates SQL references assignment scope and ownership`
+- [lib/service.ts:227](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/service.ts#L227) — search `export async function ensureIncident(`
+- [lib/mongo.ts:129](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/mongo.ts#L129) — search `async function ownedNote(`
+- [tests/integration.test.ts:341](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/tests/integration.test.ts#L341) — search `NoSQL validates SQL references assignment scope and ownership`
 
 **Demonstrate:** Show ensureIncident() and ownedNote(). Tests reject an unknown SQL incident, an unassigned responder and another author’s edit. SQL foreign keys do not reach into MongoDB.
 
@@ -655,9 +655,9 @@ Open **DATABASE_FEATURE_MAP.html** for a searchable offline guide. Its Open code
 
 **Open the code in this order:**
 
-- [lib/mongo.ts:81](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/mongo.ts#L81) — search `"MongoDB is unavailable. The note was not saved;`
-- [app/api/[...path]/route.ts:135](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/app/api/%5B...path%5D/route.ts#L135) — search `/Mongo(Network|ServerSelection|TopologyClosed|NotConnected)/`
-- [scripts/offline-smoke.mjs:9](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/scripts/offline-smoke.mjs#L9) — search `const child = spawn(`
+- [lib/mongo.ts:81](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/mongo.ts#L81) — search `"MongoDB is unavailable. The note was not saved;`
+- [app/api/[...path]/route.ts:135](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/app/api/%5B...path%5D/route.ts#L135) — search `/Mongo(Network|ServerSelection|TopologyClosed|NotConnected)/`
+- [scripts/offline-smoke.mjs:9](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/scripts/offline-smoke.mjs#L9) — search `const child = spawn(`
 
 **Demonstrate:** Open the isolated offline test and docs/verification/offline.json. It starts a separate app with an unavailable MongoDB URI and expects HTTP 503 for a note write and HTTP 200 for the SQL dashboard. No need to stop the live demo database.
 
@@ -672,9 +672,9 @@ Open **DATABASE_FEATURE_MAP.html** for a searchable offline guide. Its Open code
 
 **Open the code in this order:**
 
-- [lib/embeddings.ts:14](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/embeddings.ts#L14) — search `export async function embedText(`
-- [lib/embeddings.ts:6](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/embeddings.ts#L6) — search `export const EMBEDDING_REVISION`
-- [lib/semantic.ts:6](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/semantic.ts#L6) — search `export async function indexIncidents(`
+- [lib/embeddings.ts:14](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/embeddings.ts#L14) — search `export async function embedText(`
+- [lib/embeddings.ts:6](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/embeddings.ts#L6) — search `export const EMBEDDING_REVISION`
+- [lib/semantic.ts:6](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/semantic.ts#L6) — search `export async function indexIncidents(`
 
 **Demonstrate:** Run pnpm vector:setup once. Create a current warehouse-fire incident, then check a differently worded report at the same location. Show the pinned local model and 384 dimensions in code. No incident is written during review.
 
@@ -689,11 +689,11 @@ Open **DATABASE_FEATURE_MAP.html** for a searchable offline guide. Its Open code
 
 **Open the code in this order:**
 
-- [database/07_vector_search.sql:2](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/07_vector_search.sql#L2) — search `CREATE EXTENSION IF NOT EXISTS vector`
-- [database/07_vector_search.sql:8](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/07_vector_search.sql#L8) — search `ON emergencies USING hnsw`
-- [lib/incident-review.ts:36](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/incident-review.ts#L36) — search `export const DUPLICATE_SQL`
-- [app/api/[...path]/route.ts:72](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/app/api/%5B...path%5D/route.ts#L72) — search `if (path === "incidents/review"`
-- [app/page.tsx:483](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/app/page.tsx#L483) — search `Check for existing incidents`
+- [database/07_vector_search.sql:2](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/07_vector_search.sql#L2) — search `CREATE EXTENSION IF NOT EXISTS vector`
+- [database/07_vector_search.sql:8](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/07_vector_search.sql#L8) — search `ON emergencies USING hnsw`
+- [lib/incident-review.ts:36](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/incident-review.ts#L36) — search `export const DUPLICATE_SQL`
+- [app/api/[...path]/route.ts:72](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/app/api/%5B...path%5D/route.ts#L72) — search `if (path === "incidents/review"`
+- [app/page.tsx:477](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/app/page.tsx#L477) — search `Check for existing incidents`
 
 **Demonstrate:** In Report incident, check a paraphrased current same-location report. Show the CTE filters, cosine distance, candidate time and deployed teams. The coordinator must choose attach or create separately; similarity never proves identity.
 
@@ -708,10 +708,10 @@ Open **DATABASE_FEATURE_MAP.html** for a searchable offline guide. Its Open code
 
 **Open the code in this order:**
 
-- [database/07_vector_search.sql:12](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/07_vector_search.sql#L12) — search `CREATE OR REPLACE FUNCTION invalidate_incident_embedding()`
-- [database/07_vector_search.sql:25](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/07_vector_search.sql#L25) — search `CREATE TRIGGER trg_invalidate_incident_embedding`
-- [lib/semantic.ts:16](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/semantic.ts#L16) — search `WHERE emergency_id=$3 AND description=$4`
-- [tests/semantic.test.ts:80](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/tests/semantic.test.ts#L80) — search `description edits invalidate vectors`
+- [database/07_vector_search.sql:12](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/07_vector_search.sql#L12) — search `CREATE OR REPLACE FUNCTION invalidate_incident_embedding()`
+- [database/07_vector_search.sql:25](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/07_vector_search.sql#L25) — search `CREATE TRIGGER trg_invalidate_incident_embedding`
+- [lib/semantic.ts:16](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/semantic.ts#L16) — search `WHERE emergency_id=$3 AND description=$4`
+- [tests/semantic.test.ts:82](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/tests/semantic.test.ts#L82) — search `description edits invalidate vectors`
 
 **Demonstrate:** Show the BEFORE description-update trigger. It clears vectors only for changed descriptions; the next search recomputes them. Inference happens outside transactions and updates compare source text to avoid stale writes.
 
@@ -726,11 +726,11 @@ Open **DATABASE_FEATURE_MAP.html** for a searchable offline guide. Its Open code
 
 **Open the code in this order:**
 
-- [lib/incident-review.ts:71](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/incident-review.ts#L71) — search `export async function confirmIncidentReport(`
-- [database/08_report_receipts.sql:2](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/08_report_receipts.sql#L2) — search `CREATE TABLE IF NOT EXISTS app_incident_report_receipts`
-- [lib/mongo.ts:158](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/mongo.ts#L158) — search `export async function saveAdditionalReport(`
-- [lib/mongo.ts:66](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/mongo.ts#L66) — search `unique: true, partialFilterExpression`
-- [app/page.tsx:494](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/app/page.tsx#L494) — search `Same incident — attach this report`
+- [lib/incident-review.ts:71](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/incident-review.ts#L71) — search `export async function confirmIncidentReport(`
+- [database/08_report_receipts.sql:2](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/08_report_receipts.sql#L2) — search `CREATE TABLE IF NOT EXISTS app_incident_report_receipts`
+- [lib/mongo.ts:158](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/mongo.ts#L158) — search `export async function saveAdditionalReport(`
+- [lib/mongo.ts:66](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/mongo.ts#L66) — search `unique: true, partialFilterExpression`
+- [app/page.tsx:488](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/app/page.tsx#L488) — search `Same incident — attach this report`
 
 **Demonstrate:** Show the same-incident versus create-separately choices. Attach a report; show the original text and reported details in Field notes and unchanged incident/assignment counts. Retry the same decision: it returns the same saved observation.
 
@@ -745,10 +745,10 @@ Open **DATABASE_FEATURE_MAP.html** for a searchable offline guide. Its Open code
 
 **Open the code in this order:**
 
-- [lib/service.ts:271](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/service.ts#L271) — search `executedAt: new Date().toISOString()`
-- [app/page.tsx:1076](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/app/page.tsx#L1076) — search `Refresh results now`
-- [app/page.tsx:138](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/app/page.tsx#L138) — search `window.setInterval(() => void load(), 5000)`
-- [tests/live-lab.test.ts:12](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/tests/live-lab.test.ts#L12) — search `SQL lab reads new incidents`
+- [lib/service.ts:271](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/service.ts#L271) — search `executedAt: new Date().toISOString()`
+- [app/page.tsx:1070](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/app/page.tsx#L1070) — search `Refresh results now`
+- [app/page.tsx:137](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/app/page.tsx#L137) — search `window.setInterval(() => void load(), 5000)`
+- [tests/live-lab.test.ts:12](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/tests/live-lab.test.ts#L12) — search `SQL lab reads new incidents`
 
 **Demonstrate:** Create a new incident and open SQL lab: JOIN and latest-history CTE show its ID, and the current-day calendar count rises. Dispatch it and inspect view/group results. Not every record meets every filtered query.
 
@@ -763,15 +763,15 @@ Open **DATABASE_FEATURE_MAP.html** for a searchable offline guide. Its Open code
 
 **Open the code in this order:**
 
-- [lib/locations.ts:8](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/locations.ts#L8) — search `export async function indexLocations(`
-- [lib/locations.ts:14](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/locations.ts#L14) — search `export async function resolveLocations(`
-- [lib/locations.ts:24](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/locations.ts#L24) — search `export async function createLocation(`
-- [database/10_location_search.sql:6](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/10_location_search.sql#L6) — search `ON locations USING hnsw`
-- [app/api/[...path]/route.ts:68](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/app/api/%5B...path%5D/route.ts#L68) — search `if (path === "locations/resolve"`
-- [app/page.tsx:411](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/app/page.tsx#L411) — search `RR Campus building / saved place`
-- [tests/locations.test.ts:48](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/tests/locations.test.ts#L48) — search `Alias-confirmed building shares duplicate review`
+- [lib/locations.ts:8](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/locations.ts#L8) — search `export async function indexLocations(`
+- [lib/locations.ts:14](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/locations.ts#L14) — search `export async function resolveLocations(`
+- [lib/locations.ts:24](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/locations.ts#L24) — search `export async function createLocation(`
+- [database/10_location_search.sql:6](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/10_location_search.sql#L6) — search `ON locations USING hnsw`
+- [app/api/[...path]/route.ts:68](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/app/api/%5B...path%5D/route.ts#L68) — search `if (path === "locations/resolve"`
+- [app/page.tsx:403](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/app/page.tsx#L403) — search `Saved place / building`
+- [tests/locations.test.ts:51](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/tests/locations.test.ts#L51) — search `Alias-confirmed building shares duplicate review`
 
-**Demonstrate:** Choose Banashankari, PES RR Campus, GJB Block. Search gjb or golden jubilee block and confirm the saved place. Show semantic suggestions separately from aliases, custom landmarks and original floor/room details.
+**Demonstrate:** Choose Banashankari, then PES RR Campus — GJB Block. Search gjb or golden jubilee block and confirm the saved place. Show semantic suggestions separately from aliases, custom landmarks and original floor/room details.
 
 **Say:** “Location vectors use native cosine retrieval within an area. A human confirms the location; duplicate review then uses that canonical ID. A nearest place is not automatically the same address.”
 
@@ -784,10 +784,11 @@ Open **DATABASE_FEATURE_MAP.html** for a searchable offline guide. Its Open code
 
 **Open the code in this order:**
 
-- [database/09_operational_catalog.sql:1](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/09_operational_catalog.sql#L1) — search `-- Generated by tools/build-catalog.py.`
-- [tests/locations.test.ts:24](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/tests/locations.test.ts#L24) — search `Migration preserves changed resource status`
+- [database/09_operational_catalog.sql:1](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/09_operational_catalog.sql#L1) — search `-- Generated by tools/build-catalog.py.`
+- [database/11_area_landmarks.sql:3](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/11_area_landmarks.sql#L3) — search `CREATE UNIQUE INDEX IF NOT EXISTS idx_locations_catalog_key`
+- [tests/locations.test.ts:25](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/tests/locations.test.ts#L25) — search `Migration preserves changed resource status`
 
-**Demonstrate:** Show 12 types,16 capabilities,20 resources,15 responders and30 saved places. Dispatch a hazmat unit to a hazardous-material report. Additional teams have no login; coordinator manages them.
+**Demonstrate:** Show 12 types,16 capabilities,20 resources,15 responders and102 saved places. Dispatch a hazmat unit to a hazardous-material report. Additional teams have no login; coordinator manages them.
 
 **Say:** “INSERT ON CONFLICT and guarded renames extend existing tables. No replacement architecture is required.”
 
@@ -797,45 +798,45 @@ Only the five entries labelled stored SQL/trigger function reside in PostgreSQL.
 
 | Function | Kind | What it implements | Code |
 |---|---|---|---|
-| `invalidate_incident_embedding` | Stored trigger function | Invalidate a stale incident vector when its description changes. | [database/07_vector_search.sql:12](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/07_vector_search.sql#L12) |
-| `embedText` | Application vector-search helper | Generate real locally cached MiniLM sentence embeddings. | [lib/embeddings.ts:14](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/embeddings.ts#L14) |
-| `vectorLiteral` | Application vector-search helper | Validate dimensions/finiteness and serialize a bound vector value. | [lib/embeddings.ts:38](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/embeddings.ts#L38) |
-| `indexIncidents` | Application vector-search helper | Incrementally maintain incident embeddings with conditional writes. | [lib/semantic.ts:6](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/semantic.ts#L6) |
-| `reviewIncident` | Application vector-search helper | Filter and rank possible duplicates and sign a draft-bound review. | [lib/incident-review.ts:53](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/incident-review.ts#L53) |
-| `confirmIncidentReport` | Application vector-search helper | Apply the coordinator decision with retry and stale-review protection. | [lib/incident-review.ts:71](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/incident-review.ts#L71) |
-| `saveAdditionalReport` | Application vector-search helper | Idempotently preserve an additional report as a MongoDB observation. | [lib/mongo.ts:158](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/mongo.ts#L158) |
-| `indexLocations` | Application location helper | Maintain/search/persist confirmed locations. | [lib/locations.ts:8](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/locations.ts#L8) |
-| `resolveLocations` | Application location helper | Maintain/search/persist confirmed locations. | [lib/locations.ts:14](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/locations.ts#L14) |
-| `createLocation` | Application location helper | Maintain/search/persist confirmed locations. | [lib/locations.ts:24](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/locations.ts#L24) |
-| `app_actor` | Stored SQL function | Read the transaction actor ID used by audit and row policies. | [database/02_advanced.sql:51](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/02_advanced.sql#L51) |
-| `record_emergency_status` | Stored trigger function | Insert a history event after incident INSERT or an actual status change. | [database/02_advanced.sql:55](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/02_advanced.sql#L55) |
-| `dispatch_response` | Stored SQL function | Validate lock reserve and dispatch a response. | [database/02_advanced.sql:68](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/02_advanced.sql#L68) |
-| `finish_response` | Stored SQL function | Validate ownership create report release team and resolve when appropriate. | [database/02_advanced.sql:94](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/database/02_advanced.sql#L94) |
-| `getDb` | Application function using SQL | Initialize/open persisted PostgreSQL and load the schema/seed/extensions. | [lib/db.ts:18](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/db.ts#L18) |
-| `asActor` | Application function using SQL | Run an authenticated actor callback with a transaction-local SQL role. | [lib/db.ts:84](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/db.ts#L84) |
-| `dashboard` | Application function using SQL | Read incident/resource/assignment/history/reference records and SQL tags. | [lib/service.ts:15](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/service.ts#L15) |
-| `addResourceTag` | Application function using SQL | Insert one SQL resource tag. | [lib/service.ts:78](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/service.ts#L78) |
-| `updateResourceTag` | Application function using SQL | Rename one SQL resource tag. | [lib/service.ts:92](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/service.ts#L92) |
-| `removeResourceTag` | Application function using SQL | Delete one SQL resource tag. | [lib/service.ts:108](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/service.ts#L108) |
-| `createIncident` | Application function using SQL | Insert incident and required capability together. | [lib/service.ts:122](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/service.ts#L122) |
-| `dispatch` | Application function using SQL | Invoke stored dispatch_response. | [lib/service.ts:167](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/service.ts#L167) |
-| `complete` | Application function using SQL | Invoke stored finish_response. | [lib/service.ts:188](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/service.ts#L188) |
-| `maintenance` | Application function using SQL | Insert an authored maintenance record. | [lib/service.ts:207](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/service.ts#L207) |
-| `ensureIncident` | Application function using SQL | Check SQL incident existence and assignment scope for notes. | [lib/service.ts:227](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/service.ts#L227) |
-| `runQuery` | Application function using SQL | Execute an allowlisted live SQL example. | [lib/service.ts:265](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/service.ts#L265) |
-| `mongo` | Application function using MongoDB | Connect to real MongoDB and initialize validated/indexed field_notes. | [lib/mongo.ts:42](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/mongo.ts#L42) |
-| `listNotes` | Application function using MongoDB | Read/search notes and aggregate tag counts. | [lib/mongo.ts:94](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/mongo.ts#L94) |
-| `createNote` | Application function using MongoDB | Validate SQL scope and insert a note document. | [lib/mongo.ts:115](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/mongo.ts#L115) |
-| `ownedNote` | Application function using MongoDB | Read the target note and validate modification rights. | [lib/mongo.ts:129](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/mongo.ts#L129) |
-| `updateNote` | Application function using MongoDB | Update allowed document fields and timestamp. | [lib/mongo.ts:142](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/mongo.ts#L142) |
-| `deleteNote` | Application function using MongoDB | Delete an authorized note document. | [lib/mongo.ts:151](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/mongo.ts#L151) |
-| `login` | Application security function | Verify password throttle failures and create a hashed-token SQL session. | [lib/auth.ts:13](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/auth.ts#L13) |
-| `authenticate` | Application security function | Resolve a valid SQL session into an actor. | [lib/auth.ts:45](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/auth.ts#L45) |
-| `logout` | Application security function | Delete the SQL session token hash. | [lib/auth.ts:55](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/auth.ts#L55) |
-| `requireRole` | Application security function | Reject an action when the actor has an unsuitable application role. | [lib/auth.ts:61](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/auth.ts#L61) |
-| `hashPassword` | Application crypto helper | Create an independently salted scrypt hash. | [lib/password.ts:7](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/password.ts#L7) |
-| `verifyPassword` | Application crypto helper | Check a submitted password with timing-safe hash comparison. | [lib/password.ts:11](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/password.ts#L11) |
-| `tokenHash` | Application crypto helper | SHA-256 hash a random session token before storing it. | [lib/password.ts:24](https://github.com/abhinavk0006/crisislink/blob/29b2431a20460e7f15b395f45c732a8933a2c656/lib/password.ts#L24) |
+| `invalidate_incident_embedding` | Stored trigger function | Invalidate a stale incident vector when its description changes. | [database/07_vector_search.sql:12](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/07_vector_search.sql#L12) |
+| `embedText` | Application vector-search helper | Generate real locally cached MiniLM sentence embeddings. | [lib/embeddings.ts:14](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/embeddings.ts#L14) |
+| `vectorLiteral` | Application vector-search helper | Validate dimensions/finiteness and serialize a bound vector value. | [lib/embeddings.ts:38](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/embeddings.ts#L38) |
+| `indexIncidents` | Application vector-search helper | Incrementally maintain incident embeddings with conditional writes. | [lib/semantic.ts:6](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/semantic.ts#L6) |
+| `reviewIncident` | Application vector-search helper | Filter and rank possible duplicates and sign a draft-bound review. | [lib/incident-review.ts:53](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/incident-review.ts#L53) |
+| `confirmIncidentReport` | Application vector-search helper | Apply the coordinator decision with retry and stale-review protection. | [lib/incident-review.ts:71](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/incident-review.ts#L71) |
+| `saveAdditionalReport` | Application vector-search helper | Idempotently preserve an additional report as a MongoDB observation. | [lib/mongo.ts:158](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/mongo.ts#L158) |
+| `indexLocations` | Application location helper | Maintain/search/persist confirmed locations. | [lib/locations.ts:8](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/locations.ts#L8) |
+| `resolveLocations` | Application location helper | Maintain/search/persist confirmed locations. | [lib/locations.ts:14](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/locations.ts#L14) |
+| `createLocation` | Application location helper | Maintain/search/persist confirmed locations. | [lib/locations.ts:24](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/locations.ts#L24) |
+| `app_actor` | Stored SQL function | Read the transaction actor ID used by audit and row policies. | [database/02_advanced.sql:51](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/02_advanced.sql#L51) |
+| `record_emergency_status` | Stored trigger function | Insert a history event after incident INSERT or an actual status change. | [database/02_advanced.sql:55](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/02_advanced.sql#L55) |
+| `dispatch_response` | Stored SQL function | Validate lock reserve and dispatch a response. | [database/02_advanced.sql:68](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/02_advanced.sql#L68) |
+| `finish_response` | Stored SQL function | Validate ownership create report release team and resolve when appropriate. | [database/02_advanced.sql:94](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/database/02_advanced.sql#L94) |
+| `getDb` | Application function using SQL | Initialize/open persisted PostgreSQL and load the schema/seed/extensions. | [lib/db.ts:18](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/db.ts#L18) |
+| `asActor` | Application function using SQL | Run an authenticated actor callback with a transaction-local SQL role. | [lib/db.ts:85](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/db.ts#L85) |
+| `dashboard` | Application function using SQL | Read incident/resource/assignment/history/reference records and SQL tags. | [lib/service.ts:15](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/service.ts#L15) |
+| `addResourceTag` | Application function using SQL | Insert one SQL resource tag. | [lib/service.ts:78](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/service.ts#L78) |
+| `updateResourceTag` | Application function using SQL | Rename one SQL resource tag. | [lib/service.ts:92](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/service.ts#L92) |
+| `removeResourceTag` | Application function using SQL | Delete one SQL resource tag. | [lib/service.ts:108](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/service.ts#L108) |
+| `createIncident` | Application function using SQL | Insert incident and required capability together. | [lib/service.ts:122](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/service.ts#L122) |
+| `dispatch` | Application function using SQL | Invoke stored dispatch_response. | [lib/service.ts:167](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/service.ts#L167) |
+| `complete` | Application function using SQL | Invoke stored finish_response. | [lib/service.ts:188](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/service.ts#L188) |
+| `maintenance` | Application function using SQL | Insert an authored maintenance record. | [lib/service.ts:207](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/service.ts#L207) |
+| `ensureIncident` | Application function using SQL | Check SQL incident existence and assignment scope for notes. | [lib/service.ts:227](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/service.ts#L227) |
+| `runQuery` | Application function using SQL | Execute an allowlisted live SQL example. | [lib/service.ts:265](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/service.ts#L265) |
+| `mongo` | Application function using MongoDB | Connect to real MongoDB and initialize validated/indexed field_notes. | [lib/mongo.ts:42](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/mongo.ts#L42) |
+| `listNotes` | Application function using MongoDB | Read/search notes and aggregate tag counts. | [lib/mongo.ts:94](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/mongo.ts#L94) |
+| `createNote` | Application function using MongoDB | Validate SQL scope and insert a note document. | [lib/mongo.ts:115](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/mongo.ts#L115) |
+| `ownedNote` | Application function using MongoDB | Read the target note and validate modification rights. | [lib/mongo.ts:129](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/mongo.ts#L129) |
+| `updateNote` | Application function using MongoDB | Update allowed document fields and timestamp. | [lib/mongo.ts:142](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/mongo.ts#L142) |
+| `deleteNote` | Application function using MongoDB | Delete an authorized note document. | [lib/mongo.ts:151](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/mongo.ts#L151) |
+| `login` | Application security function | Verify password throttle failures and create a hashed-token SQL session. | [lib/auth.ts:13](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/auth.ts#L13) |
+| `authenticate` | Application security function | Resolve a valid SQL session into an actor. | [lib/auth.ts:45](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/auth.ts#L45) |
+| `logout` | Application security function | Delete the SQL session token hash. | [lib/auth.ts:55](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/auth.ts#L55) |
+| `requireRole` | Application security function | Reject an action when the actor has an unsuitable application role. | [lib/auth.ts:61](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/auth.ts#L61) |
+| `hashPassword` | Application crypto helper | Create an independently salted scrypt hash. | [lib/password.ts:7](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/password.ts#L7) |
+| `verifyPassword` | Application crypto helper | Check a submitted password with timing-safe hash comparison. | [lib/password.ts:11](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/password.ts#L11) |
+| `tokenHash` | Application crypto helper | SHA-256 hash a random session token before storing it. | [lib/password.ts:24](https://github.com/abhinavk0006/crisislink/blob/def5e89292bbed3c121a0a55525b0f18e83e4d7a/lib/password.ts#L24) |
 
 ## A practical 8 minute demonstration
 
