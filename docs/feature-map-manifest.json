@@ -1,9 +1,9 @@
 {
-  "sourceRevision": "1419edf1007672c14bb47e19d277d32378210768",
-  "featureCount": 37,
-  "functionCount": 34,
-  "sourceFileCount": 24,
-  "referenceCount": 163,
+  "sourceRevision": "930e8af3b270039819f93ecc102e3b1414c74553",
+  "featureCount": 39,
+  "functionCount": 36,
+  "sourceFileCount": 27,
+  "referenceCount": 174,
   "features": [
     {
       "id": "SQL01",
@@ -140,31 +140,31 @@
       "refs": [
         {
           "path": "lib/service.ts",
-          "line": 74,
+          "line": 75,
           "needle": "export async function addResourceTag",
           "label": "export async function addResourceTag"
         },
         {
           "path": "lib/service.ts",
-          "line": 88,
+          "line": 89,
           "needle": "export async function updateResourceTag",
           "label": "export async function updateResourceTag"
         },
         {
           "path": "lib/service.ts",
-          "line": 104,
+          "line": 105,
           "needle": "export async function removeResourceTag",
           "label": "export async function removeResourceTag"
         },
         {
           "path": "app/api/[...path]/route.ts",
-          "line": 80,
+          "line": 79,
           "needle": "if (path === \"resource-tags\")",
           "label": "if (path === \"resource-tags\")"
         },
         {
           "path": "app/page.tsx",
-          "line": 589,
+          "line": 618,
           "needle": "className=\"resource-tags\"",
           "label": "className=\"resource-tags\""
         },
@@ -188,7 +188,7 @@
       "refs": [
         {
           "path": "lib/service.ts",
-          "line": 16,
+          "line": 17,
           "needle": "`SELECT e.emergency_id,e.type_id",
           "label": "`SELECT e.emergency_id,e.type_id"
         },
@@ -200,7 +200,7 @@
         },
         {
           "path": "lib/service.ts",
-          "line": 229,
+          "line": 249,
           "needle": "  join: \"SELECT e.emergency_id",
           "label": "  join: \"SELECT e.emergency_id"
         },
@@ -224,7 +224,7 @@
       "refs": [
         {
           "path": "lib/service.ts",
-          "line": 238,
+          "line": 258,
           "needle": "  aggregate:",
           "label": "  aggregate:"
         },
@@ -236,7 +236,7 @@
         },
         {
           "path": "lib/service.ts",
-          "line": 241,
+          "line": 261,
           "needle": "export async function runQuery",
           "label": "export async function runQuery"
         }
@@ -254,7 +254,7 @@
       "refs": [
         {
           "path": "lib/service.ts",
-          "line": 230,
+          "line": 250,
           "needle": "  nested:",
           "label": "  nested:"
         },
@@ -278,7 +278,7 @@
       "refs": [
         {
           "path": "lib/service.ts",
-          "line": 232,
+          "line": 252,
           "needle": "  correlated:",
           "label": "  correlated:"
         },
@@ -308,7 +308,7 @@
       "refs": [
         {
           "path": "lib/service.ts",
-          "line": 234,
+          "line": 254,
           "needle": "  cte: \"WITH ranked AS",
           "label": "  cte: \"WITH ranked AS"
         },
@@ -320,13 +320,13 @@
         },
         {
           "path": "app/api/[...path]/route.ts",
-          "line": 88,
+          "line": 87,
           "needle": "if (path === \"queries\" && method === \"GET\")",
           "label": "if (path === \"queries\" && method === \"GET\")"
         },
         {
           "path": "app/page.tsx",
-          "line": 966,
+          "line": 995,
           "needle": "SQL example",
           "label": "SQL example"
         }
@@ -344,7 +344,7 @@
       "refs": [
         {
           "path": "lib/service.ts",
-          "line": 235,
+          "line": 255,
           "needle": "  recursive:",
           "label": "  recursive:"
         },
@@ -374,13 +374,13 @@
         },
         {
           "path": "lib/service.ts",
-          "line": 29,
+          "line": 30,
           "needle": "\"SELECT * FROM v_assignment_summary ORDER BY assignment_id DESC\"",
           "label": "\"SELECT * FROM v_assignment_summary ORDER BY assignment_id DESC\""
         },
         {
           "path": "lib/service.ts",
-          "line": 237,
+          "line": 257,
           "needle": "  view: \"SELECT * FROM v_assignment_summary",
           "label": "  view: \"SELECT * FROM v_assignment_summary"
         }
@@ -416,7 +416,7 @@
         },
         {
           "path": "docs/DATA_DICTIONARY.md",
-          "line": 357,
+          "line": 380,
           "needle": "## Index definitions",
           "label": "## Index definitions"
         }
@@ -470,19 +470,19 @@
         },
         {
           "path": "lib/service.ts",
-          "line": 143,
+          "line": 163,
           "needle": "export async function dispatch(",
           "label": "export async function dispatch("
         },
         {
           "path": "app/api/[...path]/route.ts",
-          "line": 74,
+          "line": 73,
           "needle": "if (path === \"dispatch\" && method === \"POST\")",
           "label": "if (path === \"dispatch\" && method === \"POST\")"
         },
         {
           "path": "app/page.tsx",
-          "line": 548,
+          "line": 577,
           "needle": "Dispatch team →",
           "label": "Dispatch team →"
         }
@@ -506,19 +506,19 @@
         },
         {
           "path": "lib/service.ts",
-          "line": 164,
+          "line": 184,
           "needle": "export async function complete(",
           "label": "export async function complete("
         },
         {
           "path": "app/api/[...path]/route.ts",
-          "line": 76,
+          "line": 75,
           "needle": "if (path === \"complete\" && method === \"POST\")",
           "label": "if (path === \"complete\" && method === \"POST\")"
         },
         {
           "path": "app/page.tsx",
-          "line": 488,
+          "line": 517,
           "needle": "Complete response",
           "label": "Complete response"
         }
@@ -548,7 +548,7 @@
         },
         {
           "path": "lib/service.ts",
-          "line": 118,
+          "line": 119,
           "needle": "export async function createIncident(",
           "label": "export async function createIncident("
         },
@@ -578,13 +578,13 @@
       "refs": [
         {
           "path": "lib/db.ts",
-          "line": 81,
+          "line": 82,
           "needle": "export async function asActor<T>(",
           "label": "export async function asActor<T>("
         },
         {
           "path": "lib/service.ts",
-          "line": 118,
+          "line": 119,
           "needle": "export async function createIncident(",
           "label": "export async function createIncident("
         },
@@ -668,7 +668,7 @@
         },
         {
           "path": "lib/db.ts",
-          "line": 90,
+          "line": 91,
           "needle": "await tx.exec(`SET LOCAL ROLE",
           "label": "await tx.exec(`SET LOCAL ROLE"
         },
@@ -728,13 +728,13 @@
       "refs": [
         {
           "path": "lib/service.ts",
-          "line": 82,
+          "line": 83,
           "needle": "\"INSERT INTO resource_tags(resource_id,tag) VALUES($1,$2)",
           "label": "\"INSERT INTO resource_tags(resource_id,tag) VALUES($1,$2)"
         },
         {
           "path": "lib/service.ts",
-          "line": 241,
+          "line": 261,
           "needle": "export async function runQuery(",
           "label": "export async function runQuery("
         },
@@ -884,19 +884,19 @@
       "refs": [
         {
           "path": "lib/mongo.ts",
-          "line": 112,
+          "line": 115,
           "needle": "export async function createNote(",
           "label": "export async function createNote("
         },
         {
           "path": "app/api/[...path]/route.ts",
-          "line": 106,
+          "line": 105,
           "needle": "if (path === \"notes\" && method === \"POST\")",
           "label": "if (path === \"notes\" && method === \"POST\")"
         },
         {
           "path": "app/page.tsx",
-          "line": 937,
+          "line": 966,
           "needle": "Save field note",
           "label": "Save field note"
         }
@@ -914,19 +914,19 @@
       "refs": [
         {
           "path": "lib/mongo.ts",
-          "line": 91,
+          "line": 94,
           "needle": "export async function listNotes(",
           "label": "export async function listNotes("
         },
         {
           "path": "lib/mongo.ts",
-          "line": 97,
+          "line": 100,
           "needle": ".find(filter)",
           "label": ".find(filter)"
         },
         {
           "path": "app/api/[...path]/route.ts",
-          "line": 92,
+          "line": 91,
           "needle": "if (path === \"notes\" && method === \"GET\")",
           "label": "if (path === \"notes\" && method === \"GET\")"
         }
@@ -944,19 +944,19 @@
       "refs": [
         {
           "path": "lib/mongo.ts",
-          "line": 139,
+          "line": 142,
           "needle": "export async function updateNote(",
           "label": "export async function updateNote("
         },
         {
           "path": "lib/mongo.ts",
-          "line": 141,
+          "line": 144,
           "needle": "const d = noteInput.omit({ emergency_id: true })",
           "label": "const d = noteInput.omit({ emergency_id: true })"
         },
         {
           "path": "lib/mongo.ts",
-          "line": 144,
+          "line": 147,
           "needle": "{ $set: { ...d, updated_at: new Date() } }",
           "label": "{ $set: { ...d, updated_at: new Date() } }"
         }
@@ -974,19 +974,19 @@
       "refs": [
         {
           "path": "lib/mongo.ts",
-          "line": 148,
+          "line": 151,
           "needle": "export async function deleteNote(",
           "label": "export async function deleteNote("
         },
         {
           "path": "lib/mongo.ts",
-          "line": 150,
+          "line": 153,
           "needle": "await col.deleteOne({ _id: note._id })",
           "label": "await col.deleteOne({ _id: note._id })"
         },
         {
           "path": "app/page.tsx",
-          "line": 863,
+          "line": 892,
           "needle": "Delete note",
           "label": "Delete note"
         }
@@ -1004,13 +1004,13 @@
       "refs": [
         {
           "path": "lib/mongo.ts",
-          "line": 95,
+          "line": 98,
           "needle": "filter.$text = { $search: search.slice(0, 100) }",
           "label": "filter.$text = { $search: search.slice(0, 100) }"
         },
         {
           "path": "app/page.tsx",
-          "line": 807,
+          "line": 836,
           "needle": "aria-label=\"Search notes\"",
           "label": "aria-label=\"Search notes\""
         }
@@ -1028,25 +1028,25 @@
       "refs": [
         {
           "path": "lib/mongo.ts",
-          "line": 101,
+          "line": 104,
           "needle": "const summary = await col",
           "label": "const summary = await col"
         },
         {
           "path": "lib/mongo.ts",
-          "line": 104,
+          "line": 107,
           "needle": "{ $unwind: \"$tags\" }",
           "label": "{ $unwind: \"$tags\" }"
         },
         {
           "path": "lib/mongo.ts",
-          "line": 105,
+          "line": 108,
           "needle": "{ $group: { _id: \"$tags\", count: { $sum: 1 } } }",
           "label": "{ $group: { _id: \"$tags\", count: { $sum: 1 } } }"
         },
         {
           "path": "app/page.tsx",
-          "line": 814,
+          "line": 843,
           "needle": "className=\"tag-summary\"",
           "label": "className=\"tag-summary\""
         }
@@ -1064,13 +1064,13 @@
       "refs": [
         {
           "path": "lib/service.ts",
-          "line": 203,
+          "line": 223,
           "needle": "export async function ensureIncident(",
           "label": "export async function ensureIncident("
         },
         {
           "path": "lib/mongo.ts",
-          "line": 126,
+          "line": 129,
           "needle": "async function ownedNote(",
           "label": "async function ownedNote("
         },
@@ -1094,13 +1094,13 @@
       "refs": [
         {
           "path": "lib/mongo.ts",
-          "line": 78,
+          "line": 81,
           "needle": "\"MongoDB is unavailable. The note was not saved;",
           "label": "\"MongoDB is unavailable. The note was not saved;"
         },
         {
           "path": "app/api/[...path]/route.ts",
-          "line": 131,
+          "line": 130,
           "needle": "/Mongo(Network|ServerSelection|TopologyClosed|NotConnected)/",
           "label": "/Mongo(Network|ServerSelection|TopologyClosed|NotConnected)/"
         },
@@ -1119,8 +1119,8 @@
       "id": "VEC01",
       "title": "Learned sentence embeddings",
       "category": "SQL",
-      "usage": "Operational incident search",
-      "purpose": "Encode incident descriptions and questions as normalized 384-dimensional vectors using the same pinned local MiniLM model.",
+      "usage": "Operational duplicate-report review",
+      "purpose": "Encode incident descriptions and incoming reports as normalized 384-dimensional vectors using the same pinned local MiniLM model.",
       "refs": [
         {
           "path": "lib/embeddings.ts",
@@ -1136,12 +1136,12 @@
         },
         {
           "path": "lib/semantic.ts",
-          "line": 7,
+          "line": 6,
           "needle": "export async function indexIncidents(",
           "label": "export async function indexIncidents("
         }
       ],
-      "demo": "Run pnpm vector:setup once. In Incidents search A warehouse is burning. Show the model identity and 384 dimensions in the API result. We use real model inference, not manual vectors or keyword substitutions.",
+      "demo": "Run pnpm vector:setup once. Create a current warehouse-fire incident, then check a differently worded report at the same location. Show the pinned local model and 384 dimensions in code. No incident is written during review.",
       "say": "The model turns sentences into numeric representations. Identical model and preprocessing are required for document and query vectors.",
       "presenter": "Abhinav"
     },
@@ -1149,8 +1149,8 @@
       "id": "VEC02",
       "title": "pgvector cosine distance and HNSW index",
       "category": "SQL",
-      "usage": "Operational incident search",
-      "purpose": "Retrieve semantically related past incidents using a database-native nearest-neighbour query.",
+      "usage": "Operational duplicate-report review",
+      "purpose": "Suggest possible duplicate active incidents using same-location/recent-time filters and native vector nearest neighbours.",
       "refs": [
         {
           "path": "database/07_vector_search.sql",
@@ -1165,25 +1165,25 @@
           "label": "ON emergencies USING hnsw"
         },
         {
-          "path": "lib/semantic.ts",
-          "line": 25,
-          "needle": "export const SEMANTIC_SQL",
-          "label": "export const SEMANTIC_SQL"
+          "path": "lib/incident-review.ts",
+          "line": 36,
+          "needle": "export const DUPLICATE_SQL",
+          "label": "export const DUPLICATE_SQL"
         },
         {
           "path": "app/api/[...path]/route.ts",
           "line": 67,
-          "needle": "if (path === \"incidents/search\"",
-          "label": "if (path === \"incidents/search\""
+          "needle": "if (path === \"incidents/review\"",
+          "label": "if (path === \"incidents/review\""
         },
         {
           "path": "app/page.tsx",
-          "line": 294,
-          "needle": "Find similar incidents",
-          "label": "Find similar incidents"
+          "line": 418,
+          "needle": "Check for existing incidents",
+          "label": "Check for existing incidents"
         }
       ],
-      "demo": "Search People trapped by rising water and inspect ranked incidents. Show embedding <=> query, ORDER BY distance and LIMIT. Smaller distance is closer; the score is not probability. Small tables may use a sequential scan.",
+      "demo": "In Report incident, check a paraphrased current same-location report. Show the CTE filters, cosine distance, candidate time and deployed teams. The coordinator must choose attach or create separately; similarity never proves identity.",
       "say": "This implements the course PostgreSQL vector lesson within our existing architecture. MongoDB notes still use keyword search.",
       "presenter": "Abhinav"
     },
@@ -1208,19 +1208,97 @@
         },
         {
           "path": "lib/semantic.ts",
-          "line": 17,
+          "line": 16,
           "needle": "WHERE emergency_id=$3 AND description=$4",
           "label": "WHERE emergency_id=$3 AND description=$4"
         },
         {
           "path": "tests/semantic.test.ts",
-          "line": 52,
-          "needle": "Description edits invalidate old vectors",
-          "label": "Description edits invalidate old vectors"
+          "line": 80,
+          "needle": "description edits invalidate vectors",
+          "label": "description edits invalidate vectors"
         }
       ],
       "demo": "Show the BEFORE description-update trigger. It clears vectors only for changed descriptions; the next search recomputes them. Inference happens outside transactions and updates compare source text to avoid stale writes.",
       "say": "Embeddings are a derived search representation. Invalidating and regenerating them keeps search consistent with the source incident.",
+      "presenter": "Sachin"
+    },
+    {
+      "id": "VEC04",
+      "title": "Human-confirmed duplicate decisions and idempotent reports",
+      "category": "Integration",
+      "usage": "Operational reporting",
+      "purpose": "Attach an additional report once without another incident or dispatch, or deliberately create a separate event.",
+      "refs": [
+        {
+          "path": "lib/incident-review.ts",
+          "line": 71,
+          "needle": "export async function confirmIncidentReport(",
+          "label": "export async function confirmIncidentReport("
+        },
+        {
+          "path": "database/08_report_receipts.sql",
+          "line": 2,
+          "needle": "CREATE TABLE IF NOT EXISTS app_incident_report_receipts",
+          "label": "CREATE TABLE IF NOT EXISTS app_incident_report_receipts"
+        },
+        {
+          "path": "lib/mongo.ts",
+          "line": 158,
+          "needle": "export async function saveAdditionalReport(",
+          "label": "export async function saveAdditionalReport("
+        },
+        {
+          "path": "lib/mongo.ts",
+          "line": 66,
+          "needle": "unique: true, partialFilterExpression",
+          "label": "unique: true, partialFilterExpression"
+        },
+        {
+          "path": "app/page.tsx",
+          "line": 429,
+          "needle": "Same incident — attach this report",
+          "label": "Same incident — attach this report"
+        }
+      ],
+      "demo": "Show the same-incident versus create-separately choices. Attach a report; show the original text and reported details in Field notes and unchanged incident/assignment counts. Retry the same decision: it returns the same saved observation.",
+      "say": "SQL records the decision; MongoDB preserves the original observation. A signed review binds user, draft and candidates. Receipts and a unique partial index make retries safe; there is no distributed transaction.",
+      "presenter": "Both"
+    },
+    {
+      "id": "SQL22",
+      "title": "Live SQL results and rolling calendar",
+      "category": "SQL",
+      "usage": "Operational SQL lab",
+      "purpose": "Show new incidents and assignments using real queries with five-second polling, manual refresh and a server execution timestamp.",
+      "refs": [
+        {
+          "path": "lib/service.ts",
+          "line": 267,
+          "needle": "executedAt: new Date().toISOString()",
+          "label": "executedAt: new Date().toISOString()"
+        },
+        {
+          "path": "app/page.tsx",
+          "line": 1010,
+          "needle": "Refresh results now",
+          "label": "Refresh results now"
+        },
+        {
+          "path": "app/page.tsx",
+          "line": 109,
+          "needle": "window.setInterval(() => void load(), 5000)",
+          "label": "window.setInterval(() => void load(), 5000)"
+        },
+        {
+          "path": "tests/live-lab.test.ts",
+          "line": 12,
+          "needle": "SQL lab reads new incidents",
+          "label": "SQL lab reads new incidents"
+        }
+      ],
+      "demo": "Create a new incident and open SQL lab: JOIN and latest-history CTE show its ID, and the current-day calendar count rises. Dispatch it and inspect view/group results. Not every record meets every filtered query.",
+      "say": "These are current database results. The lab polls every five seconds while open and can refresh immediately; the calendar uses CURRENT_DATE rather than old sample dates.",
       "presenter": "Sachin"
     }
   ],
@@ -1264,20 +1342,42 @@
       "purpose": "Incrementally maintain incident embeddings with conditional writes.",
       "ref": {
         "path": "lib/semantic.ts",
-        "line": 7,
+        "line": 6,
         "needle": "export async function indexIncidents(",
         "label": "export async function indexIncidents("
       }
     },
     {
-      "name": "searchIncidents",
+      "name": "reviewIncident",
       "kind": "Application vector-search helper",
-      "purpose": "Run authenticated PostgreSQL cosine nearest-neighbour search.",
+      "purpose": "Filter and rank possible duplicates and sign a draft-bound review.",
       "ref": {
-        "path": "lib/semantic.ts",
-        "line": 33,
-        "needle": "export async function searchIncidents(",
-        "label": "export async function searchIncidents("
+        "path": "lib/incident-review.ts",
+        "line": 53,
+        "needle": "export async function reviewIncident(",
+        "label": "export async function reviewIncident("
+      }
+    },
+    {
+      "name": "confirmIncidentReport",
+      "kind": "Application vector-search helper",
+      "purpose": "Apply the coordinator decision with retry and stale-review protection.",
+      "ref": {
+        "path": "lib/incident-review.ts",
+        "line": 71,
+        "needle": "export async function confirmIncidentReport(",
+        "label": "export async function confirmIncidentReport("
+      }
+    },
+    {
+      "name": "saveAdditionalReport",
+      "kind": "Application vector-search helper",
+      "purpose": "Idempotently preserve an additional report as a MongoDB observation.",
+      "ref": {
+        "path": "lib/mongo.ts",
+        "line": 158,
+        "needle": "export async function saveAdditionalReport(",
+        "label": "export async function saveAdditionalReport("
       }
     },
     {
@@ -1341,7 +1441,7 @@
       "purpose": "Run an authenticated actor callback with a transaction-local SQL role.",
       "ref": {
         "path": "lib/db.ts",
-        "line": 81,
+        "line": 82,
         "needle": "export async function asActor",
         "label": "export async function asActor"
       }
@@ -1352,7 +1452,7 @@
       "purpose": "Read incident/resource/assignment/history/reference records and SQL tags.",
       "ref": {
         "path": "lib/service.ts",
-        "line": 12,
+        "line": 13,
         "needle": "export async function dashboard(",
         "label": "export async function dashboard("
       }
@@ -1363,7 +1463,7 @@
       "purpose": "Insert one SQL resource tag.",
       "ref": {
         "path": "lib/service.ts",
-        "line": 74,
+        "line": 75,
         "needle": "export async function addResourceTag(",
         "label": "export async function addResourceTag("
       }
@@ -1374,7 +1474,7 @@
       "purpose": "Rename one SQL resource tag.",
       "ref": {
         "path": "lib/service.ts",
-        "line": 88,
+        "line": 89,
         "needle": "export async function updateResourceTag(",
         "label": "export async function updateResourceTag("
       }
@@ -1385,7 +1485,7 @@
       "purpose": "Delete one SQL resource tag.",
       "ref": {
         "path": "lib/service.ts",
-        "line": 104,
+        "line": 105,
         "needle": "export async function removeResourceTag(",
         "label": "export async function removeResourceTag("
       }
@@ -1396,7 +1496,7 @@
       "purpose": "Insert incident and required capability together.",
       "ref": {
         "path": "lib/service.ts",
-        "line": 118,
+        "line": 119,
         "needle": "export async function createIncident(",
         "label": "export async function createIncident("
       }
@@ -1407,7 +1507,7 @@
       "purpose": "Invoke stored dispatch_response.",
       "ref": {
         "path": "lib/service.ts",
-        "line": 143,
+        "line": 163,
         "needle": "export async function dispatch(",
         "label": "export async function dispatch("
       }
@@ -1418,7 +1518,7 @@
       "purpose": "Invoke stored finish_response.",
       "ref": {
         "path": "lib/service.ts",
-        "line": 164,
+        "line": 184,
         "needle": "export async function complete(",
         "label": "export async function complete("
       }
@@ -1429,7 +1529,7 @@
       "purpose": "Insert an authored maintenance record.",
       "ref": {
         "path": "lib/service.ts",
-        "line": 183,
+        "line": 203,
         "needle": "export async function maintenance(",
         "label": "export async function maintenance("
       }
@@ -1440,7 +1540,7 @@
       "purpose": "Check SQL incident existence and assignment scope for notes.",
       "ref": {
         "path": "lib/service.ts",
-        "line": 203,
+        "line": 223,
         "needle": "export async function ensureIncident(",
         "label": "export async function ensureIncident("
       }
@@ -1451,7 +1551,7 @@
       "purpose": "Execute an allowlisted live SQL example.",
       "ref": {
         "path": "lib/service.ts",
-        "line": 241,
+        "line": 261,
         "needle": "export async function runQuery(",
         "label": "export async function runQuery("
       }
@@ -1473,7 +1573,7 @@
       "purpose": "Read/search notes and aggregate tag counts.",
       "ref": {
         "path": "lib/mongo.ts",
-        "line": 91,
+        "line": 94,
         "needle": "async function listNotes(",
         "label": "async function listNotes("
       }
@@ -1484,7 +1584,7 @@
       "purpose": "Validate SQL scope and insert a note document.",
       "ref": {
         "path": "lib/mongo.ts",
-        "line": 112,
+        "line": 115,
         "needle": "async function createNote(",
         "label": "async function createNote("
       }
@@ -1495,7 +1595,7 @@
       "purpose": "Read the target note and validate modification rights.",
       "ref": {
         "path": "lib/mongo.ts",
-        "line": 126,
+        "line": 129,
         "needle": "async function ownedNote(",
         "label": "async function ownedNote("
       }
@@ -1506,7 +1606,7 @@
       "purpose": "Update allowed document fields and timestamp.",
       "ref": {
         "path": "lib/mongo.ts",
-        "line": 139,
+        "line": 142,
         "needle": "async function updateNote(",
         "label": "async function updateNote("
       }
@@ -1517,7 +1617,7 @@
       "purpose": "Delete an authorized note document.",
       "ref": {
         "path": "lib/mongo.ts",
-        "line": 148,
+        "line": 151,
         "needle": "async function deleteNote(",
         "label": "async function deleteNote("
       }
@@ -1603,27 +1703,30 @@
   "sourceHashes": {
     "database/00_schema.sql": "4ccfc84adfcabcb1334e3c25d1eae03a8d51b0ff53fb5c39e3239bc3c33f8afb",
     "database/02_advanced.sql": "c5f99eb01967100e7d90b4cd4b1d0c3f31c88ac09e769c387d909b3f0235fa2e",
-    "lib/db.ts": "1af401cdb512698f218d880416665a63ebd7f208c08aa6622d53973006260e26",
+    "lib/db.ts": "8c4db8fa144073035d991f97450f9ba56f189fe7c1a0b89f1350134394f02e8f",
     "tests/resource-tags.test.ts": "4c0f6a887ab5cdefecb591823cf639feb547090f9e03d2898216b8e23bab1de8",
     "database/06_ddl_demo.sql": "bf67d0ae14ea551531b30c582ea441e13cec5f0b1894d16272b1ce071047df91",
     "tests/ddl.test.ts": "7e9046ff5ef4d2d6e28d9b73f847953711335ba8fa2300bc1efa7feeb4569db8",
     "database/01_seed.sql": "dd7aa0deb55108ca1b400b96270135b6f4f33b362a13bd138cf4e95e418c0577",
-    "lib/service.ts": "b401ade32f0b39ef962d4bcb97186d71ea71c81bd98e8e7ecf25eb01aa6cc47f",
-    "app/api/[...path]/route.ts": "5925150fa179258c71556472abd8b2f6a8d3bfe66e63306b99513b0d6141d7bc",
-    "app/page.tsx": "89237784f8ddd68f06973ff37856e1ba18ad883e1887675b391cf6b35146a23c",
+    "lib/service.ts": "63ccaca3ab3904a4be0853cb64befb59f5176f70f3ced701e18e3dea5154016f",
+    "app/api/[...path]/route.ts": "c6b7cae1de133dd17abe28045726de49726eb5b6305d2a608d225f45a71e0e77",
+    "app/page.tsx": "13ee0bafe9df973423023912808a8bffc27e24f88a229d61c1252529d4262d42",
     "database/05_resource_tag_permissions.sql": "46891c9c1a1dc08988799557375b7f33f3dc49f69379c67f26b095f97bebe459",
-    "database/03_queries.sql": "ab92bffa9ea1d6c6b9c48766285b41272f320c6278e83ddb63322e41060102b8",
-    "docs/DATA_DICTIONARY.md": "6845f1c6b06e2ecbc8bf9ed7ea09e7dd38f9ef810f461891c513929f3c579203",
+    "database/03_queries.sql": "45909307ff7f832c170c617fef15bd3f734109cdd47be6b6c2e5edb192474877",
+    "docs/DATA_DICTIONARY.md": "298805903691755e3a92d5b810f3d0357bcd5839d3439dd0be085b69f75f921e",
     "tests/integration.test.ts": "8844347d362cb6d971c3f64ec1600e573e36a6665992a4b1da7858fea2280f89",
     "lib/password.ts": "05cb05c7984c9a77401de4653e5241b21fef3ec29c9b8d2d2515eb7db5e072ca",
     "lib/auth.ts": "625719c4f80a557f95b4b74fd31a2f26cdd23ac18e70faf9b8f5484513689787",
     "scripts/setup.ts": "83eec63b3e7177aa329647c9b5c9eb737b4f5f66370c267debc2ffd3e2c936a7",
-    "lib/mongo.ts": "24f03ea371e84206121eba2e93f0a5c04b94bd9248ffddb3482513fa86bc04ad",
+    "lib/mongo.ts": "423aba201f1f3464d366c417048c7083647685786e641afe52ce24d8f293f421",
     "database/04_mongo_commands.js": "35ac665d34342c3d5126094546fe3396603ba2e2633b9e244d00fbecfb416c7d",
     "scripts/offline-smoke.mjs": "285d61ca4d39e2d7445ab940c0cfb2208c92b735f64b53ebd789245f1c98dd32",
     "lib/embeddings.ts": "f062a8b3f229998945b508fd2d4e4e8e10288b6c84523fa7695942ad744f6e63",
-    "lib/semantic.ts": "e322a5fb84b44cc15df2a547810b57f8f3fcb99b135b3e8386fd6a4b5b8d5155",
+    "lib/semantic.ts": "e971654c51ed86beedd9008e8995194338906f41ebb9304b8a94079d7caf076c",
     "database/07_vector_search.sql": "db2f424405ab55aebfe4d32db79a35da7e7ff5f76bd5356108598ac6d396988a",
-    "tests/semantic.test.ts": "36dad21dd4bf237803f3d1753c2869a92acbaaf6de1fa65ae1fea5b49b2c6e88"
+    "lib/incident-review.ts": "61442272d5b420f0f7d6c161c6a1833ad59db87be843880b54af37295987dcef",
+    "tests/semantic.test.ts": "96ff0cb56ea484d13cfbbbee08f3d6d3cfc0bb406319e1bf2fbd210d2ba5f1af",
+    "database/08_report_receipts.sql": "98bc6956911b2ab4e5d702bd77706c2111278418149ab5d36b9f29a50a9b678c",
+    "tests/live-lab.test.ts": "9fc79da44d83d2ce2d73cc3da2fd0f5ccab955b4be43ec2889fb9937bf65c1c8"
   }
 }
