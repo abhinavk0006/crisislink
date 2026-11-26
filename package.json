@@ -12,7 +12,8 @@
     "setup": "tsx scripts/setup.ts",
     "mongo": "node scripts/mongo.mjs",
     "vector:setup": "tsx scripts/vector-setup.ts",
-    "vector:search": "node scripts/vector-search.mjs"
+    "vector:search": "node scripts/vector-search.mjs",
+    "incidents:seed": "tsx scripts/seed-incidents.ts"
   },
   "dependencies": {
     "@electric-sql/pglite": "0.5.16",
