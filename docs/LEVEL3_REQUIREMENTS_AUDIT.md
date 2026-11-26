@@ -33,3 +33,7 @@ Source: user-provided DBMS Level 3 Project Requirements.pdf, four pages, inspect
 
 Public source repository verified: https://github.com/abhinavk0006/crisislink
 
+
+## Implemented course vector-search extension, 26 November 2026
+
+PostgreSQL now provides a real pgvector column, HNSW cosine index and semantic search of incident descriptions using pinned local MiniLM embeddings (384 dimensions). The Incidents screen calls an authenticated API. Description changes invalidate embeddings; incremental indexing and conditional writes prevent stale vectors. MongoDB field-note keyword search remains a separate feature. COURSE_ALIGNMENT.md maps this to course PDF pages 681 and 697-709. The original architecture, roles, domain relationships and workflows are preserved.

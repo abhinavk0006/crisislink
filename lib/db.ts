@@ -1,4 +1,5 @@
 import { PGlite } from "@electric-sql/pglite";
+import { vector } from "@electric-sql/pglite-pgvector";
 import { readFile, mkdir } from "node:fs/promises";
 import { resolve, join } from "node:path";
 import { hashPassword } from "./password";
@@ -19,7 +20,7 @@ export async function getDb() {
     globalDb.crisisDb = (async () => {
       const dir = resolve(process.env.PGLITE_DATA_DIR || "data/postgres");
       await mkdir(dir, { recursive: true });
-      const db = new PGlite(dir);
+      const db = new PGlite(dir, { extensions: { vector } });
       await db.waitReady;
       await db.exec("SET TIME ZONE 'Asia/Kolkata'");
       const exists = await db.query<{ present: boolean }>(
@@ -70,6 +71,9 @@ export async function getDb() {
           "utf8",
         ),
       );
+      await db.transaction(async (tx) => {
+        await tx.exec(await readFile(join(process.cwd(), "database/07_vector_search.sql"), "utf8"));
+      });
       return db;
     })();
   return globalDb.crisisDb;

@@ -1,6 +1,12 @@
 * {
   box-sizing: border-box;
 }
+.semantic-search { margin-bottom: 24px; }
+.semantic-controls { display: flex; gap: 12px; margin-top: 8px; flex-wrap: wrap; }
+.semantic-controls input { flex: 1; min-width: 200px; }
+.semantic-results { padding-left: 22px; }
+.semantic-results li { padding: 12px 0; border-bottom: 1px solid #d9e3dc; }
+.semantic-results p { margin: 8px 0; }
 .resource-tags {
   margin-top: 16px;
 }

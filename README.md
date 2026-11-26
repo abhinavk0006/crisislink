@@ -10,6 +10,8 @@ Public repository: https://github.com/abhinavk0006/crisislink
 
 [Database concept-to-feature and code mapping](docs/DATABASE_FEATURE_MAP.md) | [Searchable offline viva guide](docs/DATABASE_FEATURE_MAP.html)
 
+[Course alignment and vector-search viva guide](docs/COURSE_ALIGNMENT.md)
+
 Database Management Systems mini project, UE24CS351A.
 
 Students: Sachin R (PES1UG24CS688) and Abhinav Krishna Kandukuri (PES1UG24CS701).
@@ -24,6 +26,7 @@ This runnable reconstruction uses the 17-table model and 63 fictional seed rows 
 - Three application and PostgreSQL roles: Coordinator, Responder and Technician.
 - Atomic SQL dispatch and completion functions, an automatic status-history trigger, CTE/window/recursive queries, a reporting view, indexes, GRANT/REVOKE and a row-level maintenance policy.
 - MongoDB validation, compound/text indexes, note CRUD, full-text search and tag aggregation.
+- PostgreSQL pgvector semantic incident search using local MiniLM embeddings (384 dimensions), cosine distance and an HNSW index, as taught in the course slides.
 
 This is a single-process local classroom demonstration, with fictional incidents. It does not contact real emergency services. PGlite is not a network PostgreSQL server. The source MySQL scripts remain in `database/mysql/` for provenance; the application runs only the PostgreSQL adaptation.
 
@@ -34,6 +37,7 @@ Install Node.js 24 or later and MongoDB Community Server. Install pnpm using you
 ```powershell
 pnpm install --frozen-lockfile
 pnpm setup
+pnpm vector:setup
 pnpm mongo
 ```
 
@@ -56,6 +60,8 @@ Before starting the app, run `pnpm setup` and choose a 12 to 200 character demon
 | tech@example.com | Technician |
 
 All accounts are synthetic. Passwords receive independent scrypt salts; sessions store only SHA-256 token hashes. Cookies are HttpOnly and SameSite Strict, with Secure enabled for HTTPS. This local demo uses loopback HTTP. MongoDB is loopback-only and has no authentication in the included local helper; a remote deployment requires authenticated MongoDB/TLS, HTTPS, managed secrets and a suitable database/server architecture.
+
+`pnpm vector:setup` downloads the pinned public MiniLM model once into `data/models` and backfills incident vectors. Stop the app before running this standalone command. The app also indexes new/changed descriptions on the next semantic search. No embedding API key is needed; inference runs locally and works offline after caching. This feature is **Find similar incidents** on the Incidents screen. MongoDB field-note search remains keyword search. See `docs/COURSE_ALIGNMENT.md` for slide pages, exact SQL, limitations and viva examples.
 
 Production-mode local check:
 

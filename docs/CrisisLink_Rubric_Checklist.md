@@ -23,7 +23,7 @@ The friend's ZIP supplied a classroom MySQL model, seed, diagrams, slides and SQ
 
 ## Verification record
 
-- The combined suite passed 30 tests (29 named checks plus the parent test): the original 23 integration checks, DDL lifecycle, three SQL tag tests, hash-only bootstrap persistence, and secure setup/reset.
+- The revised suite passed 40 runner tests (38 named checks plus two parents), including nine real local embedding/pgvector checks alongside the original SQL/MongoDB tests.
 - 12 running HTTP checks passed, including incident/dispatch/completion, MongoDB CRUD and SQL tag CRUD. See docs/verification/http.json.
 - Two outage checks passed against a separate running production instance: an unavailable MongoDB endpoint returned 503, while the SQL dashboard remained available.
 - TypeScript checking and a production build passed. Final build/evidence files are included in the source package.
@@ -51,3 +51,11 @@ See docs/LEVEL3_REQUIREMENTS_AUDIT.md for all 18 requirements, PROJECT_SPECIFICA
 
 
 
+
+## Course-aligned vector extension (26 November 2026)
+
+- [x] Real local MiniLM embeddings, vector(384), cosine distance and HNSW incident search.
+- [x] Invalidation trigger, conditional reindex writes, cached offline model and explicit model-outage errors.
+- [x] Existing architecture and MongoDB keyword-search behaviour preserved.
+- [x] Five new HTTP checks plus the existing 12 HTTP checks and two MongoDB outage checks pass.
+- See COURSE_ALIGNMENT.md for course-PDF pages and precise limitations.

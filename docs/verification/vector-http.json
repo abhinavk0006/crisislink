@@ -1,0 +1,51 @@
+{
+  "checkedAt": "2026-11-26T13:56:44.176Z",
+  "passed": 6,
+  "checks": [
+    "Unauthenticated vector search is rejected",
+    "Authenticated production endpoint performs real offline semantic search",
+    "API validates query and top-k bounds",
+    "Existing 12 HTTP authentication/SQL/MongoDB checks pass on the revised build",
+    "Missing offline model returns 503 without keyword fallback",
+    "Dashboard and incident creation work while embedding model is unavailable"
+  ],
+  "example": {
+    "rows": [
+      {
+        "emergency_id": 101,
+        "description": "Training warehouse fire",
+        "status": "responding",
+        "severity_level": "high",
+        "cosine_distance": 0.30844669140654235,
+        "cosine_similarity": 0.6915533085934576
+      },
+      {
+        "emergency_id": 102,
+        "description": "Training medical incident",
+        "status": "resolved",
+        "severity_level": "medium",
+        "cosine_distance": 0.8972059786319733,
+        "cosine_similarity": 0.10279402136802673
+      },
+      {
+        "emergency_id": 103,
+        "description": "Training flood rescue",
+        "status": "responding",
+        "severity_level": "high",
+        "cosine_distance": 0.9667210486995548,
+        "cosine_similarity": 0.033278951300445225
+      }
+    ],
+    "coverage": {
+      "total": 3,
+      "indexed": 3
+    },
+    "newlyIndexed": 3,
+    "model": "Xenova/all-MiniLM-L6-v2@751bff37182d3f1213fa05d7196b954e230abad9:mean:normalized:q8",
+    "dimensions": 384,
+    "metric": "cosine distance",
+    "sql": "SELECT emergency_id,description,status,severity_level,\n  embedding <=> $1::vector AS cosine_distance,\n  1 - (embedding <=> $1::vector) AS cosine_similarity\nFROM emergencies\nWHERE embedding IS NOT NULL AND embedding_model=$2\nORDER BY embedding <=> $1::vector\nLIMIT $3"
+  },
+  "newNamedChecks": 5,
+  "note": "The sixth item summarizes the existing 12 HTTP checks and is not counted twice."
+}

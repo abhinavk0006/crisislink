@@ -13,7 +13,7 @@ Course CodeUE24CS351A
 | Sachin R | PES1UG24CS688 |
 | Abhinav Krishna Kandukuri | PES1UG24CS701 |
 
-17 November 2026
+26 November 2026
 
 
 ---
@@ -25,6 +25,8 @@ CrisisLink is an emergency response management application that connects inciden
 The project combines PostgreSQL, executed through PGlite, with MongoDB. PostgreSQL maintains the structured operational records and enforces keys, constraints, transactions and access permissions. MongoDB stores flexible field notes with tags and assessment details. The Next.js interface connects both databases through authenticated APIs. The implementation includes stored functions, an automatic audit trigger, nested and correlated queries, CTEs, a recursive query, a view and supporting indexes.
 
 The initial relational dataset contains 63 fictional records across 17 domain tables. Two additional internal tables support sessions and login throttling. The system is a local classroom demonstration and does not connect to emergency services.
+
+A course-aligned extension adds genuine semantic incident search using PostgreSQL pgvector, a pinned local MiniLM model, 384-dimensional embeddings, cosine distance and an HNSW index. MongoDB field-note search remains a separate keyword-search feature.
 
 2.1 Problem statement
 
@@ -58,6 +60,7 @@ The supported scope is one local classroom deployment with fictional data. It in
 | FR13 | Report database failures | No success response for an unconfirmed database save. |
 | FR14 | Protect passwords | Hidden setup input; only salted hashes persist. |
 | FR15 | Demonstrate DDL safely | CREATE ALTER DROP run against a temporary object. |
+| FR16 | Find similar incidents | Local model embeddings and PostgreSQL cosine search return ranked incident records. |
 
 
 ---
@@ -69,6 +72,7 @@ The supported scope is one local classroom deployment with fictional data. It in
 | Next.js 16.4.6 and React 19.3.1 | App Router interface and server-side route handlers in one project. |
 | TypeScript 7.0.2 and Zod 4.6.7 | Typed modules and server validation of incident, authentication and note inputs. |
 | PostgreSQL through PGlite 0.5.16 | Relational integrity, stored functions, triggers, roles and transactions without installing a separate SQL server. |
+| pgvector 0.8.7 and MiniLM | Real vector(384) storage, HNSW cosine index and locally generated semantic embeddings. Transformers.js 3.8.1 runs pinned model weights. |
 | MongoDB Community Server 8.2 | A real document database for variable note assessments, indexed search and aggregation. |
 | MongoDB Node driver 7.9.0 | Server-side connection and document CRUD; no browser database credentials. |
 | Node.js 24 and pnpm | Local runtime, locked dependencies, build and test commands. |
@@ -404,6 +408,70 @@ Authorization is applied in the interface, API service layer and SQL grants/func
 
 ---
 
+4.9 Course-aligned semantic incident search
+
+The course slides teach generating sentence embeddings, storing them with pgvector, creating an HNSW index and querying cosine distance (PDF pages 681 and 697-709). CrisisLink applies this to incident descriptions so a coordinator can retrieve similar historical situations. The existing Next.js API, PostgreSQL/PGlite and MongoDB architecture is retained. This is a working incident-search feature, not keyword matching described as vector search.
+
+```
+-- database/07_vector_search.sql (additive migration)
+CREATE EXTENSION IF NOT EXISTS vector;
+ALTER TABLE emergencies ADD COLUMN IF NOT EXISTS
+  embedding vector(384);
+ALTER TABLE emergencies ADD COLUMN IF NOT EXISTS
+  embedding_model VARCHAR(160);
+ALTER TABLE emergencies ADD COLUMN IF NOT EXISTS
+  embedded_at TIMESTAMPTZ;
+CREATE INDEX IF NOT EXISTS idx_emergency_embedding_hnsw
+  ON emergencies USING hnsw (embedding vector_cosine_ops)
+  WHERE embedding IS NOT NULL;
+```
+
+The original ER and relational diagrams show the base 17-table model. These three implementation columns extend emergencies without adding a new entity or foreign-key relationship. The generated data dictionary contains the extended schema.
+
+lib/embeddings.ts runs the pinned Xenova/all-MiniLM-L6-v2 model locally using mean pooling and normalization, retaining all 384 dimensions. Documents and queries use the same model identity. Model files are cached under data/models after the first setup download; no embedding API key or hosted inference is used.
+
+```
+-- Parameters: query vector, pinned model identity, top-k limit
+SELECT emergency_id, description, status,
+       embedding <=> $1::vector AS cosine_distance,
+       1 - (embedding <=> $1::vector) AS cosine_similarity
+FROM emergencies
+WHERE embedding IS NOT NULL AND embedding_model=$2
+ORDER BY embedding <=> $1::vector
+LIMIT $3;
+```
+
+The less-than-equals-greater-than operator computes cosine distance: smaller is closer. Similarity equals one minus distance; it is not confidence or probability. PostgreSQL may choose an exact scan for small data. HNSW supports approximate nearest neighbours, but its presence alone does not demonstrate a speed improvement.
+
+
+---
+
+4.10 Vector lifecycle, integration and demonstration
+
+Find similar incidents on the Incidents screen calls GET /api/incidents/search. The existing route authenticates the session and validates a 3-500 character query and top-k limit of 1-10. lib/semantic.ts incrementally embeds missing/outdated descriptions, embeds the query, and executes bound SQL under the authenticated role. The UI shows ranked incident descriptions, cosine distances and links to incident details. Search is advisory and never changes dispatch decisions automatically.
+
+Inference occurs outside SQL transactions. Each vector update is conditional on the source description remaining unchanged, preventing a stale write if the incident is edited during inference. A BEFORE UPDATE OF description trigger invalidates the vector, model and timestamp when the text changes. Status-only changes preserve valid embeddings. Subsequent search reindexes pending records. Incident creation and dispatch do not depend on model availability.
+
+```
+pnpm install --frozen-lockfile
+# Stop the app before standalone indexing against its SQL folder:
+pnpm vector:setup
+# Model is now cached; fully offline inference can be required:
+# set EMBEDDING_OFFLINE=1 in the process environment
+pnpm mongo
+# In another terminal:
+pnpm dev
+```
+
+For a demonstration, search for People trapped by rising water and inspect the flood-rescue result; then try A warehouse is burning. Add a differently worded incident and repeat: its first search indexes it automatically. Tests use a medical query with different wording and verify the correct ranking, 384 dimensions, normalized vectors, offline inference, invalidation/reindexing, SQL binding and index eligibility.
+
+No manual vectors, synonym substitutions or JavaScript cosine scan are used. The distance query executes in PostgreSQL through pgvector. Model failure returns HTTP 503 for semantic search without silently substituting keyword search. On a large deployment, indexing should move to a background worker. MongoDB remains the document store and continues to use its text index and aggregation; native MongoDB vector search is not claimed.
+
+COURSE_ALIGNMENT.md maps the feature to the supplied course PDF pages and explains dimensions, cosine distance, HNSW, indexing lifecycle and limitations. DATABASE_FEATURE_MAP links the implementation to exact source locations. Existing seed rows and user records are preserved by the additive migration.
+
+
+---
+
 5 NoSQL Database Commands
 
 5.1 Collection creation and validation
@@ -499,6 +567,8 @@ crisislink-app/
     auth.ts                    Login sessions and role checks
     password.ts                Scrypt and token hashing
     service.ts                 Incidents dispatch completion SQL lab
+    embeddings.ts              Pinned local MiniLM vector generation
+    semantic.ts                Incremental indexing and cosine search
     mongo.ts                   Validation notes CRUD search aggregation
   database/
     00_schema.sql              PostgreSQL domain DDL
@@ -508,12 +578,14 @@ crisislink-app/
     04_mongo_commands.js       MongoDB setup and demonstrations
     05_resource_tag_permissions.sql  Role grants for tag CRUD
     06_ddl_demo.sql             Isolated CREATE ALTER DROP demo
+    07_vector_search.sql        pgvector HNSW and invalidation trigger
     mysql/                     Original classroom SQL and outputs
   scripts/
     mongo.mjs                  Dedicated local MongoDB launcher
     setup.ts                   Hidden input hash only account setup
     secret-input.mjs           Non echoing terminal input
     export-schema.ts           Generate the SQL data dictionary
+    vector-setup.ts            Cache model and backfill incident vectors
     http-smoke.mjs             Running API checks
   tests/integration.test.ts     Isolated SQL and MongoDB checks
   .env.example                 Configuration names without secrets
@@ -525,12 +597,13 @@ crisislink-app/
 
 Request flow
 
-A user action reaches a same-origin Next.js route handler. The handler validates the request, authenticates the session and delegates to the SQL service or MongoDB note service. SQL operations run under the authenticated role. Note writes also validate their SQL references. The API returns an explicit success or error, and the interface refreshes the relevant database records.
+The authenticated API validates each request and calls the SQL, semantic-search or MongoDB service. JSON success/error responses update the interface; note writes also validate SQL references.
 
 | Command | Purpose |
 |---|---|
 | pnpm install --frozen-lockfile | Install locked dependencies |
 | pnpm setup | Initialize/reset accounts with hidden password input |
+| pnpm vector:setup | Cache the model and backfill incident vectors |
 | pnpm mongo | Start local MongoDB in the first terminal |
 | pnpm dev | Start the app at 127.0.0.1:3100 |
 | pnpm build and pnpm start | Build and run in production mode |
@@ -547,6 +620,7 @@ A user action reaches a same-origin Next.js route handler. The handler validates
 | GET /api/auth/me | Resolve the current authenticated user and role. |
 | POST /api/auth/logout | Revoke the session. |
 | GET /api/dashboard | Retrieve incidents, resources, assignments, history and reference records. |
+| GET /api/incidents/search?q=... | Authenticated semantic incident search using local embeddings and pgvector. |
 | POST /api/incidents | Coordinator creates incident and required capability. |
 | POST /api/dispatch | Coordinator invokes the atomic dispatch SQL function. |
 | POST /api/complete | Assigned responder or coordinator completes a response. |
@@ -599,7 +673,7 @@ Figure 5 CTE query and recorded application result
 
 Verification performed
 
-The integration suite passed 23 named checks against isolated PostgreSQL and MongoDB data. Additional tests cover temporary-object DDL, SQL tag CRUD and permission denial, hash-only bootstrap persistence and secure setup/reset. The combined test runner passed 30 tests including its parent test. The HTTP suite passed 12 checks. Type checking and the production build passed.
+The integration suite passed 23 named checks against isolated PostgreSQL and MongoDB data. Additional tests cover temporary-object DDL, SQL tag CRUD and permission denial, hash-only bootstrap persistence and secure setup/reset. The combined test runner passed 40 tests (38 named checks and two parent tests), including nine real-vector tests. Five additional HTTP vector checks cover authentication, semantic results, bounds, model outage and continued SQL operation. The HTTP suite passed 12 checks. Type checking and the production build passed.
 
 Two outage checks verified an unavailable MongoDB endpoint returns an explicit failure while the SQL dashboard remains available. Browser captures document coordinator login, incident creation, dispatch, a persisted field note and live SQL results.
 
@@ -626,7 +700,7 @@ The implementation goes beyond separate CRUD forms through transaction boundarie
 | Authenticated MongoDB and TLS | Prepare database connections for hosted operation beyond the loopback demo. |
 | Multi-resource allocation | Allocate capability quantities across several response units. |
 | Cross-database outbox and retries | Coordinate eventual field updates without claiming distributed atomic commit. |
-| Maps and optional semantic note search | Improve location selection and explore vector retrieval where useful. |
+| Maps and semantic field-note retrieval | Improve location selection and extend the implemented incident vector search to other content. |
 
 These enhancements are future work. The delivered application remains a fictional single-process local demonstration and does not connect to emergency services.
 

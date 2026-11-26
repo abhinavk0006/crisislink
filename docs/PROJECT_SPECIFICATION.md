@@ -43,9 +43,11 @@ The system does not communicate with emergency services, send public alerts, pro
 | FR14 | Maintain password confidentiality | Setup accepts hidden input, persists only independently salted scrypt hashes, and creates no plaintext password file. |
 | FR15 | Demonstrate DDL safely | CREATE, ALTER and DROP run against a disposable temporary table without dropping operational tables. |
 
+| FR16 | Find similar incidents | Pinned local 384-dimensional embeddings and PostgreSQL cosine nearest-neighbour search return ranked incidents; changed descriptions are reindexed. |
+
 ## Database choice
 
-PostgreSQL is responsible for structured relationships, referential integrity, transactions, SQL functions, triggers, views and permissions. PGlite runs the real PostgreSQL engine locally with filesystem persistence. MongoDB stores variable field assessments as documents and supports field-note text search and tag aggregation. This implements the requirements' SQL plus NoSQL option; a vector database is optional and is not needed for this design.
+PostgreSQL is responsible for structured relationships, referential integrity, transactions, SQL functions, triggers, views and permissions. PGlite runs the real PostgreSQL engine locally with filesystem persistence. MongoDB stores variable field assessments as documents and supports field-note text search and tag aggregation. PostgreSQL also implements course-aligned vector search over incident descriptions with pgvector, a pinned local MiniLM model, cosine distance and HNSW. MongoDB note keyword search remains separate. See COURSE_ALIGNMENT.md for the slide-to-code mapping.
 
 ## Conclusion and future enhancements
 

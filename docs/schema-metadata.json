@@ -246,6 +246,30 @@
       "position": 10
     },
     {
+      "table_name": "emergencies",
+      "column_name": "embedding",
+      "sql_type": "vector(384)",
+      "nullable": true,
+      "identity": "",
+      "position": 11
+    },
+    {
+      "table_name": "emergencies",
+      "column_name": "embedding_model",
+      "sql_type": "character varying(160)",
+      "nullable": true,
+      "identity": "",
+      "position": 12
+    },
+    {
+      "table_name": "emergencies",
+      "column_name": "embedded_at",
+      "sql_type": "timestamp with time zone",
+      "nullable": true,
+      "identity": "",
+      "position": 13
+    },
+    {
       "table_name": "emergency_required_capabilities",
       "column_name": "emergency_id",
       "sql_type": "integer",
@@ -1445,6 +1469,11 @@
       "tablename": "capabilities",
       "indexname": "pk_capabilities",
       "indexdef": "CREATE UNIQUE INDEX pk_capabilities ON public.capabilities USING btree (capability_id)"
+    },
+    {
+      "tablename": "emergencies",
+      "indexname": "idx_emergency_embedding_hnsw",
+      "indexdef": "CREATE INDEX idx_emergency_embedding_hnsw ON public.emergencies USING hnsw (embedding vector_cosine_ops) WHERE (embedding IS NOT NULL)"
     },
     {
       "tablename": "emergencies",

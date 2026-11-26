@@ -10,10 +10,14 @@
     "typecheck": "tsc --noEmit",
     "test": "tsx --test --test-concurrency=1 tests/*.test.ts",
     "setup": "tsx scripts/setup.ts",
-    "mongo": "node scripts/mongo.mjs"
+    "mongo": "node scripts/mongo.mjs",
+    "vector:setup": "tsx scripts/vector-setup.ts",
+    "vector:search": "node scripts/vector-search.mjs"
   },
   "dependencies": {
     "@electric-sql/pglite": "0.5.16",
+    "@electric-sql/pglite-pgvector": "0.0.17",
+    "@huggingface/transformers": "3.8.1",
     "mongodb": "7.9.0",
     "next": "16.4.6",
     "react": "19.3.1",

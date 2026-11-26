@@ -86,6 +86,9 @@ Constraints:
 | status | character varying(255) | Yes | No |
 | reported_at | timestamp with time zone | Yes | No |
 | updated_at | timestamp with time zone | Yes | No |
+| embedding | vector(384) | Yes | No |
+| embedding_model | character varying(160) | Yes | No |
+| embedded_at | timestamp with time zone | Yes | No |
 
 Constraints:
 
@@ -379,6 +382,10 @@ CREATE UNIQUE INDEX uq_active_responder ON public.assignments USING btree (respo
 
 ```sql
 CREATE UNIQUE INDEX pk_capabilities ON public.capabilities USING btree (capability_id);
+```
+
+```sql
+CREATE INDEX idx_emergency_embedding_hnsw ON public.emergencies USING hnsw (embedding vector_cosine_ops) WHERE (embedding IS NOT NULL);
 ```
 
 ```sql

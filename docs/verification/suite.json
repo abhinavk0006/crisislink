@@ -1,15 +1,14 @@
 {
   "failed": 0,
   "command": "node --import tsx --test --test-concurrency=1 tests/*.test.ts",
-  "passed": 30,
+  "passed": 40,
+  "runnerTests": 40,
+  "namedChecks": 38,
+  "checkedOn": "2026-11-26 Asia/Calcutta",
   "coverage": [
-    "DDL lifecycle",
-    "SQL and real MongoDB integration",
-    "SQL resource tag CRUD and permissions",
-    "hash-only bootstrap persistence",
-    "secure setup password reset and session revocation"
-  ],
-  "checkedOn": "2026-11-17 Asia/Calcutta",
-  "runnerTests": 30,
-  "namedChecks": 29
+    "Original SQL/MongoDB integration",
+    "DDL and SQL resource-tag CRUD",
+    "Secure hash-only setup/reset",
+    "Nine real local embedding/pgvector checks"
+  ]
 }

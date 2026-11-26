@@ -31,6 +31,8 @@ MongoDB stores field-note documents containing an SQL incident ID, session-deriv
 
 ## Transaction and failure behavior
 
+Semantic incident search extends the existing PostgreSQL branch with pgvector. The same Next.js backend runs a pinned MiniLM model locally, stores 384-dimensional vectors on emergencies, and queries cosine distance using a real HNSW-capable index. No extra database/server/API provider is introduced. Missing/outdated descriptions are indexed before search; inference runs outside SQL transactions and conditional updates avoid stale writes. A BEFORE description-update trigger invalidates the old embedding. Model failures affect semantic search only. MongoDB remains the field-note document database with keyword search. See COURSE_ALIGNMENT.md.
+
 Incident creation and its requirement rows share one SQL transaction. A trigger-created history row belongs to that same transaction. Dispatch locks the incident, resource and responder; checks availability and capability coverage; then inserts and reserves them atomically. Completion records the report and releases the resource/responder together. Partial unique indexes reject overlapping active reservations.
 
 SQL and MongoDB have independent transaction boundaries. Notes are not silently treated as committed if MongoDB fails. The API returns an error and allows retry. The offline test runs an isolated app against an unavailable MongoDB address and verifies both the error and continued SQL access. No distributed atomic commit or automatic retry/outbox mechanism is claimed.

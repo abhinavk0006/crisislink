@@ -13,7 +13,7 @@ export async function dashboard(actor: Actor) {
   return asActor(actor, async (tx) => {
     const incidents = (
       await tx.query(
-        `SELECT e.*,t.type_name,l.location_name FROM emergencies e JOIN emergency_types t USING(type_id) JOIN locations l USING(location_id) ORDER BY e.reported_at DESC,e.emergency_id DESC`,
+        `SELECT e.emergency_id,e.type_id,e.location_id,e.reported_by,e.description,e.severity_level,e.people_affected,e.status,e.reported_at,e.updated_at,t.type_name,l.location_name FROM emergencies e JOIN emergency_types t USING(type_id) JOIN locations l USING(location_id) ORDER BY e.reported_at DESC,e.emergency_id DESC`,
       )
     ).rows;
     const resources = (

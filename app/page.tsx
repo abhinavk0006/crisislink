@@ -40,6 +40,8 @@ export default function Home() {
     resource_id: number;
     tag: string;
   } | null>(null);
+  const [semanticQuery, setSemanticQuery] = useState("");
+  const [semanticResult, setSemanticResult] = useState<Row | null>(null);
   const refresh = useCallback(async () => {
     setData(await api("dashboard"));
   }, []);
@@ -288,6 +290,34 @@ export default function Home() {
                   </button>
                 )}
               </div>
+              <section className="panel semantic-search">
+                <h3>Find similar incidents</h3>
+                <p className="muted">Describe a situation to find related incidents by meaning, even when the wording differs.</p>
+                <form onSubmit={(e) => {
+                  e.preventDefault();
+                  void action(async () => {
+                    setSemanticResult(null);
+                    setSemanticResult(await api("incidents/search?q=" + encodeURIComponent(semanticQuery)));
+                  });
+                }}>
+                  <label htmlFor="semantic-query">Situation or question</label>
+                  <div className="semantic-controls">
+                    <input id="semantic-query" value={semanticQuery}
+                      onChange={(e) => setSemanticQuery(e.target.value)}
+                      placeholder="People trapped by rising water" minLength={3} maxLength={500} required />
+                    <button className="primary" disabled={busy}>{busy ? "Searching…" : "Search by meaning"}</button>
+                  </div>
+                </form>
+                {semanticResult && <div aria-live="polite">
+                  <p className="muted">{semanticResult.coverage.indexed} of {semanticResult.coverage.total} incidents indexed. Results are ranked suggestions; review their details before acting.</p>
+                  {semanticResult.rows.length === 0 && <p>No indexed incidents yet.</p>}
+                  <ol className="semantic-results">{semanticResult.rows.map((r: Row) => <li key={r.emergency_id}>
+                    <button type="button" onClick={() => setSelected(r.emergency_id)}>Open incident #{r.emergency_id}</button>
+                    <p>{r.description}</p>
+                    <small>Cosine distance: {Number(r.cosine_distance).toFixed(4)} · {r.status}</small>
+                  </li>)}</ol>
+                </div>}
+              </section>
               {showCreate && coordinator && (
                 <section className="panel">
                   <h3>Report a new incident</h3>

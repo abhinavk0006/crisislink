@@ -13,6 +13,7 @@ import {
   removeResourceTag,
 } from "@/lib/service";
 import { listNotes, createNote, updateNote, deleteNote } from "@/lib/mongo";
+import { searchIncidents } from "@/lib/semantic";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 async function handler(req: NextRequest) {
@@ -63,6 +64,11 @@ async function handler(req: NextRequest) {
     }
     if (path === "dashboard" && method === "GET")
       return respond(await dashboard(actor));
+    if (path === "incidents/search" && method === "GET")
+      return respond(await searchIncidents(actor, {
+        query: req.nextUrl.searchParams.get("q"),
+        limit: req.nextUrl.searchParams.get("limit") || 5,
+      }));
     if (path === "incidents" && method === "POST")
       return respond(await createIncident(actor, await req.json()), 201);
     if (path === "dispatch" && method === "POST")

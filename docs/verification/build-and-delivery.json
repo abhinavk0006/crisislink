@@ -1,26 +1,20 @@
 {
-  "totalNamedChecks": 43,
-  "pdfPageSize": "A4",
+  "totalNamedChecks": 57,
+  "runnerTests": 40,
+  "namedDatabaseChecks": 38,
+  "httpChecks": 12,
+  "newVectorHTTPChecks": 5,
   "outageChecks": 2,
-  "pdfPages": 23,
-  "requirementsSource": "DBMS Level 3 Project Requirements.pdf",
   "typecheck": {
-    "command": "tsc --noEmit",
     "exitCode": 0
   },
   "productionBuild": {
-    "command": "next build --webpack",
-    "routes": [
-      "/",
-      "/api/[...path]"
-    ],
     "exitCode": 0
   },
-  "codeCommit": "1c3366b",
+  "checkedOn": "2026-11-26 Asia/Calcutta",
+  "requirementsSource": "DBMS Level 3 Project Requirements.pdf and UE24CS351A_Merged_Slides.pdf",
   "evaluationRubricsInReport": false,
-  "runnerTests": 30,
-  "checkedOn": "2026-11-17 Asia/Calcutta",
-  "httpChecks": 12,
-  "namedDatabaseChecks": 29,
-  "documentationRevision": "Formal project title and assigned team responsibility plan; TypeScript validation passed; prior functional verification unchanged."
+  "pdfPageSize": "A4",
+  "pdfPages": 25,
+  "browserVerification": "Isolated test instance: People trapped by rising water ranked incident 103 first (distance 0.6522), ahead of medical 0.8773 and fire 0.9406. Layout visually inspected; user accounts unchanged."
 }

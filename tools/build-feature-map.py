@@ -54,7 +54,7 @@ f('SQL05','SQL CRUD used by the Resources screen','SQL','Operational',
  'The form reaches the API and service, which execute bound INSERT, SELECT, UPDATE and DELETE statements on resource_tags.','Sachin'),
 f('SQL06','JOIN queries','SQL','Operational + SQL lab',
  'Combine incidents with type/location and assignments with resource/responder information.',
- [ref(S,'`SELECT e.*,t.type_name,l.location_name'),ref(ADV,'CREATE VIEW v_assignment_summary'),ref(S,'  join: "SELECT e.emergency_id'),ref(Q,'-- JOIN:')],
+ [ref(S,'`SELECT e.emergency_id,e.type_id'),ref(ADV,'CREATE VIEW v_assignment_summary'),ref(S,'  join: "SELECT e.emergency_id'),ref(Q,'-- JOIN:')],
  'Use SQL lab > Multiple JOINs for a live result. Then show dashboard() and the assignment view: JOINs also supply the operational interface.',
  'A JOIN combines related rows by matching their keys; it does not store a second copy of each related entity.','Sachin'),
 f('SQL07','GROUP BY HAVING COUNT and ORDER BY','SQL','Live SQL lab example',
@@ -199,9 +199,34 @@ f('OPS01','Database outage failure handling','Integration','Operational + isolat
  'A MongoDB failure is shown as a failure, not a successful save. SQL and MongoDB remain independent services.','Abhinav'),
 ]
 
+features.extend([
+f('VEC01','Learned sentence embeddings','SQL','Operational incident search',
+ 'Encode incident descriptions and questions as normalized 384-dimensional vectors using the same pinned local MiniLM model.',
+ [ref('lib/embeddings.ts','export async function embedText('),ref('lib/embeddings.ts','export const EMBEDDING_REVISION'),ref('lib/semantic.ts','export async function indexIncidents(')],
+ 'Run pnpm vector:setup once. In Incidents search A warehouse is burning. Show the model identity and 384 dimensions in the API result. We use real model inference, not manual vectors or keyword substitutions.',
+ 'The model turns sentences into numeric representations. Identical model and preprocessing are required for document and query vectors.','Abhinav'),
+f('VEC02','pgvector cosine distance and HNSW index','SQL','Operational incident search',
+ 'Retrieve semantically related past incidents using a database-native nearest-neighbour query.',
+ [ref('database/07_vector_search.sql','CREATE EXTENSION IF NOT EXISTS vector'),ref('database/07_vector_search.sql','ON emergencies USING hnsw'),ref('lib/semantic.ts','export const SEMANTIC_SQL'),ref(API,'if (path === "incidents/search"'),ref(UI,'Find similar incidents')],
+ 'Search People trapped by rising water and inspect ranked incidents. Show embedding <=> query, ORDER BY distance and LIMIT. Smaller distance is closer; the score is not probability. Small tables may use a sequential scan.',
+ 'This implements the course PostgreSQL vector lesson within our existing architecture. MongoDB notes still use keyword search.','Abhinav'),
+f('VEC03','Embedding invalidation and incremental indexing','SQL','Operational derived-index maintenance',
+ 'Prevent a description edit from leaving a searchable embedding for old text, while keeping incident reporting independent of the model.',
+ [ref('database/07_vector_search.sql','CREATE OR REPLACE FUNCTION invalidate_incident_embedding()'),ref('database/07_vector_search.sql','CREATE TRIGGER trg_invalidate_incident_embedding'),ref('lib/semantic.ts','WHERE emergency_id=$3 AND description=$4'),ref('tests/semantic.test.ts','Description edits invalidate old vectors')],
+ 'Show the BEFORE description-update trigger. It clears vectors only for changed descriptions; the next search recomputes them. Inference happens outside transactions and updates compare source text to avoid stale writes.',
+ 'Embeddings are a derived search representation. Invalidating and regenerating them keeps search consistent with the source incident.','Sachin'),
+])
+
 inventory=[]
 def inv(name,kind,purpose,path,needle):
     inventory.append(dict(name=name,kind=kind,purpose=purpose,ref=ref(path,needle)))
+inv('invalidate_incident_embedding','Stored trigger function','Invalidate a stale incident vector when its description changes.','database/07_vector_search.sql','CREATE OR REPLACE FUNCTION invalidate_incident_embedding()')
+for name,purpose,path,needle in [
+ ('embedText','Generate real locally cached MiniLM sentence embeddings.','lib/embeddings.ts','export async function embedText('),
+ ('vectorLiteral','Validate dimensions/finiteness and serialize a bound vector value.','lib/embeddings.ts','export function vectorLiteral('),
+ ('indexIncidents','Incrementally maintain incident embeddings with conditional writes.','lib/semantic.ts','export async function indexIncidents('),
+ ('searchIncidents','Run authenticated PostgreSQL cosine nearest-neighbour search.','lib/semantic.ts','export async function searchIncidents('),
+]:inv(name,'Application vector-search helper',purpose,path,needle)
 inv('app_actor','Stored SQL function','Read the transaction actor ID used by audit and row policies.',ADV,'CREATE FUNCTION app_actor()')
 inv('record_emergency_status','Stored trigger function','Insert a history event after incident INSERT or an actual status change.',ADV,'CREATE FUNCTION record_emergency_status()')
 inv('dispatch_response','Stored SQL function','Validate lock reserve and dispatch a response.',ADV,'CREATE FUNCTION dispatch_response(')
@@ -241,10 +266,10 @@ f'Source-code snapshot: `{REV}`. Line numbers and marker strings were checked di
 '## Important distinctions',
 '',
 '- PostgreSQL through PGlite stores operational relations, including resource_tags. MongoDB stores field_notes and their tag arrays/assessments.',
-'- SQL stored functions are dispatch_response, finish_response, app_actor and the trigger function record_emergency_status. TypeScript service/password functions are application functions. No stored SQL procedure using CREATE PROCEDURE/CALL is implemented.',
+'- SQL stored functions are dispatch_response, finish_response, app_actor, record_emergency_status and invalidate_incident_embedding. TypeScript helpers are application functions. No CREATE PROCEDURE/CALL routine is implemented.',
 '- The trigger, stored dispatch/completion functions and assignment view serve the operational workflow. CTE/recursive/nested/aggregate examples also execute live, but through SQL lab; they are not all dashboard implementation queries.',
 '- database/03_queries.sql and database/04_mongo_commands.js are supplementary standalone examples. Runtime query definitions live in lib/service.ts and lib/mongo.ts. database/06_ddl_demo.sql is an isolated demonstration, not an operational migration.',
-'- MongoDB keyword text search is not vector/semantic search. Supporting indexes do not establish a measured performance improvement; the optimizer may choose a sequential scan on small data.',
+'- PostgreSQL incident semantic search uses real MiniLM embeddings, pgvector cosine distance and an HNSW index. MongoDB note search remains keyword search. Supporting indexes do not establish measured speed improvement; small data may use sequential scans.',
 '- Presenter suggestions follow CONTRIBUTIONS.md and are responsibility assignments, not claims of historical authorship.',
 '',
 '## Fast lookup',
@@ -259,7 +284,7 @@ for item in features:
     for r in item['refs']:md.append(f'- {mdref(r)} — search `{r["needle"]}`')
     md.extend(['',f'**Demonstrate:** {item["demo"]}','',f'**Say:** “{item["say"]}”',''])
 md.extend(['## Function inventory','',
-'Only the four entries labelled stored SQL/trigger function reside in PostgreSQL. The other named functions are TypeScript helpers that call SQL, MongoDB or crypto APIs.','',
+'Only the five entries labelled stored SQL/trigger function reside in PostgreSQL. The other named functions are TypeScript helpers that call SQL, MongoDB, model or crypto APIs.','',
 '| Function | Kind | What it implements | Code |','|---|---|---|---|'])
 for item in inventory:md.append(f'| `{item["name"]}` | {item["kind"]} | {item["purpose"]} | {mdref(item["ref"])} |')
 md.extend(['','## A practical 8 minute demonstration','',
@@ -295,7 +320,7 @@ for item in features:
     cards.append(f'''<article class="feature" id="{item['id'].lower()}" data-category="{item['category']}"><span class="badge">{item['category']}</span><span class="badge">{escape(item['usage'])}</span><h2>{item['id']} {escape(item['title'])}</h2><p><span class="label">We used it to:</span> {escape(item['purpose'])}</p><p class="muted">Suggested presenter: {escape(item['presenter'])}</p><ol class="code-links">{''.join(links)}</ol><details><summary>How to demonstrate and explain it</summary><p>{escape(item['demo'])}</p><blockquote>{escape(item['say'])}</blockquote></details></article>''')
 quick=''.join(f'<a href="#{item["id"].lower()}">{escape(item["title"])}</a>' for item in features if item['id'] in ['SQL05','SQL10','SQL11','SQL12','SQL15','SQL17','SQL18','SQL21','NO08','NO09'])
 inventory_rows=''.join(f'<tr><td><code>{escape(item["name"])}</code><br>{escape(item["kind"])}</td><td>{escape(item["purpose"])}</td><td><a href="{offline(item["ref"])}">{escape(item["ref"]["path"])}:{item["ref"]["line"]}</a></td></tr>' for item in inventory)
-inventory_html=f'<section class="panel" id="function-inventory"><h2>Function inventory</h2><p>The four stored SQL/trigger functions run inside PostgreSQL. All other entries are application helpers; their names do not make them stored database routines.</p><table><thead><tr><th>Function and kind</th><th>Purpose</th><th>Open code</th></tr></thead><tbody>{inventory_rows}</tbody></table></section>'
+inventory_html=f'<section class="panel" id="function-inventory"><h2>Function inventory</h2><p>The five stored SQL/trigger functions run inside PostgreSQL. All other entries are application helpers; their names do not make them stored database routines.</p><table><thead><tr><th>Function and kind</th><th>Purpose</th><th>Open code</th></tr></thead><tbody>{inventory_rows}</tbody></table></section>'
 CSS+='table{width:100%;border-collapse:collapse;font-size:12px}td,th{text-align:left;vertical-align:top;padding:10px;border:1px solid #d9e3d5}th{background:#e9f0e5}td{overflow-wrap:anywhere}'
 html=f'''<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Crisis Link database feature and code map</title><style>{CSS}</style></head><body><main><p class="muted">TEACHER AND VIVA REFERENCE</p><h1>What we used and where it is in the code</h1><p>Crisis Link Emergency Resource Coordination &amp; Response Management System</p><p class="muted">Source snapshot {REV[:12]} · {len(features)} verified concept mappings · Offline source viewers included</p><section class="panel"><h2>Use this during your demo</h2><p>Find the concept → explain its purpose → open its definition → show its caller → demonstrate the result.</p><p><b>Important:</b> triggers/functions/view support operations; CTE/recursive/nested examples run through SQL lab. PostgreSQL resource tags and MongoDB field-note tags are separate data. Keyword search is not vector search. Presenter assignments are a plan, not historical authorship evidence.</p><div class="quick">{quick}</div><p><a href="DATABASE_FEATURE_MAP.md">Full Markdown guide and demonstration script</a> · <a href="../README.md">Setup instructions</a> · <a href="../CONTRIBUTIONS.md">Assigned team responsibilities</a></p></section><div class="toolbar"><input id="search" type="search" aria-label="Search concepts and code" placeholder="Search trigger, CTE, view, insertOne, role…"><select id="category" aria-label="Concept category"><option value="">All categories</option><option>SQL</option><option>NoSQL</option><option>Security</option><option>Integration</option></select></div><p class="muted" id="count">{len(features)} mappings</p>{''.join(cards)}</main><script>const input=document.getElementById('search'),category=document.getElementById('category'),cards=[...document.querySelectorAll('.feature')];function filter(){{let count=0;for(const card of cards){{const visible=card.textContent.toLowerCase().includes(input.value.toLowerCase())&&(!category.value||card.dataset.category===category.value);card.hidden=!visible;if(visible)count++;}}document.getElementById('count').textContent=count+' mappings';}}input.addEventListener('input',filter);category.addEventListener('change',filter);</script></body></html>'''
 html=html.replace('</main><script>',inventory_html+'</main><script>')
