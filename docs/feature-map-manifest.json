@@ -1,9 +1,9 @@
 {
-  "sourceRevision": "3aefc252a521ff4465b552a8410a72ffec548304",
-  "featureCount": 34,
-  "functionCount": 29,
-  "sourceFileCount": 20,
-  "referenceCount": 146,
+  "sourceRevision": "1419edf1007672c14bb47e19d277d32378210768",
+  "featureCount": 37,
+  "functionCount": 34,
+  "sourceFileCount": 24,
+  "referenceCount": 163,
   "features": [
     {
       "id": "SQL01",
@@ -32,7 +32,7 @@
         },
         {
           "path": "lib/db.ts",
-          "line": 17,
+          "line": 18,
           "needle": "export async function getDb()",
           "label": "export async function getDb()"
         }
@@ -122,7 +122,7 @@
         },
         {
           "path": "lib/db.ts",
-          "line": 30,
+          "line": 31,
           "needle": "for (const file of [\"00_schema.sql\", \"01_seed.sql\"])",
           "label": "for (const file of [\"00_schema.sql\", \"01_seed.sql\"])"
         }
@@ -158,13 +158,13 @@
         },
         {
           "path": "app/api/[...path]/route.ts",
-          "line": 74,
+          "line": 80,
           "needle": "if (path === \"resource-tags\")",
           "label": "if (path === \"resource-tags\")"
         },
         {
           "path": "app/page.tsx",
-          "line": 559,
+          "line": 589,
           "needle": "className=\"resource-tags\"",
           "label": "className=\"resource-tags\""
         },
@@ -189,8 +189,8 @@
         {
           "path": "lib/service.ts",
           "line": 16,
-          "needle": "`SELECT e.*,t.type_name,l.location_name",
-          "label": "`SELECT e.*,t.type_name,l.location_name"
+          "needle": "`SELECT e.emergency_id,e.type_id",
+          "label": "`SELECT e.emergency_id,e.type_id"
         },
         {
           "path": "database/02_advanced.sql",
@@ -320,13 +320,13 @@
         },
         {
           "path": "app/api/[...path]/route.ts",
-          "line": 82,
+          "line": 88,
           "needle": "if (path === \"queries\" && method === \"GET\")",
           "label": "if (path === \"queries\" && method === \"GET\")"
         },
         {
           "path": "app/page.tsx",
-          "line": 936,
+          "line": 966,
           "needle": "SQL example",
           "label": "SQL example"
         }
@@ -416,7 +416,7 @@
         },
         {
           "path": "docs/DATA_DICTIONARY.md",
-          "line": 354,
+          "line": 357,
           "needle": "## Index definitions",
           "label": "## Index definitions"
         }
@@ -476,13 +476,13 @@
         },
         {
           "path": "app/api/[...path]/route.ts",
-          "line": 68,
+          "line": 74,
           "needle": "if (path === \"dispatch\" && method === \"POST\")",
           "label": "if (path === \"dispatch\" && method === \"POST\")"
         },
         {
           "path": "app/page.tsx",
-          "line": 518,
+          "line": 548,
           "needle": "Dispatch team →",
           "label": "Dispatch team →"
         }
@@ -512,13 +512,13 @@
         },
         {
           "path": "app/api/[...path]/route.ts",
-          "line": 70,
+          "line": 76,
           "needle": "if (path === \"complete\" && method === \"POST\")",
           "label": "if (path === \"complete\" && method === \"POST\")"
         },
         {
           "path": "app/page.tsx",
-          "line": 458,
+          "line": 488,
           "needle": "Complete response",
           "label": "Complete response"
         }
@@ -578,7 +578,7 @@
       "refs": [
         {
           "path": "lib/db.ts",
-          "line": 77,
+          "line": 81,
           "needle": "export async function asActor<T>(",
           "label": "export async function asActor<T>("
         },
@@ -668,7 +668,7 @@
         },
         {
           "path": "lib/db.ts",
-          "line": 86,
+          "line": 90,
           "needle": "await tx.exec(`SET LOCAL ROLE",
           "label": "await tx.exec(`SET LOCAL ROLE"
         },
@@ -740,7 +740,7 @@
         },
         {
           "path": "app/api/[...path]/route.ts",
-          "line": 56,
+          "line": 57,
           "needle": "const actor = await authenticate(token);",
           "label": "const actor = await authenticate(token);"
         }
@@ -782,7 +782,7 @@
         },
         {
           "path": "app/api/[...path]/route.ts",
-          "line": 46,
+          "line": 47,
           "needle": "res.cookies.set(\"crisis_session\"",
           "label": "res.cookies.set(\"crisis_session\""
         }
@@ -890,13 +890,13 @@
         },
         {
           "path": "app/api/[...path]/route.ts",
-          "line": 100,
+          "line": 106,
           "needle": "if (path === \"notes\" && method === \"POST\")",
           "label": "if (path === \"notes\" && method === \"POST\")"
         },
         {
           "path": "app/page.tsx",
-          "line": 907,
+          "line": 937,
           "needle": "Save field note",
           "label": "Save field note"
         }
@@ -926,7 +926,7 @@
         },
         {
           "path": "app/api/[...path]/route.ts",
-          "line": 86,
+          "line": 92,
           "needle": "if (path === \"notes\" && method === \"GET\")",
           "label": "if (path === \"notes\" && method === \"GET\")"
         }
@@ -986,7 +986,7 @@
         },
         {
           "path": "app/page.tsx",
-          "line": 833,
+          "line": 863,
           "needle": "Delete note",
           "label": "Delete note"
         }
@@ -1010,7 +1010,7 @@
         },
         {
           "path": "app/page.tsx",
-          "line": 777,
+          "line": 807,
           "needle": "aria-label=\"Search notes\"",
           "label": "aria-label=\"Search notes\""
         }
@@ -1046,7 +1046,7 @@
         },
         {
           "path": "app/page.tsx",
-          "line": 784,
+          "line": 814,
           "needle": "className=\"tag-summary\"",
           "label": "className=\"tag-summary\""
         }
@@ -1100,7 +1100,7 @@
         },
         {
           "path": "app/api/[...path]/route.ts",
-          "line": 125,
+          "line": 131,
           "needle": "/Mongo(Network|ServerSelection|TopologyClosed|NotConnected)/",
           "label": "/Mongo(Network|ServerSelection|TopologyClosed|NotConnected)/"
         },
@@ -1114,9 +1114,172 @@
       "demo": "Open the isolated offline test and docs/verification/offline.json. It starts a separate app with an unavailable MongoDB URI and expects HTTP 503 for a note write and HTTP 200 for the SQL dashboard. No need to stop the live demo database.",
       "say": "A MongoDB failure is shown as a failure, not a successful save. SQL and MongoDB remain independent services.",
       "presenter": "Abhinav"
+    },
+    {
+      "id": "VEC01",
+      "title": "Learned sentence embeddings",
+      "category": "SQL",
+      "usage": "Operational incident search",
+      "purpose": "Encode incident descriptions and questions as normalized 384-dimensional vectors using the same pinned local MiniLM model.",
+      "refs": [
+        {
+          "path": "lib/embeddings.ts",
+          "line": 14,
+          "needle": "export async function embedText(",
+          "label": "export async function embedText("
+        },
+        {
+          "path": "lib/embeddings.ts",
+          "line": 6,
+          "needle": "export const EMBEDDING_REVISION",
+          "label": "export const EMBEDDING_REVISION"
+        },
+        {
+          "path": "lib/semantic.ts",
+          "line": 7,
+          "needle": "export async function indexIncidents(",
+          "label": "export async function indexIncidents("
+        }
+      ],
+      "demo": "Run pnpm vector:setup once. In Incidents search A warehouse is burning. Show the model identity and 384 dimensions in the API result. We use real model inference, not manual vectors or keyword substitutions.",
+      "say": "The model turns sentences into numeric representations. Identical model and preprocessing are required for document and query vectors.",
+      "presenter": "Abhinav"
+    },
+    {
+      "id": "VEC02",
+      "title": "pgvector cosine distance and HNSW index",
+      "category": "SQL",
+      "usage": "Operational incident search",
+      "purpose": "Retrieve semantically related past incidents using a database-native nearest-neighbour query.",
+      "refs": [
+        {
+          "path": "database/07_vector_search.sql",
+          "line": 2,
+          "needle": "CREATE EXTENSION IF NOT EXISTS vector",
+          "label": "CREATE EXTENSION IF NOT EXISTS vector"
+        },
+        {
+          "path": "database/07_vector_search.sql",
+          "line": 8,
+          "needle": "ON emergencies USING hnsw",
+          "label": "ON emergencies USING hnsw"
+        },
+        {
+          "path": "lib/semantic.ts",
+          "line": 25,
+          "needle": "export const SEMANTIC_SQL",
+          "label": "export const SEMANTIC_SQL"
+        },
+        {
+          "path": "app/api/[...path]/route.ts",
+          "line": 67,
+          "needle": "if (path === \"incidents/search\"",
+          "label": "if (path === \"incidents/search\""
+        },
+        {
+          "path": "app/page.tsx",
+          "line": 294,
+          "needle": "Find similar incidents",
+          "label": "Find similar incidents"
+        }
+      ],
+      "demo": "Search People trapped by rising water and inspect ranked incidents. Show embedding <=> query, ORDER BY distance and LIMIT. Smaller distance is closer; the score is not probability. Small tables may use a sequential scan.",
+      "say": "This implements the course PostgreSQL vector lesson within our existing architecture. MongoDB notes still use keyword search.",
+      "presenter": "Abhinav"
+    },
+    {
+      "id": "VEC03",
+      "title": "Embedding invalidation and incremental indexing",
+      "category": "SQL",
+      "usage": "Operational derived-index maintenance",
+      "purpose": "Prevent a description edit from leaving a searchable embedding for old text, while keeping incident reporting independent of the model.",
+      "refs": [
+        {
+          "path": "database/07_vector_search.sql",
+          "line": 12,
+          "needle": "CREATE OR REPLACE FUNCTION invalidate_incident_embedding()",
+          "label": "CREATE OR REPLACE FUNCTION invalidate_incident_embedding()"
+        },
+        {
+          "path": "database/07_vector_search.sql",
+          "line": 25,
+          "needle": "CREATE TRIGGER trg_invalidate_incident_embedding",
+          "label": "CREATE TRIGGER trg_invalidate_incident_embedding"
+        },
+        {
+          "path": "lib/semantic.ts",
+          "line": 17,
+          "needle": "WHERE emergency_id=$3 AND description=$4",
+          "label": "WHERE emergency_id=$3 AND description=$4"
+        },
+        {
+          "path": "tests/semantic.test.ts",
+          "line": 52,
+          "needle": "Description edits invalidate old vectors",
+          "label": "Description edits invalidate old vectors"
+        }
+      ],
+      "demo": "Show the BEFORE description-update trigger. It clears vectors only for changed descriptions; the next search recomputes them. Inference happens outside transactions and updates compare source text to avoid stale writes.",
+      "say": "Embeddings are a derived search representation. Invalidating and regenerating them keeps search consistent with the source incident.",
+      "presenter": "Sachin"
     }
   ],
   "functionInventory": [
+    {
+      "name": "invalidate_incident_embedding",
+      "kind": "Stored trigger function",
+      "purpose": "Invalidate a stale incident vector when its description changes.",
+      "ref": {
+        "path": "database/07_vector_search.sql",
+        "line": 12,
+        "needle": "CREATE OR REPLACE FUNCTION invalidate_incident_embedding()",
+        "label": "CREATE OR REPLACE FUNCTION invalidate_incident_embedding()"
+      }
+    },
+    {
+      "name": "embedText",
+      "kind": "Application vector-search helper",
+      "purpose": "Generate real locally cached MiniLM sentence embeddings.",
+      "ref": {
+        "path": "lib/embeddings.ts",
+        "line": 14,
+        "needle": "export async function embedText(",
+        "label": "export async function embedText("
+      }
+    },
+    {
+      "name": "vectorLiteral",
+      "kind": "Application vector-search helper",
+      "purpose": "Validate dimensions/finiteness and serialize a bound vector value.",
+      "ref": {
+        "path": "lib/embeddings.ts",
+        "line": 38,
+        "needle": "export function vectorLiteral(",
+        "label": "export function vectorLiteral("
+      }
+    },
+    {
+      "name": "indexIncidents",
+      "kind": "Application vector-search helper",
+      "purpose": "Incrementally maintain incident embeddings with conditional writes.",
+      "ref": {
+        "path": "lib/semantic.ts",
+        "line": 7,
+        "needle": "export async function indexIncidents(",
+        "label": "export async function indexIncidents("
+      }
+    },
+    {
+      "name": "searchIncidents",
+      "kind": "Application vector-search helper",
+      "purpose": "Run authenticated PostgreSQL cosine nearest-neighbour search.",
+      "ref": {
+        "path": "lib/semantic.ts",
+        "line": 33,
+        "needle": "export async function searchIncidents(",
+        "label": "export async function searchIncidents("
+      }
+    },
     {
       "name": "app_actor",
       "kind": "Stored SQL function",
@@ -1167,7 +1330,7 @@
       "purpose": "Initialize/open persisted PostgreSQL and load the schema/seed/extensions.",
       "ref": {
         "path": "lib/db.ts",
-        "line": 17,
+        "line": 18,
         "needle": "export async function getDb",
         "label": "export async function getDb"
       }
@@ -1178,7 +1341,7 @@
       "purpose": "Run an authenticated actor callback with a transaction-local SQL role.",
       "ref": {
         "path": "lib/db.ts",
-        "line": 77,
+        "line": 81,
         "needle": "export async function asActor",
         "label": "export async function asActor"
       }
@@ -1440,23 +1603,27 @@
   "sourceHashes": {
     "database/00_schema.sql": "4ccfc84adfcabcb1334e3c25d1eae03a8d51b0ff53fb5c39e3239bc3c33f8afb",
     "database/02_advanced.sql": "c5f99eb01967100e7d90b4cd4b1d0c3f31c88ac09e769c387d909b3f0235fa2e",
-    "lib/db.ts": "8e98d429f52eab14ff39d24dba0a52aa9c394a9e6708bad7c25516dada017b58",
+    "lib/db.ts": "1af401cdb512698f218d880416665a63ebd7f208c08aa6622d53973006260e26",
     "tests/resource-tags.test.ts": "4c0f6a887ab5cdefecb591823cf639feb547090f9e03d2898216b8e23bab1de8",
     "database/06_ddl_demo.sql": "bf67d0ae14ea551531b30c582ea441e13cec5f0b1894d16272b1ce071047df91",
     "tests/ddl.test.ts": "7e9046ff5ef4d2d6e28d9b73f847953711335ba8fa2300bc1efa7feeb4569db8",
     "database/01_seed.sql": "dd7aa0deb55108ca1b400b96270135b6f4f33b362a13bd138cf4e95e418c0577",
-    "lib/service.ts": "a425dfe9c85a779c56671e3aff390a2bf27ccc5660052e680333620f4ec5cb93",
-    "app/api/[...path]/route.ts": "e3027ccd04fcae85e8a8b22bebe415037d44231b9b31f6fdd1eacd0072a79038",
-    "app/page.tsx": "b0f9c62e09f3febe3bde92391b7613362aa53672c615a6fdfeedbfb362b6cb39",
+    "lib/service.ts": "b401ade32f0b39ef962d4bcb97186d71ea71c81bd98e8e7ecf25eb01aa6cc47f",
+    "app/api/[...path]/route.ts": "5925150fa179258c71556472abd8b2f6a8d3bfe66e63306b99513b0d6141d7bc",
+    "app/page.tsx": "89237784f8ddd68f06973ff37856e1ba18ad883e1887675b391cf6b35146a23c",
     "database/05_resource_tag_permissions.sql": "46891c9c1a1dc08988799557375b7f33f3dc49f69379c67f26b095f97bebe459",
     "database/03_queries.sql": "ab92bffa9ea1d6c6b9c48766285b41272f320c6278e83ddb63322e41060102b8",
-    "docs/DATA_DICTIONARY.md": "ed5275eb9b12e1c7bdd8ba3f92ea8c677afd6dd8ebe5b4f3288e6b1681ef31c3",
+    "docs/DATA_DICTIONARY.md": "6845f1c6b06e2ecbc8bf9ed7ea09e7dd38f9ef810f461891c513929f3c579203",
     "tests/integration.test.ts": "8844347d362cb6d971c3f64ec1600e573e36a6665992a4b1da7858fea2280f89",
     "lib/password.ts": "05cb05c7984c9a77401de4653e5241b21fef3ec29c9b8d2d2515eb7db5e072ca",
     "lib/auth.ts": "625719c4f80a557f95b4b74fd31a2f26cdd23ac18e70faf9b8f5484513689787",
     "scripts/setup.ts": "83eec63b3e7177aa329647c9b5c9eb737b4f5f66370c267debc2ffd3e2c936a7",
     "lib/mongo.ts": "24f03ea371e84206121eba2e93f0a5c04b94bd9248ffddb3482513fa86bc04ad",
     "database/04_mongo_commands.js": "35ac665d34342c3d5126094546fe3396603ba2e2633b9e244d00fbecfb416c7d",
-    "scripts/offline-smoke.mjs": "285d61ca4d39e2d7445ab940c0cfb2208c92b735f64b53ebd789245f1c98dd32"
+    "scripts/offline-smoke.mjs": "285d61ca4d39e2d7445ab940c0cfb2208c92b735f64b53ebd789245f1c98dd32",
+    "lib/embeddings.ts": "f062a8b3f229998945b508fd2d4e4e8e10288b6c84523fa7695942ad744f6e63",
+    "lib/semantic.ts": "e322a5fb84b44cc15df2a547810b57f8f3fcb99b135b3e8386fd6a4b5b8d5155",
+    "database/07_vector_search.sql": "db2f424405ab55aebfe4d32db79a35da7e7ff5f76bd5356108598ac6d396988a",
+    "tests/semantic.test.ts": "36dad21dd4bf237803f3d1753c2869a92acbaaf6de1fa65ae1fea5b49b2c6e88"
   }
 }
