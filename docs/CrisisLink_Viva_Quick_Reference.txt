@@ -1,0 +1,343 @@
+﻿CRISISLINK: FILE LOCATIONS AND CUSTOM QUERY COMMANDS
+27 November 2026. Use with docs/DATABASE_FEATURE_MAP.html for clickable lines.
+
+PROJECT ROOT
+C:\Users\Abhinav Krishna\Documents\ChatGPT\capstone\crisislink-app
+Website: http://127.0.0.1:3100
+
+ARCHITECTURE
+React browser interface -> Next.js authenticated API -> application services.
+SQL service -> real embedded PostgreSQL through PGlite: records and pgvector.
+Mongo service -> separate MongoDB: field_notes documents.
+Transformers.js runs local MiniLM: normalized 384-dimensional embeddings.
+PostgreSQL pgvector cosine distance (<=>) and HNSW support vector retrieval.
+MongoDB $text is keyword search; vectors are in PostgreSQL, not MongoDB.
+No separate Express backend. No external embedding API required.
+
+FOLDER / FILE MAP
+app/page.tsx: React forms, buttons, dropdowns, API fetch calls and SQL lab.
+app/globals.css: layout/styles. app/layout.tsx: root layout and metadata.
+app/api/[...path]/route.ts: API routing, session authentication and errors.
+lib/db.ts: PGlite initialization/migrations; asActor sets user and database role.
+lib/service.ts: SQL dashboard, incident creation, dispatch/completion calls,
+  maintenance, resource-tag CRUD, labQueries and runQuery.
+lib/mongo.ts: Mongo connection, validator, indexes, CRUD, $text, aggregation.
+lib/auth.ts: login/logout, sessions and role checks.
+lib/password.ts: salted scrypt passwords and hashed session tokens.
+lib/embeddings.ts: pinned local MiniLM, 384 dimensions, vector serialization.
+lib/semantic.ts: incremental incident embedding maintenance.
+lib/incident-review.ts: one-hour duplicate search; signed attach/create decisions.
+lib/locations.ts: aliases, location vectors and custom location creation.
+lib/location-catalog.ts: Bengaluru area options.
+database/: SQL definitions and migrations. scripts/: operational commands.
+tests/: SQL/MongoDB/security/vector/workflow checks. tools/: generators.
+docs/DATA_DICTIONARY.md: executed schema, constraints and index definitions.
+docs/DATABASE_FEATURE_MAP.html: searchable concept-to-feature-to-exact-code guide.
+docs/diagrams/chen.png: ER diagram. docs/diagrams/schema.png: base schema.
+data/postgres: real SQL files. data/mongo: Mongo files. data/models: model cache.
+Do not edit database data files, node_modules or generated .next output.
+
+SQL DEFINITIONS: LOOK IN database/
+00_schema.sql: 17 domain tables and base keys/checks.
+01_seed.sql: original base seed records.
+02_advanced.sql: strengthened constraints, roles, RLS, indexes, stored functions,
+  status trigger, assignment view, sessions and login-attempt tables.
+03_queries.sql: standalone examples; NOT the running SQL lab source.
+04_mongo_commands.js: mongosh validation and CRUD examples.
+05_resource_tag_permissions.sql: SQL resource-tag CRUD grants.
+06_ddl_demo.sql: disposable CREATE/ALTER/DROP example.
+07_vector_search.sql: incident vectors, HNSW and description invalidation trigger.
+08_report_receipts.sql: retry-safe create/attach decision records.
+09_operational_catalog.sql: expanded types/resources/teams/base places.
+10_location_search.sql: location vectors/index and reported location text.
+11_area_landmarks.sql: additional saved landmarks and unique catalog keys.
+area-landmarks.json -> tools/build-landmarks.py -> 11_area_landmarks.sql.
+catalog.json -> tools/build-catalog.py -> 09_operational_catalog.sql.
+database/mysql is historical input; it is not the running database engine.
+
+TEACHER CONCEPT -> ACTUAL FEATURE -> FILE
+Primary/foreign keys and checks -> integrity -> 00_schema.sql,02_advanced.sql.
+M:N emergency/capability -> emergency_required_capabilities linking table.
+M:N resource/capability -> resource_capabilities linking table.
+Transaction -> incident + requirement + automatic history -> service.createIncident.
+Stored function dispatch_response -> validate capabilities/availability, lock rows
+  FOR UPDATE, assign and reserve resource/team -> 02_advanced.sql.
+Stored function finish_response -> report completion, release unit/team, resolve
+  incident if no active assignment remains -> 02_advanced.sql.
+record_emergency_status + trg_emergency_status -> automatic status history.
+v_assignment_summary -> joined assignment/resource/responder information.
+app_actor -> current transaction user for audit and row policies.
+GRANT/REVOKE -> independent SQL roles; RLS -> maintenance author enforcement.
+CTE + ROW_NUMBER -> latest history per incident -> service.labQueries.cte.
+Recursive CTE -> last seven calendar days with counts -> labQueries.recursive.
+Correlated NOT EXISTS -> incidents without active assignments -> labQueries.correlated.
+Nested query -> above-average affected count -> labQueries.nested.
+GROUP BY/HAVING -> assignment counts -> labQueries.aggregate.
+SQL resource-tag CRUD -> Resources screen -> service add/update/removeResourceTag.
+Mongo create/list/update/deleteNote -> field_notes CRUD -> lib/mongo.ts.
+Mongo listNotes -> $text keyword search and unwind/group tag aggregation.
+
+VECTOR WORKFLOW
+Location text -> exact alias + area-filtered cosine suggestions -> human confirms
+  canonical saved location ID. Similar place does not prove same address.
+Incident text -> vector -> same location, active status, last ONE HOUR -> review.
+Human attaches incoming report as Mongo note or creates a separate SQL incident.
+Lower cosine distance means closer vectors. 0.65 is a heuristic, not confidence.
+Description edit invalidates old embedding; indexing regenerates current vectors.
+One hour is a lookback, not a reporting deadline. Older incidents remain listed.
+Yesterday's sample incidents naturally age out. Use fresh incidents for the viva.
+SQL and MongoDB have no shared distributed atomic transaction.
+
+AUTHENTICATION
+Coordinator reports and dispatches. Responder completes authorized assignments.
+Technician records maintenance; coordinator/technician can change resource tags.
+API role checks plus SQL grants; Mongo writes also check SQL incident access.
+Passwords: salted scrypt hashes. Cookie: HttpOnly and SameSite Strict.
+Stored session token is hashed. No password is included in this file.
+
+CUSTOM SQL IN THE WEBSITE (LIVE SQL LAB)
+1. Open lib/service.ts and find: export const labQueries
+2. Add this property inside that object:
+
+  area_open: `
+    SELECT l.area, COUNT(*) AS open_incidents
+    FROM emergencies e
+    JOIN locations l ON l.location_id=e.location_id
+    WHERE e.status IN ('reported','responding')
+    GROUP BY l.area
+    ORDER BY open_incidents DESC, l.area
+  `,
+
+3. In app/page.tsx find SQL example; add alongside the existing option tags:
+  <option value="area_open">Open incidents by area</option>
+
+Dropdown key -> /api/queries?key=area_open -> runQuery -> SQL -> ResultTable.
+Returned column headings are automatic. Queries refresh every five seconds.
+The API accepts listed query keys, not arbitrary SQL strings from the browser.
+Editing database/03_queries.sql alone does not change the running lab.
+pnpm dev reloads source edits. Production: stop app, pnpm build, pnpm start.
+
+OTHER SELECT QUERIES TO PUT IN A labQueries TEMPLATE STRING
+
+SELECT e.emergency_id,t.type_name,l.location_name,e.status
+FROM emergencies e JOIN emergency_types t USING(type_id)
+JOIN locations l USING(location_id) ORDER BY e.reported_at DESC;
+
+SELECT r.resource_name,c.capability_name
+FROM resources r JOIN resource_capabilities rc USING(resource_id)
+JOIN capabilities c USING(capability_id) ORDER BY r.resource_name;
+
+WITH ranked AS (
+  SELECT emergency_id,status,changed_at,
+    ROW_NUMBER() OVER(PARTITION BY emergency_id
+      ORDER BY changed_at DESC,history_id DESC) AS rn
+  FROM emergency_status_history
+)
+SELECT * FROM ranked WHERE rn=1;
+
+SELECT e.emergency_id,e.description FROM emergencies e
+WHERE NOT EXISTS(SELECT 1 FROM assignments a
+  WHERE a.emergency_id=e.emergency_id AND a.status IN ('active','dispatched'));
+
+SELECT * FROM v_assignment_summary ORDER BY assignment_id DESC;
+SELECT * FROM emergency_status_history ORDER BY changed_at DESC,history_id DESC;
+
+CUSTOM SQL IN A TERMINAL
+PGlite is embedded: there is no psql TCP server. STOP APP FIRST before standalone
+access to the same SQL folder. While app stays running, use its SQL-lab API.
+Create scripts/custom-query.ts with this code:
+
+import {getDb} from "../lib/db";
+const db=await getDb();
+try {
+  const result=await db.query(`
+    SELECT severity_level,COUNT(*) AS incident_count
+    FROM emergencies GROUP BY severity_level
+    ORDER BY incident_count DESC
+  `);
+  console.table(result.rows);
+} finally { await db.close(); }
+
+Run from project root: pnpm exec tsx scripts/custom-query.ts
+Restart afterwards: pnpm start
+Use SELECT for exploration. Direct owner queries are not an API-role test.
+Schema/function edits may need a migration or CREATE OR REPLACE FUNCTION on an
+already initialized database. Do not reset saved data to demonstrate changes.
+
+MONGO SHELL (MAY RUN WHILE WEBSITE IS OPEN)
+PowerShell command:
+  mongosh "mongodb://127.0.0.1:27028/crisislink"
+
+// Collections, counts and existing indexes
+show collections
+db.field_notes.countDocuments({})
+db.field_notes.getIndexes()
+
+// Latest notes
+db.field_notes.find({}, {emergency_id:1,text:1,tags:1,assessment:1}).sort({created_at:-1}).limit(10)
+
+// Replace302 with an incident ID visible in your app
+db.field_notes.find({emergency_id:302})
+
+// Keyword text search; uses existing text index, not vectors
+db.field_notes.find({$text:{$search:"smoke electrical"}})
+db.field_notes.find({emergency_id:302,$text:{$search:"smoke"}})
+
+// Array tag, substring search and recent notes
+db.field_notes.find({tags:"additional-report"})
+db.field_notes.find({text:{$regex:"smoke",$options:"i"}})
+db.field_notes.find({created_at:{$gte:new Date(Date.now()-60*60*1000)}})
+
+// Notes per incident
+db.field_notes.aggregate([
+  {$group:{_id:"$emergency_id",note_count:{$sum:1}}},
+  {$sort:{note_count:-1}}
+])
+
+// Tag frequencies: unwind expands array elements into pipeline documents
+db.field_notes.aggregate([
+  {$unwind:"$tags"},
+  {$group:{_id:"$tags",count:{$sum:1}}},
+  {$sort:{count:-1}}
+])
+
+New SQL incidents do not automatically have Mongo notes. Empty results may be valid.
+Create a field note or attach an additional report through the application first.
+The SQL incident reference is checked by the backend, not a Mongo foreign key.
+
+SHELL CRUD PRACTICE (SEPARATE FROM REAL FIELD NOTES)
+Direct shell writes bypass application authorization. Prefer the Field notes UI
+for real writes. If asked for shell CRUD, use a separate practice collection:
+
+const practiceId=db.viva_notes_practice.insertOne({
+  text:"Electrical smoke near corridor",tags:["smoke"],created_at:new Date()
+}).insertedId
+db.viva_notes_practice.find({_id:practiceId})
+db.viva_notes_practice.updateOne({_id:practiceId},
+  {$set:{text:"Smoke contained",updated_at:new Date()}})
+db.viva_notes_practice.deleteOne({_id:practiceId})
+
+This is a shell exercise. Real field_notes CRUD uses lib/mongo.ts and checks
+authenticated author/incident access; do not claim this practice collection is
+part of the application's stored field observations.
+
+RUNNING AND PREPARATION
+cd "C:\Users\Abhinav Krishna\Documents\ChatGPT\capstone\crisislink-app"
+Terminal1: pnpm mongo
+Terminal2: pnpm start (existing build) OR pnpm dev
+Production build: pnpm build
+Type check: pnpm typecheck
+Tests: pnpm test
+APP STOPPED: pnpm vector:setup (cache model/index)
+APP STOPPED: pnpm incidents:seed (reuse original eight without changing dates)
+APP STOPPED: pnpm incidents:seed --fresh (explicitly add eight NEW incidents)
+Fresh flag adds another batch on EACH invocation; use it only when intended.
+pnpm setup changes passwords/revokes sessions; it is not a normal startup step.
+
+READ-ONLY VECTOR REVIEW THROUGH RUNNING API
+pnpm vector:search "Smoke from an electrical cabinet in BE Block" 27 1
+Prompts for coordinator password with hidden input, saves no report, logs out.
+27 is BE Block;1 is Fire. Requires recent active incidents at that location.
+
+EXACT SOURCE LOCATIONS
+The companion docs/DATABASE_FEATURE_MAP.html contains line-numbered links and
+definition/caller/UI/test mappings. Source line numbers move after code changes;
+use Ctrl+F for dispatch_response, finish_response, trg_emergency_status,
+v_assignment_summary, labQueries, DUPLICATE_SQL, listNotes, resolveLocations.
+
+
+GENERATED EXACT LINE REFERENCES - CURRENT SOURCE
+
+C:\Users\Abhinav Krishna\Documents\ChatGPT\capstone\crisislink-app\database\00_schema.sql
+  Line 4: CREATE TABLE roles (
+  Line 11: CREATE TABLE users (
+  Line 26: CREATE TABLE emergency_types (
+  Line 33: CREATE TABLE locations (
+  Line 45: CREATE TABLE emergencies (
+  Line 69: CREATE TABLE emergency_status_history (
+  Line 85: CREATE TABLE capabilities (
+  Line 92: CREATE TABLE emergency_required_capabilities (
+  Line 112: CREATE TABLE responders (
+  Line 124: CREATE TABLE resource_types (
+  Line 131: CREATE TABLE resources (
+  Line 149: CREATE TABLE resource_capabilities (
+  Line 162: CREATE TABLE assignments (
+  Line 187: CREATE TABLE maintenance_records (
+  Line 211: CREATE TABLE responder_reports (
+  Line 235: CREATE TABLE responder_skills (
+  Line 244: CREATE TABLE resource_tags (
+
+C:\Users\Abhinav Krishna\Documents\ChatGPT\capstone\crisislink-app\database\02_advanced.sql
+  Line 26: CREATE UNIQUE INDEX uq_active_resource ON assignments(resource_id)
+  Line 28: CREATE UNIQUE INDEX uq_active_responder ON assignments(responder_id)
+  Line 30: CREATE INDEX idx_emergency_status_time ON emergencies(status,reported_at DESC);
+  Line 31: CREATE INDEX idx_history_time ON emergency_status_history(emergency_id,changed_at DESC);
+  Line 32: CREATE INDEX idx_assignment_emergency ON assignments(emergency_id);
+  Line 34: CREATE TABLE app_sessions (
+  Line 39: CREATE TABLE app_login_attempts (
+  Line 45: CREATE VIEW v_assignment_summary AS
+  Line 51: CREATE FUNCTION app_actor() RETURNS INTEGER LANGUAGE SQL STABLE AS $$
+  Line 55: CREATE FUNCTION record_emergency_status() RETURNS TRIGGER
+  Line 65: CREATE TRIGGER trg_emergency_status AFTER INSERT OR UPDATE OF status ON emergencies
+  Line 68: CREATE FUNCTION dispatch_response(p_emergency INTEGER,p_resource INTEGER,p_responder INTEGER)
+  Line 94: CREATE FUNCTION finish_response(p_assignment INTEGER,p_outcome TEXT)
+  Line 136: CREATE POLICY maintenance_read ON maintenance_records FOR SELECT
+  Line 138: CREATE POLICY maintenance_author ON maintenance_records FOR INSERT
+
+C:\Users\Abhinav Krishna\Documents\ChatGPT\capstone\crisislink-app\database\07_vector_search.sql
+  Line 7: CREATE INDEX IF NOT EXISTS idx_emergency_embedding_hnsw
+  Line 12: CREATE OR REPLACE FUNCTION invalidate_incident_embedding() RETURNS TRIGGER
+  Line 25: CREATE TRIGGER trg_invalidate_incident_embedding
+
+C:\Users\Abhinav Krishna\Documents\ChatGPT\capstone\crisislink-app\database\10_location_search.sql
+  Line 5: CREATE INDEX IF NOT EXISTS idx_location_embedding_hnsw
+
+C:\Users\Abhinav Krishna\Documents\ChatGPT\capstone\crisislink-app\database\11_area_landmarks.sql
+  Line 3: CREATE UNIQUE INDEX IF NOT EXISTS idx_locations_catalog_key ON locations(catalog_key);
+
+C:\Users\Abhinav Krishna\Documents\ChatGPT\capstone\crisislink-app\lib\service.ts
+  Line 6: export const incidentInput = z.object({
+  Line 15: export async function dashboard(actor: Actor) {
+  Line 78: export async function addResourceTag(actor: Actor, input: unknown) {
+  Line 92: export async function updateResourceTag(actor: Actor, input: unknown) {
+  Line 108: export async function removeResourceTag(actor: Actor, input: unknown) {
+  Line 122: export async function createIncident(actor: Actor, input: unknown, requestId?: string) {
+  Line 167: export async function dispatch(actor: Actor, input: unknown) {
+  Line 188: export async function complete(actor: Actor, input: unknown) {
+  Line 207: export async function maintenance(actor: Actor, input: unknown) {
+  Line 227: export async function ensureIncident(actor: Actor, id: number, write = false) {
+  Line 252: export const labQueries = {
+  Line 265: export async function runQuery(actor: Actor, key: string) {
+
+C:\Users\Abhinav Krishna\Documents\ChatGPT\capstone\crisislink-app\lib\mongo.ts
+  Line 6: export const noteValidator = {
+  Line 42: export async function mongo() {
+  Line 94: export async function listNotes(actor: Actor, incident: number, search = "") {
+  Line 115: export async function createNote(actor: Actor, input: unknown) {
+  Line 142: export async function updateNote(actor: Actor, id: string, input: unknown) {
+  Line 151: export async function deleteNote(actor: Actor, id: string) {
+  Line 158: export async function saveAdditionalReport(actor: Actor, incident: number, reviewId: string,
+
+C:\Users\Abhinav Krishna\Documents\ChatGPT\capstone\crisislink-app\lib\incident-review.ts
+  Line 10: export const DUPLICATE_WINDOW_HOURS = 1;
+  Line 12: export const MAX_DUPLICATE_DISTANCE = 0.65;
+  Line 36: export const DUPLICATE_SQL = `WITH nearest AS MATERIALIZED (
+  Line 53: export async function reviewIncident(actor: Actor, input: unknown) {
+  Line 71: export async function confirmIncidentReport(actor: Actor, input: unknown) {
+
+C:\Users\Abhinav Krishna\Documents\ChatGPT\capstone\crisislink-app\lib\locations.ts
+  Line 8: export async function indexLocations(){
+  Line 14: export async function resolveLocations(actor:Actor,input:unknown){
+  Line 24: export async function createLocation(actor:Actor,input:unknown){
+
+C:\Users\Abhinav Krishna\Documents\ChatGPT\capstone\crisislink-app\lib\embeddings.ts
+  Line 4: export const EMBEDDING_MODEL = "Xenova/all-MiniLM-L6-v2";
+  Line 6: export const EMBEDDING_REVISION = "751bff37182d3f1213fa05d7196b954e230abad9";
+  Line 7: export const EMBEDDING_DIMENSIONS = 384;
+  Line 8: export const EMBEDDING_ID = `${EMBEDDING_MODEL}@${EMBEDDING_REVISION}:mean:normalized:q8`;
+  Line 14: export async function embedText(text: string): Promise<number[]> {
+
+C:\Users\Abhinav Krishna\Documents\ChatGPT\capstone\crisislink-app\lib\auth.ts
+  Line 13: export async function login(email: string, password: string) {
+  Line 45: export async function authenticate(token?: string): Promise<Actor> {
+  Line 55: export async function logout(token: string) {

@@ -1,6 +1,9 @@
 // Explicit one-time sample data command. Stop the app before standalone PGlite access.
 // Stable request IDs make reruns reuse the same records without changing timestamps/statuses.
 import {connect} from "node:net";
+import {randomUUID} from "node:crypto";
+// Explicit --fresh adds a new batch; the default remains retry-safe.
+const fresh = process.argv.includes("--fresh");
 import {getDb,type Actor} from "../lib/db";
 import {createIncident} from "../lib/service";
 import {indexIncidents} from "../lib/semantic";
@@ -28,7 +31,7 @@ try{
  const before=Number((await db.query<{n:number}>("SELECT count(*) AS n FROM emergencies")).rows[0].n);
  const incidents=[];
  for(const [i,s] of samples.entries()){
-  const record=await createIncident(actor,{type_id:s.type,location_id:s.location,description:s.description,severity_level:s.severity,people_affected:s.people,capability_id:s.capability,reported_location_text:s.directions},`78c87942-3ca6-4bfd-8d15-${String(i+1).padStart(12,"0")}`);
+  const record=await createIncident(actor,{type_id:s.type,location_id:s.location,description:s.description,severity_level:s.severity,people_affected:s.people,capability_id:s.capability,reported_location_text:s.directions},fresh ? randomUUID() : `78c87942-3ca6-4bfd-8d15-${String(i+1).padStart(12,"0")}`);
   incidents.push({emergency_id:record.emergency_id,description:s.description});
  }
  const indexed=await indexIncidents();
